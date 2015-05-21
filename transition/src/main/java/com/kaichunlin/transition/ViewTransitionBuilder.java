@@ -118,7 +118,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param percent
      * @return
      */
-    public ViewTransitionBuilder translationYAsFractionOfWidth(final float percent) {
+    public ViewTransitionBuilder translationXAsFractionOfWidth(final float percent) {
         return translationX(mView.getWidth() * percent);
     }
 
@@ -345,6 +345,9 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     }
 
     /**
+     * Sets the {@link ITransitionAdapter}, once set {@link build()} would automatically add
+     * the created {@link ViewTransition} to the adapter.
+     *
      * @param adapter
      * @return
      */
