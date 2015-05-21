@@ -19,8 +19,9 @@
     <string name="slideup_fading_actionbar">Fading AcitonBar</string>
     <string name="slideup_change_actionbar_color">Change AcitonBar Color</string>
     <string name="slideup_change_actionbar_color_hsv">Change AcitonBar Color HSV</string>
+    <string name="drawer_rotate_android">Rotate and Shrink View</string>
     <string name="drawer_slide_subviews">Sliding Subviews</string>
-    <string name="drawer_rotate_android">Rotate Android</string>
+    <string name="drawer_slide_bg">Sliding Background</string>
     <string name="interpolator">Interpolator</string>
     <string name="interpolator_default">Default</string>
     <string name="interpolator_linear">Linear</string>

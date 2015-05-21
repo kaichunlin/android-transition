@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ListView;
 
 import com.kaichunlin.transition.ViewTransitionBuilder;
@@ -30,6 +31,7 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_drawer_view);
         findViewById(R.id.rotate_android).setOnClickListener(this);
         findViewById(R.id.slide_subviews).setOnClickListener(this);
+        findViewById(R.id.slide_bg).setOnClickListener(this);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -63,20 +65,21 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         mDrawerListenerAdapter.clearTransition();
 
-        ViewTransitionBuilder builder;
         switch (v.getId()) {
             case R.id.rotate_android:
                 mDrawerListenerAdapter.addTransition(
                         ViewTransitionBuilder.transit(findViewById(R.id.big_icon)).rotation(0f, 360f).scaleX(1f, 0.2f).scaleY(1f, 0f).translationX(200f));
                 break;
             case R.id.slide_subviews:
-                builder = ViewTransitionBuilder.transit(findViewById(R.id.lay_buttons)).interpolator(new AccelerateInterpolator()).adapter(mDrawerListenerAdapter).transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
+                ViewTransitionBuilder.transit(findViewById(R.id.lay_buttons)).interpolator(new AccelerateInterpolator()).adapter(mDrawerListenerAdapter).transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
                     @Override
                     public void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View view, int index, int total) {
                         builder.range((total - 1 - index) * 0.2f, 1f).translationX(viewGroup.getRight()).build();
                     }
                 });
-                mDrawerListenerAdapter.addTransition(builder);
+                break;
+            case R.id.slide_bg:
+                mDrawerListenerAdapter.addTransition(ViewTransitionBuilder.transit(findViewById(R.id.bg)).interpolator(new LinearInterpolator()).translationXAsFractionOfWidth(0.25f));
                 break;
         }
     }

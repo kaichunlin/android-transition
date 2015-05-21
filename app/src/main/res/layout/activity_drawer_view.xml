@@ -29,6 +29,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <View
+                android:id="@+id/bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg" />
+
             <ImageView
                 android:id="@+id/big_icon"
                 android:layout_width="match_parent"
@@ -50,6 +56,11 @@
                 <android.support.v7.widget.AppCompatButton
                     style="@style/Button"
                     android:id="@+id/slide_subviews"
+                    android:text="@string/drawer_slide_subviews" />
+
+                <android.support.v7.widget.AppCompatButton
+                    style="@style/Button"
+                    android:id="@+id/slide_bg"
                     android:text="@string/drawer_slide_subviews" />
             </LinearLayout>
         </FrameLayout>
