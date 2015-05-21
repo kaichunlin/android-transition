@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -104,51 +103,53 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
     @Override
     public void onClick(View v) {
         mSlidingUpPanelLayoutAdapter.clearTransition();
-        mLastSelection=v;
+        mLastSelection = v;
 
+        //configure a builder with properties shared by all instances and just clone it for future use
+        //since adapter(ITransitionAdapter) is set, simply call build() would add the resultant ViewTransition to the adapter
+        ViewTransitionBuilder baseBuilder = ViewTransitionBuilder.transit().interpolator(mInterpolator).adapter(mSlidingUpPanelLayoutAdapter);
         ViewTransitionBuilder builder;
         switch (v.getId()) {
-            //TODO visual artifact on Android 5.1, why???
+            //TODO visual artifact on Android 5.1 when rotationX is ~45, why???
             case R.id.rotate_slide:
-                builder = ViewTransitionBuilder.transit(findViewById(R.id.content_bg)).interpolator(mInterpolator).rotationX(45f).scale(0.8f).translationYAsFractionOfHeight(-0.5f).adapter(mSlidingUpPanelLayoutAdapter);
+                builder = baseBuilder.clone().target(findViewById(R.id.content_bg)).rotationX(42f).scale(0.8f).translationYAsFractionOfHeight(-0.5f);
                 builder.build();
                 builder.target(findViewById(R.id.content)).build();
                 builder.target(mToolbar).scale(0.8f).translationYAsFractionOfHeight(-1f).build();
 
-                builder = ViewTransitionBuilder.transit(findViewById(R.id.content)).interpolator(mInterpolator).adapter(mSlidingUpPanelLayoutAdapter);
+                builder = baseBuilder.clone().target(findViewById(R.id.content));
                 builder.transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
                     @Override
                     public void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View view, int index, int total) {
                         builder.range((total - 1 - index) * 0.1f, 1f).translationYAsFractionOfHeight(viewGroup, 1f).build();
-                        Log.e(getClass().getSimpleName(), "transit: "+((total - 1 - index) * 0.1f));
                     }
                 });
                 break;
             case R.id.sliding_actionbar_view:
-                mSlidingUpPanelLayoutAdapter.addTransition(ViewTransitionBuilder.transit(mToolbar).interpolator(mInterpolator).translationYAsFractionOfHeight(-1f));
-                builder=ViewTransitionBuilder.transit(findViewById(R.id.content)).interpolator(mInterpolator).translationYAsFractionOfHeight(-0.5f).adapter(mSlidingUpPanelLayoutAdapter);
+                baseBuilder.clone().target(mToolbar).translationYAsFractionOfHeight(-1f).build();
+                builder = baseBuilder.clone().target(findViewById(R.id.content)).translationYAsFractionOfHeight(-0.5f);
                 builder.build();
+                //apply the exact same transition to another view
                 builder.target(findViewById(R.id.content_bg2)).build();
                 break;
             case R.id.change_actionbar_color:
-                mSlidingUpPanelLayoutAdapter.addTransition(ViewTransitionBuilder.transit(mToolbar).interpolator(mInterpolator).backgroundColorResource(getResources(), R.color.primary, R.color.accent));
+                baseBuilder.clone().target(mToolbar).backgroundColorResource(getResources(), R.color.primary, R.color.accent).build();
                 break;
             case R.id.change_actionbar_color_hsv:
-                mSlidingUpPanelLayoutAdapter.addTransition( ViewTransitionBuilder.transit(mToolbar).interpolator(mInterpolator).backgroundColorResourceHSV(getResources(), R.color.primary, R.color.drawer_opened));
+                baseBuilder.clone().target(mToolbar).backgroundColorResourceHSV(getResources(), R.color.primary, R.color.drawer_opened).build();
                 break;
             case R.id.fading_actionbar:
-                mSlidingUpPanelLayoutAdapter.addTransition(ViewTransitionBuilder.transit(mToolbar).interpolator(mInterpolator).alpha(1f, 0f));
+                baseBuilder.clone().target(mToolbar).alpha(1f, 0f).build();
 
                 //TODO this should work, but doesn't
 //                MenuItemTransitionBuilder menuBuilder=MenuItemTransitionBuilder.transit(mToolbar).scaleY(1f, 0f).visibleOnStartAnimation(true).invalidateOptionOnStopTransition(this, true);
 //                mSlidingUpPanelLayoutAdapter.setupOption(this, new MenuOptionConfiguration(menuBuilder.build(), R.menu.main));
 
-                MenuItemTransitionBuilder menuBuilder=MenuItemTransitionBuilder.transit(mToolbar).interpolator(mInterpolator).scaleY(1f, 0f).visibleOnStartAnimation(true).invalidateOptionOnStopTransition(this, true);
+                MenuItemTransitionBuilder menuBuilder = MenuItemTransitionBuilder.transit(mToolbar).interpolator(mInterpolator).scaleY(1f, 0f).visibleOnStartAnimation(true).invalidateOptionOnStopTransition(this, true);
                 mSlidingUpPanelLayoutAdapter.setupCloseOption(this, new MenuOptionConfiguration(menuBuilder.reverse().build(), R.menu.main));
                 break;
             case R.id.rotating_actionbar:
-                mSlidingUpPanelLayoutAdapter.addTransition(
-                        ViewTransitionBuilder.transit(mToolbar).interpolator(mInterpolator).delayTranslationYAsFractionOfHeight(-0.5f).delayRotationX(90f).scale(0.8f));
+                baseBuilder.clone().target(mToolbar).delayTranslationYAsFractionOfHeight(-0.5f).delayRotationX(90f).scale(0.8f).build();
                 break;
         }
     }

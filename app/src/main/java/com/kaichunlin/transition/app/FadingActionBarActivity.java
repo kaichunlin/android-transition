@@ -25,10 +25,12 @@ public class FadingActionBarActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         SlidingUpPanelLayout supl=((SlidingUpPanelLayout)findViewById(R.id.sliding_layout));
 
-        //code to transit view
+        //set up the adapter
         mSlidingUpPanelLayoutAdapter = new SlidingUpPanelLayoutAdapter();
+        supl.setPanelSlideListener(mSlidingUpPanelLayoutAdapter);
+
+        //configure transition
         mSlidingUpPanelLayoutAdapter.addTransition(
                 ViewTransitionBuilder.transit(findViewById(R.id.toolbar)).alpha(1f, 0f));
-        supl.setPanelSlideListener(mSlidingUpPanelLayoutAdapter);
     }
 }
