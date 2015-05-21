@@ -61,7 +61,7 @@
                 <android.support.v7.widget.AppCompatButton
                     style="@style/Button"
                     android:id="@+id/slide_bg"
-                    android:text="@string/drawer_slide_subviews" />
+                    android:text="@string/drawer_slide_bg" />
             </LinearLayout>
         </FrameLayout>
 
