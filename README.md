@@ -7,9 +7,13 @@ Features
 --------
 + **View and MenuItem Transition**
 
-  ![](/github/slideup_default.gif) view transition
+  view transition
+  
+  ![](/github/slideup_default.gif) 
+  
+  MenuItem transition
 
-  ![](/github/menu_shrink_and_fade.gif) MenuItem transition
+  ![](/github/menu_shrink_and_fade.gif) 
 
 
 + **Interpolator**
@@ -34,7 +38,7 @@ Usage
 The app/ folder is a sample app containing dozens of examples.
 
 
-#### Two steps are required to apply transition to any View ([sample code](https://github.com/kaichunlin/android-transition/blob/master/app/src/main/java/com/kaichunlin/transition/app/DrawerViewActivity.java)):
+#### Two steps to apply transition to any View ([sample code](https://github.com/kaichunlin/android-transition/blob/master/app/src/main/java/com/kaichunlin/transition/app/DrawerViewActivity.java)):
 
   1. Use the appropriate adapter:
   
@@ -51,7 +55,7 @@ The app/ folder is a sample app containing dozens of examples.
 
 ---
   
-#### Three steps are required to apply transition to a MenuItem ([sample code](https://github.com/kaichunlin/android-transition/blob/master/app/src/main/java/com/kaichunlin/transition/app/DrawerMenuItemActivity.java)):
+#### Three steps to apply transition to a MenuItem ([sample code](https://github.com/kaichunlin/android-transition/blob/master/app/src/main/java/com/kaichunlin/transition/app/DrawerMenuItemActivity.java)):
 
 1. Use the appropriate adapter that extends [MenuBaseAdapter](https://github.com/kaichunlin/android-transition/blob/master/transition/src/main/java/com/kaichunlin/transition/adapter/MenuBaseAdapter.java):
 
