@@ -1,0 +1,14 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.kaichunlin.transition.app.ViewPagerActivityFragment">
+
+    <TextView android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:textColor="#7F7F7F"
+        android:textSize="36dp"
+        android:id="@+id/pager_img"/>
+
+</RelativeLayout>

@@ -1,0 +1,9 @@
+<resources>
+    <style name="Button">
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:backgroundTint">?attr/colorAccent</item>
+    </style>
+</resources>

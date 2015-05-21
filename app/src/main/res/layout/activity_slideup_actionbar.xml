@@ -1,0 +1,96 @@
+<!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="68dp"
+    sothree:umanoShadowHeight="4dp"
+    sothree:umanoFadeColor="@android:color/transparent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black">
+
+        <ImageView
+            android:id="@+id/content_bg2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg2"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/content_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bg" />
+
+            <LinearLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginTop="64dp">
+
+                <android.support.v7.widget.AppCompatButton
+                    style="@style/Button"
+                    android:id="@+id/rotate_slide"
+                    android:text="@string/slideup_rotate_slide" />
+
+                <android.support.v7.widget.AppCompatButton
+                    style="@style/Button"
+                    android:id="@+id/sliding_actionbar_view"
+                    android:text="@string/slideup_slide_actionbar_view" />
+
+                <android.support.v7.widget.AppCompatButton
+                    style="@style/Button"
+                    android:id="@+id/change_actionbar_color"
+                    android:text="@string/slideup_change_actionbar_color" />
+
+                <android.support.v7.widget.AppCompatButton
+                    style="@style/Button"
+                    android:id="@+id/change_actionbar_color_hsv"
+                    android:text="@string/slideup_change_actionbar_color_hsv" />
+
+                <android.support.v7.widget.AppCompatButton
+                    style="@style/Button"
+                    android:id="@+id/fading_actionbar"
+                    android:text="@string/slideup_fading_actionbar" />
+
+                <android.support.v7.widget.AppCompatButton
+                    style="@style/Button"
+                    android:id="@+id/rotating_actionbar"
+                    android:text="@string/slideup_rotate_actionbar" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:title="@string/title_slideing_up_panel"
+            app:title="@string/title_slideing_up_panel"
+            app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
+            app:theme="@style/Toolbar" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|top"
+        android:text="@string/slideup_panel"
+        android:textSize="22sp" />
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

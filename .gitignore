@@ -1,0 +1,12 @@
+transition_slidinguppanel/build/
+transition_observablescrollview/build/
+transition/build/
+transition_staging/build/
+app/build/
+.gradle/
+build/
+.idea/
+local.properties
+gradle.properties
+*.iml
+transition_staging/

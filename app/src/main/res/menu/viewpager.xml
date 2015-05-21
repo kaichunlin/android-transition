@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    <item android:visible="true" android:id="@+id/effect"
+        app:showAsAction="always"
+        android:titleCondensed="Effect"
+        android:title="Effect"
+        android:enabled="true">
+        <menu>
+            <item android:id="@+id/trans_y" android:title="TranslationY + Alpha"></item>
+            <item android:id="@+id/zoom" android:title="Zoom"></item>
+            <item android:id="@+id/depth" android:title="Depth"></item>
+            <item android:id="@+id/rotate" android:title="Rotate"></item>
+        </menu>
+    </item>
+</menu>

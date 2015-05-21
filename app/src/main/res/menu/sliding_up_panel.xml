@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    <item android:id="@+id/menu_default" android:title="@string/interpolator_default"/>
+    <item android:id="@+id/menu_linear" android:title="@string/interpolator_linear"/>
+    <item android:id="@+id/menu_accelerate" android:title="@string/interpolator_accelerate"/>
+    <item android:id="@+id/menu_decelerate" android:title="@string/interpolator_decelerate"/>
+    <item android:id="@+id/menu_linearin" android:title="@string/interpolator_fastout_linearin"/>
+    <item android:id="@+id/menu_anticipate" android:title="@string/interpolator_anticipate"/>
+</menu>

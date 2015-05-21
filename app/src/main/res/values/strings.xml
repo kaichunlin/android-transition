@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Android Transition</string>
+
+    <string name="title_view_pager">View Pager (In Progress)</string>
+    <string name="title_slideing_up_panel">Sliding Up Panel</string>
+    <string name="title_rotate_image">Rotate Image</string>
+    <string name="title_drawer_view">Drawer View Transition</string>
+    <string name="title_drawer_menuitem">MenuItem Transition</string>
+    <string name="title_drawer_gradient">Shifting Gradient Drawer</string>
+
+    <string name="drawer_menuitem_flipe_fade">Flip and Fade</string>
+    <string name="drawer_menuitem_shrink_fade">Shrink and Fade</string>
+    <string name="drawer_menuitem_rotate">Rotate</string>
+
+    <string name="slideup_panel">The Awesome Sliding Up Panel</string>
+    <string name="slideup_rotate_slide">Rotate and Slide</string>
+    <string name="slideup_rotate_actionbar">Rotating AcitonBar</string>
+    <string name="slideup_slide_actionbar_view">Sliding AcitonBar and Subviews</string>
+    <string name="slideup_fading_actionbar">Fading AcitonBar</string>
+    <string name="slideup_change_actionbar_color">Change AcitonBar Color</string>
+    <string name="slideup_change_actionbar_color_hsv">Change AcitonBar Color HSV</string>
+    <string name="drawer_slide_subviews">Sliding Subviews</string>
+    <string name="drawer_rotate_android">Rotate Android</string>
+    <string name="interpolator">Interpolator</string>
+    <string name="interpolator_default">Default</string>
+    <string name="interpolator_linear">Linear</string>
+    <string name="interpolator_accelerate">Accelerate</string>
+    <string name="interpolator_decelerate">Decelerate</string>
+    <string name="interpolator_fastout_linearin">Fast Out Linear In</string>
+    <string name="interpolator_anticipate">Anticipate</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+</resources>
