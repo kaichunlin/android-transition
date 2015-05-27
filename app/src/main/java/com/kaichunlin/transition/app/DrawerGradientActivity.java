@@ -6,7 +6,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
@@ -55,6 +54,7 @@ public class DrawerGradientActivity extends AppCompatActivity implements View.On
         //code to transit view
         mDrawerListenerAdapter = new DrawerListenerAdapter(mDrawerToggle, R.id.drawerList);
         mDrawerListenerAdapter.setDrawerLayout(mDrawerLayout);
+        mDrawerListenerAdapter.setDrawerListener(new DialogDrawerListener(this));
 
         mGradient = findViewById(R.id.gradient);
         ViewUtil.executeOnGlobalLayout(mGradient, new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -63,17 +63,17 @@ public class DrawerGradientActivity extends AppCompatActivity implements View.On
                 if (!mDrawerListenerAdapter.isOpened(DrawerGradientActivity.this)) {
                     mGradient.setTranslationX(-mGradient.getWidth());
                 }
-                updateTransition(findViewById(R.id.interpolator_default), false);
+                updateTransition(findViewById(R.id.interpolator_default));
             }
         });
     }
 
     @Override
     public void onClick(View v) {
-        updateTransition(v, true);
+        updateTransition(v);
     }
 
-    public void updateTransition(View v, boolean expand) {
+    public void updateTransition(View v) {
         mDrawerListenerAdapter.clearTransition();
 
         ViewTransitionBuilder builder = ViewTransitionBuilder.transit(mGradient).translationX(-mGradient.getWidth(), 0);
@@ -97,10 +97,6 @@ public class DrawerGradientActivity extends AppCompatActivity implements View.On
                 break;
         }
         mDrawerListenerAdapter.addTransition(builder);
-
-        if(expand) {
-            mDrawerLayout.openDrawer(Gravity.LEFT);
-        }
     }
 
     @Override

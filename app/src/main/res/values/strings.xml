@@ -12,6 +12,10 @@
     <string name="drawer_menuitem_shrink_fade">Shrink and Fade</string>
     <string name="drawer_menuitem_rotate">Rotate</string>
 
+    <string name="dialog_slide_right">Slowly slides your finger from the left edge of the screen towards right to see the transition.</string>
+    <string name="dialog_slide_up">Press on "The Awesome Sliding Up Panel" and slowly slides your finger up to see the transition.</string>
+    <string name="dialog_ok">OK</string>
+
     <string name="slideup_panel">The Awesome Sliding Up Panel</string>
     <string name="slideup_rotate_slide">Rotate and Slide</string>
     <string name="slideup_rotate_actionbar">Rotating AcitonBar</string>

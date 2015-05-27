@@ -58,6 +58,8 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
         //set up the adapter
         mSlidingUpPanelLayoutAdapter = new SlidingUpPanelLayoutAdapter();
         supl.setPanelSlideListener(mSlidingUpPanelLayoutAdapter);
+        //the adapter accepts another SlidingUpPanelLayout.PanelSlideListener so other customizations can be performed
+        mSlidingUpPanelLayoutAdapter.setPanelSlideListener(new DialogPanelSlideListener(this));
 
         //this is required since some transition requires the width/height/position of a view, which is not yet properly initialized until layout is complete
         //in this example, another way of achieving correct behavior without using ViewUtil.executeOnGlobalLayout() would be to change all
@@ -125,7 +127,7 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
             //TODO visual artifact on Android 5.1 when rotationX is ~45, why???
             case R.id.rotate_slide:
                 builder = baseBuilder.clone();
-                builder.scale(0.8f).translationYAsFractionOfHeight(-1f).build();
+                builder.scale(0.8f).rotationX(40).translationYAsFractionOfHeight(-1f).build();
 
                 builder = baseBuilder.clone().target(findViewById(R.id.content_bg)).rotationX(42f).scale(0.8f).translationYAsFractionOfHeight(-0.5f);
                 builder.build();

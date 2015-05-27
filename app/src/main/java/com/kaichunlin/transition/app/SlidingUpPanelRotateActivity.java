@@ -36,5 +36,6 @@ public class SlidingUpPanelRotateActivity extends AppCompatActivity {
         mSlidingUpPanelLayoutAdapter.addTransition(
                 ViewTransitionBuilder.transit(findViewById(R.id.content_bg2)).rotationY(270, 360).range(0.25f, 0.5f).id("JOKER"));
         supl.setPanelSlideListener(mSlidingUpPanelLayoutAdapter);
+        mSlidingUpPanelLayoutAdapter.setPanelSlideListener(new DialogPanelSlideListener(this));
     }
 }

@@ -63,6 +63,7 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
         //set up the adapter
         mDrawerListenerAdapter = new DrawerListenerAdapter(mDrawerToggle, R.id.drawerList);
         mDrawerListenerAdapter.setDrawerLayout(mDrawerLayout);
+        mDrawerListenerAdapter.setDrawerListener(new DialogDrawerListener(this));
 
         //set the initial options
         onClick(findViewById(R.id.flip_fade));
