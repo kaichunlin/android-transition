@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kaichunlin.transition.util.TransitionStateHolder;
-
 import kaichunlin.transition.app.R;
 
 
@@ -29,7 +27,6 @@ public class ViewPagerActivityFragment extends Fragment {
         Bundle args = getArguments();
         rootView.findViewById(R.id.pager_img).setBackgroundResource(
                 args.getInt(RES_ID));
-        rootView.setTag(R.id.debug_id, new TransitionStateHolder(String.valueOf(args.getInt(ID))));
         return rootView;
     }
 }
