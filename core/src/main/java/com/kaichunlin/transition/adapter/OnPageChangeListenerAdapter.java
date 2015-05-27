@@ -33,18 +33,17 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
         float oldX;
 
         @Override
-        public void updateProgress(float progress) {
-            View view = getTarget();
+        public void updateProgress(View target, float progress) {
             float x = 0;
             if (progress <= 0) {
-                x = view.getWidth() * -progress;
+                x = target.getWidth() * -progress;
                 if (oldX == x) {
                     return;
                 }
                 oldX = x;
-                view.setTranslationX(x);
+                target.setTranslationX(x);
             } else {
-                view.setTranslationX(0);
+                target.setTranslationX(0);
             }
             if (TransitionConfig.isDebug()) {
                 getTransitionStateHolder().append(getId(), this, "CUSTOM updateProgress=" + progress + ": \t[" + getStart() + ".." + getEnd() + "], translationX=" + x);
@@ -59,18 +58,17 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
         float oldX;
 
         @Override
-        public void updateProgress(float progress) {
-            View view = getTarget();
+        public void updateProgress(View target, float progress) {
             float x = 0;
             if (progress > 0 && progress <= 1) {
-                x = view.getWidth() * -progress;
+                x = target.getWidth() * -progress;
                 if (oldX == x) {
                     return;
                 }
                 oldX = x;
-                view.setTranslationX(x);
+                target.setTranslationX(x);
             } else {
-                view.setTranslationX(0);
+                target.setTranslationX(0);
             }
             if (TransitionConfig.isDebug()) {
                 getTransitionStateHolder().append(getId(), this, "CUSTOM updateProgress=" + progress + ": \t[" + getStart() + ".." + getEnd() + "], translationX=" + x);

@@ -166,7 +166,7 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
                     ColorMatrix matrix = new ColorMatrix();
 
                     @Override
-                    public void updateProgress(float progress) {
+                    public void updateProgress(View target, float progress) {
                         matrix.setSaturation(1 - progress);
                         ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
                         ((ImageView) findViewById(R.id.content_bg)).getDrawable().setColorFilter(filter);
