@@ -58,7 +58,7 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
         // translationYAsFractionOfHeight() calls to delayTranslationYAsFractionOfHeight() which would defer the calculation until the transition is just about to start
         ViewUtil.executeOnGlobalLayout(findViewById(R.id.rotate_slide), new ViewTreeObserver.OnGlobalLayoutListener() {
             public void onGlobalLayout() {
-                onClick(findViewById(R.id.rotate_slide));
+                updateTransition(findViewById(R.id.rotate_slide), false);
             }
         });
     }
@@ -95,13 +95,17 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
                 mInterpolator = new AnticipateInterpolator();
                 break;
         }
-        onClick(mLastSelection);
+        updateTransition(mLastSelection, true);
 
         return true;
     }
 
     @Override
     public void onClick(View v) {
+        updateTransition(v, true);
+    }
+
+    public void updateTransition(View v, boolean expand) {
         mSlidingUpPanelLayoutAdapter.clearTransition();
         mLastSelection = v;
 
@@ -151,6 +155,10 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
             case R.id.rotating_actionbar:
                 baseBuilder.clone().target(mToolbar).delayTranslationYAsFractionOfHeight(-0.5f).delayRotationX(90f).scale(0.8f).build();
                 break;
+        }
+
+        if(expand) {
+            ((SlidingUpPanelLayout) findViewById(R.id.sliding_layout)).setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
         }
     }
 }

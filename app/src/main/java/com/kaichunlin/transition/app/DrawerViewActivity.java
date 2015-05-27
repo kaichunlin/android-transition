@@ -5,6 +5,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -51,7 +52,7 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
         mDrawerListenerAdapter = new DrawerListenerAdapter(mDrawerToggle, R.id.drawerList);
         mDrawerListenerAdapter.setDrawerLayout(mDrawerLayout);
 
-        onClick(findViewById(R.id.rotate_android));
+        updateTransition(findViewById(R.id.rotate_android), false);
     }
 
     @Override
@@ -63,6 +64,10 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
+        updateTransition(v, true);
+    }
+
+    public void updateTransition(View v, boolean expand) {
         mDrawerListenerAdapter.clearTransition();
 
         switch (v.getId()) {
@@ -81,6 +86,10 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
             case R.id.slide_bg:
                 mDrawerListenerAdapter.addTransition(ViewTransitionBuilder.transit(findViewById(R.id.bg)).interpolator(new LinearInterpolator()).translationXAsFractionOfWidth(0.25f));
                 break;
+        }
+
+        if(expand) {
+            mDrawerLayout.openDrawer(Gravity.LEFT);
         }
     }
 }
