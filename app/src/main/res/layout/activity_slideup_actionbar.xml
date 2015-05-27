@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="bottom"
     sothree:umanoPanelHeight="68dp"
-    sothree:umanoShadowHeight="4dp"
+    sothree:umanoShadowHeight="0dp"
     sothree:umanoFadeColor="@android:color/transparent">
 
     <RelativeLayout
@@ -72,6 +72,11 @@
                     style="@style/Button"
                     android:id="@+id/rotating_actionbar"
                     android:text="@string/slideup_rotate_actionbar" />
+
+                <android.support.v7.widget.AppCompatButton
+                    style="@style/Button"
+                    android:id="@+id/grayscale_bg"
+                    android:text="@string/slideup_grayscale" />
             </LinearLayout>
         </RelativeLayout>
 

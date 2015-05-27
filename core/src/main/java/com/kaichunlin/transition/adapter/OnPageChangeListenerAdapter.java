@@ -36,7 +36,6 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
         public void updateProgress(float progress) {
             View view = getTarget();
             float x = 0;
-            getTransitionStateHolder().append(getId(), this, "CUSTOM updateProgress=" + progress + ": \t[" + getStart() + ".." + getEnd() + "], translationX=" + x);
             if (progress <= 0) {
                 x = view.getWidth() * -progress;
                 if (oldX == x) {
