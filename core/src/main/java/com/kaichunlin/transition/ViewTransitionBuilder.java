@@ -11,6 +11,7 @@ import com.nineoldandroids.animation.ArgbEvaluator;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.PropertyValuesHolder;
 import com.nineoldandroids.animation.ValueAnimator;
+import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,42 +77,42 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
 
     @Override
     public ViewTransitionBuilder alpha(float end) {
-        return alpha(mView.getAlpha(), end);
+        return alpha(ViewHelper.getAlpha(mView), end);
     }
 
     @Override
     public ViewTransitionBuilder rotation(float end) {
-        return rotation(mView.getRotation(), end);
+        return rotation(ViewHelper.getRotation(mView), end);
     }
 
     @Override
     public ViewTransitionBuilder rotationX(float end) {
-        return rotationX(mView.getRotationX(), end);
+        return rotationX(ViewHelper.getRotationX(mView), end);
     }
 
     @Override
     public ViewTransitionBuilder rotationY(float end) {
-        return rotationY(mView.getRotationY(), end);
+        return rotationY(ViewHelper.getRotationY(mView), end);
     }
 
     @Override
     public ViewTransitionBuilder scaleX(float end) {
-        return scaleX(mView.getScaleX(), end);
+        return scaleX(ViewHelper.getScaleX(mView), end);
     }
 
     @Override
     public ViewTransitionBuilder scaleY(float end) {
-        return scaleY(mView.getScaleY(), end);
+        return scaleY(ViewHelper.getScaleY(mView), end);
     }
 
     @Override
     public ViewTransitionBuilder scale(float end) {
-        return scaleX(mView.getScaleX(), end).scaleY(mView.getScaleY(), end);
+        return scaleX(ViewHelper.getScaleX(mView), end).scaleY(ViewHelper.getScaleY(mView), end);
     }
 
     @Override
     public ViewTransitionBuilder translationX(float end) {
-        return translationX(mView.getTranslationX(), end);
+        return translationX(ViewHelper.getTranslationX(mView), end);
     }
 
     /**
@@ -163,7 +164,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
 
     @Override
     public ViewTransitionBuilder translationY(float end) {
-        return translationY(mView.getTranslationY(), end);
+        return translationY(ViewHelper.getTranslationY(mView), end);
     }
 
     /**
@@ -215,12 +216,12 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
 
     @Override
     public ViewTransitionBuilder x(float end) {
-        return x(mView.getX(), end);
+        return x(ViewHelper.getX(mView), end);
     }
 
     @Override
     public ViewTransitionBuilder y(float end) {
-        return y(mView.getY(), end);
+        return y(ViewHelper.getY(mView), end);
     }
 
     @Override
