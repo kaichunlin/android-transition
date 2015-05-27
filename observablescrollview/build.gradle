@@ -1,11 +1,13 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion 22
     buildToolsVersion '22.0.1'
 
     defaultConfig {
-        minSdkVersion 11
+        minSdkVersion 9
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -21,5 +23,9 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.1'
-    compile project(':transition')
+    compile project(':core')
 }
+
+// This is the library version used when deploying the artifact
+version = "0.8.0"
+apply from: '../upload.gradle';

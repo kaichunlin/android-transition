@@ -1,12 +1,14 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion '22.0.1'
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
-        minSdkVersion 11
-        targetSdkVersion 22
+        minSdkVersion 9
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -20,6 +22,10 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.sothree.slidinguppanel:library:3.0.0'
-    compile project(':transition')
+    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.nineoldandroids:library:2.4.0'
 }
+
+// This is the library version used when deploying the artifact
+version = "0.8.0"
+apply from: '../upload.gradle';

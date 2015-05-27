@@ -1,0 +1,99 @@
+
+
+/**
+ * JCenter publishing logic courtesy of https://www.virag.si/2015/01/publishing-gradle-android-library-to-jcenter/
+ */
+def siteUrl = 'https://github.com/kaichunlin/android-transition'      // Homepage URL of the library
+def gitUrl = 'https://github.com/kaichunlin/android-transition.git'   // Git repository URL
+group = "com.github.kaichunlin.transition"                            // Maven Group ID for the artifact
+
+Properties moduleProperties = new Properties()
+moduleProperties.load(project.file('module.properties').newDataInputStream())
+
+ext.artifactId = moduleProperties.getProperty("module.name")
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+
+                // Add your description here
+                name moduleProperties.getProperty("module.pom_name")
+                // http://stackoverflow.com/questions/30475780/how-to-change-the-default-artifactid-of-maven-metadata-xml-when-uploading-to-bin/30476385#30476385
+                // artifactId = moduleProperties.getProperty("module.artifactId")
+                description moduleProperties.getProperty("module.desc")
+                url siteUrl
+
+                // Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'kaichunlin'
+                        name 'Kai-Chun Lin'
+                        email 'kaichun.lin@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+def test = false
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    dryRun = test //Whether to run this as dry-run, without deploying
+    publish = !test //If version should be auto published after an upload
+    pkg {
+        repo = "maven"
+        name = moduleProperties.getProperty("module.bintray")
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = !test
+        version {
+            gpg {
+                sign = true //Determines whether to GPG sign the files. The default is false
+//                passphrase = properties.getProperty("bintray.gpg.password") //Optional. The passphrase for GPG signing'
+            }
+        }
+    }
+}
