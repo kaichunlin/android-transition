@@ -24,7 +24,12 @@ public class SlidingUpPanelLayoutAdapter extends MenuBaseAdapter implements Slid
         };
     }
 
-    public void setListener(SlidingUpPanelLayout.PanelSlideListener listener) {
+    /**
+     * Sets a listener that can provide further customization, the respective calls to the listener is performed after the adapter has completed its own processing.
+     *
+     * @param listener
+     */
+    public void setPanelSlideListener(SlidingUpPanelLayout.PanelSlideListener listener) {
         mListener = listener;
     }
 
