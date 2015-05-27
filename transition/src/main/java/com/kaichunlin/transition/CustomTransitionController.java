@@ -2,7 +2,7 @@ package com.kaichunlin.transition;
 
 /**
  * Allows customized transition behavior by implementing {@link #updateProgress(float)}
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/28.
  */
 public abstract class CustomTransitionController extends BaseTransitionController implements Cloneable {

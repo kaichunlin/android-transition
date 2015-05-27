@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * Provides implementation shared by most adapters
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 public abstract class BaseAdapter implements ITransitionAdapter {

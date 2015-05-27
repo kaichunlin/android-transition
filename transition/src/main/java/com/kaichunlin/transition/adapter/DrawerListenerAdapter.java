@@ -9,7 +9,7 @@ import com.kaichunlin.transition.ITransition;
 
 /**
  * Adapter for DrawerListener, the transition range goes from 0.0f to 1.0f, where 0.0f is the closed state and 1.0f is the opened state.
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/14.
  */
 public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayout.DrawerListener {

@@ -5,7 +5,7 @@ import android.view.animation.Interpolator;
 
 /**
  * Provides common implementations for all transitions.
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 abstract class BaseTransition<T extends BaseTransition, S extends BaseTransition.Setup> implements ITransition<S> {

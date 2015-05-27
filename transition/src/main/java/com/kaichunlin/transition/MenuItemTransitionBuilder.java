@@ -11,7 +11,7 @@ import com.nineoldandroids.animation.PropertyValuesHolder;
 
 /**
  * Allows the easy creation of {@link MenuItemTransition}
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/23.
  */
 public class MenuItemTransitionBuilder extends BaseTransitionBuilder<MenuItemTransitionBuilder, MenuItemTransition> implements MenuItemTransition.Setup {

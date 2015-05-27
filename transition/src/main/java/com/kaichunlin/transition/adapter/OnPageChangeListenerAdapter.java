@@ -18,7 +18,7 @@ import java.util.WeakHashMap;
 
 /**
  * Adapter for PageView
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPager.OnPageChangeListener, ViewPager.PageTransformer {

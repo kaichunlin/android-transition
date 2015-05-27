@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * Provides transition support to a MenuItem
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuItemTransition.Setup> {

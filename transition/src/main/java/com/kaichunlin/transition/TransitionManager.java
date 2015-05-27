@@ -13,7 +13,7 @@ import java.util.Set;
 
 /**
  * Manages the transition state of a set of {@link ITransitionController}
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/14.
  */
 public class TransitionManager implements /*TimeAnimator.TimeListener,*/ Cloneable {

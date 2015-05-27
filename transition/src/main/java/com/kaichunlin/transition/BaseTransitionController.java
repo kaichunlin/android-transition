@@ -7,7 +7,7 @@ import com.kaichunlin.transition.util.TransitionStateHolder;
 
 /**
  * Base implementation for ITransitionController
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/28.
  */
 public abstract class BaseTransitionController implements ITransitionController {

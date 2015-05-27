@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Useful utility methods for manipulating Views
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 public class ViewUtil {

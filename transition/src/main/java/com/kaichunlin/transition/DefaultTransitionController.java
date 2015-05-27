@@ -7,10 +7,10 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ValueAnimator;
 
 /**
- * {@link com.nineoldandroids.animation.ObjectAnimator} is used to provide required transition behavior.
- * <p/>
+ * NineOldAndroids's ObjectAnimator is used to provide required transition behavior.
+ * <p>
  * TODO may be possible to switch to use NineOldDroid's ViewPropertyAnimator for better performance
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/16.
  */
 public class DefaultTransitionController extends BaseTransitionController implements Cloneable {

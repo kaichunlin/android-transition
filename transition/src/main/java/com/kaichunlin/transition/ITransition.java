@@ -5,7 +5,7 @@ import android.view.animation.Interpolator;
 
 /**
  * Represent the operations that should be performed with the given progress, usually performed on a view.
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 public interface ITransition<S extends BaseTransition.Setup> extends Cloneable {

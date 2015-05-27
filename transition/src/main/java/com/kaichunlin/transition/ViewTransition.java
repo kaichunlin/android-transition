@@ -7,7 +7,7 @@ import java.util.WeakHashMap;
 
 /**
  * Provides transitions effects to all views other than one controlled by {@link android.view.MenuItem}
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 public class ViewTransition extends BaseTransition<ViewTransition, ViewTransition.Setup> {

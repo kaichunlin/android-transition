@@ -5,7 +5,7 @@ import android.view.animation.Interpolator;
 
 /**
  * Provides the actual implementation for a transition
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/28.
  */
 public interface ITransitionController extends Cloneable {

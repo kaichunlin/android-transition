@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * Used to help trace the state of transition for debugging purpose
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/5/3.
  */
 public class TransitionStateHolder {

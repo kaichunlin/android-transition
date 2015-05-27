@@ -7,7 +7,7 @@ import com.kaichunlin.transition.MenuItemTransition;
 
 /**
  * Provides default support for handling MenuItem transitions
- * <p/>
+ * <p>
  * Created by Kai on 2015/5/10.
  */
 public abstract class DefaultMenuOptionHandler {

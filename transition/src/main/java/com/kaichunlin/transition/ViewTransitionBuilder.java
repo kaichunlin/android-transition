@@ -18,7 +18,7 @@ import java.util.Map;
 
 /**
  * Allows the easy creation of {@link ViewTransition}
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/23.
  */
 public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionBuilder, ViewTransition> implements ViewTransition.Setup {

@@ -2,7 +2,7 @@ package com.kaichunlin.transition;
 
 /**
  * Configuration that affects the whole framework
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/28.
  */
 public class TransitionConfig {

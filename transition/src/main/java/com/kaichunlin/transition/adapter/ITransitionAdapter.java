@@ -5,7 +5,7 @@ import com.kaichunlin.transition.ITransition;
 
 /**
  * Allows the adaption of different UI interactive components (e.g. Drawer) to support transition effects
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/5/20.
  */
 public interface ITransitionAdapter {

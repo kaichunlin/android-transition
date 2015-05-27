@@ -4,7 +4,7 @@ import com.kaichunlin.transition.MenuItemTransition;
 
 /**
  * Stores the menu ID-MenuItemTransition pair
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/5/10.
  */
 public class MenuOptionConfiguration {

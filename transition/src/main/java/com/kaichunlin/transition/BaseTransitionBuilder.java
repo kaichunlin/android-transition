@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * Provides foundation to build classes that allows easy creation of ITransition
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/23.
  */
 public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U extends ITransition> implements Cloneable {
@@ -128,7 +128,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
     }
 
     /**
-     * Changes the rotation (rotationX & rotationY) value from the target view's current value to the end value
+     * Changes the rotation (rotationX and rotationY) value from the target view's current value to the end value
      *
      * @param start
      * @param end
@@ -308,7 +308,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
     }
 
     /**
-     * Changes the scale (scaleX & scaleY) value from the target view's current value to the end value
+     * Changes the scale (scaleX and scaleY) value from the target view's current value to the end value
      *
      * @param start
      * @param end
