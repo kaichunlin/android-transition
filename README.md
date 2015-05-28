@@ -40,6 +40,29 @@ Features
   * [ObeservableScrollView](https://github.com/ksoichiro/Android-ObservableScrollView) (work in progress)
   * Write one yourself!
 
+Integration
+--------
+The simplest way to integrate Android-Transition is to grab them from Maven Central or jCenter. On Android Studio, add the code below to Gradle dependencies:
+
+    compile 'com.github.kaichunlin.transition:core:0.8.0'
+
+Adapters that adapts to UI components not found in Android framework or Android Support Library are provided as their own libraries, the table below is the list of libraries:
+
+| Library       | Function           | Description in build.gradle  |
+|:-------------|:-------------|:-----|
+| core | Provides core transition function and adapters | com.github.kaichunlin.transition:core:0.8.0 |
+| slidinguppanel | [AndroidSlidingUpPanel](https://github.com/umano/AndroidSlidingUpPanel) Adapter | com.github.kaichunlin.transition:slidinguppanel:0.8.0|
+
+As an example, if an app requires both the core & slidinguppanel libraries, then build.gradle will look like below:
+
+   dependencies {
+     //other dependencies
+     ...
+
+     compile 'com.github.kaichunlin.transition:core:0.8.0'
+     compile 'com.github.kaichunlin.transition:slidinguppanel:0.8.0'
+   }
+
 Usage
 --------
 The app/ folder is a sample app containing dozens of examples.
