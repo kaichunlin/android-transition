@@ -55,13 +55,13 @@ Adapters that adapts to UI components not found in Android framework or Android 
 
 As an example, if an app requires both the core & slidinguppanel libraries, then build.gradle will look like below:
 
-   dependencies {
-     //other dependencies
-     ...
+     dependencies {
+       //other dependencies
+       ...
 
-     compile 'com.github.kaichunlin.transition:core:0.8.0'
-     compile 'com.github.kaichunlin.transition:slidinguppanel:0.8.0'
-   }
+       compile 'com.github.kaichunlin.transition:core:0.8.0'
+       compile 'com.github.kaichunlin.transition:slidinguppanel:0.8.0'
+     }
 
 Usage
 --------
