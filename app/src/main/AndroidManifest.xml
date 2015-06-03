@@ -32,9 +32,6 @@
             android:name="com.kaichunlin.transition.app.SlidingUpPanelActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.kaichunlin.transition.app.FadingActionBarActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.kaichunlin.transition.app.SlidingUpPanelRotateActivity"
             android:screenOrientation="portrait" />
         <activity

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Android Transition</string>
+    <string name="app_name">Transition</string>
 
     <string name="title_view_pager">View Pager (In Progress)</string>
     <string name="title_slideing_up_panel">Sliding Up Panel</string>
