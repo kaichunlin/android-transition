@@ -76,7 +76,7 @@ public class TransitionStateHolder {
     /**
      * The state of the transition for a given moment
      */
-    public class TransitionState {
+    public static class TransitionState {
         private String subId;
         private Object mClass;
         private String message;

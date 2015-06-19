@@ -29,7 +29,7 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
     /**
      * Keeps the left fragment in the center of the screen
      */
-    public static CustomTransitionController LEFT_IN_PLACE = new CustomTransitionController() {
+    public static final CustomTransitionController LEFT_IN_PLACE = new CustomTransitionController() {
         float oldX;
 
         @Override
@@ -54,7 +54,7 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
     /**
      * Keeps the right fragment in the center of the screen
      */
-    public static CustomTransitionController RIGHT_IN_PLACE = new CustomTransitionController() {
+    public static final CustomTransitionController RIGHT_IN_PLACE = new CustomTransitionController() {
         float oldX;
 
         @Override
@@ -228,11 +228,8 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
 
     private static class PageHolder {
         final Map<String, ITransition> mAnimationList = new HashMap<>();
-        View mView;
-        boolean mShouldStart = true;
 
         public PageHolder(View page, Map<String, ITransition> animationList) {
-            mView = page;
             for (ITransition trans : animationList.values()) {
                 trans = trans.clone();
                 trans.setTarget(page);
