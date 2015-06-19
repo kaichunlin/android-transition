@@ -121,7 +121,7 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
         //since adapter(ITransitionAdapter) is set, simply call build() would add the resultant ViewTransition to the adapter
         ViewTransitionBuilder baseBuilder = ViewTransitionBuilder.transit(mToolbar).interpolator(mInterpolator).adapter(mSlidingUpPanelLayoutAdapter);
         ViewTransitionBuilder builder;
-        ((ImageView) findViewById(R.id.content_bg)).getDrawable().setColorFilter(null);
+        ((ImageView) findViewById(R.id.content_bg)).setColorFilter(null);
         boolean setHalfHeight = false;
         switch (v.getId()) {
             //TODO visual artifact on Android 5.1 when rotationX is ~45, why???
@@ -169,7 +169,7 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
                     public void updateProgress(View target, float progress) {
                         matrix.setSaturation(1 - progress);
                         ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-                        ((ImageView) findViewById(R.id.content_bg)).getDrawable().setColorFilter(filter);
+                        ((ImageView) findViewById(R.id.content_bg)).setColorFilter(filter);
                     }
                 }).build();
                 setHalfHeight = true;
