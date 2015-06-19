@@ -56,7 +56,7 @@ Adapters that adapts to UI components not found in Android framework or Android 
 
 | Library       | Function           | Description in build.gradle  |
 |:-------------|:-------------|:-----|
-| core | Provides core transition function and adapters | com.github.kaichunlin.transition:core:0.8.0 |
+| core | Provides core transition function and adapters | com.github.kaichunlin.transition:core:0.8.1 |
 | slidinguppanel | [AndroidSlidingUpPanel](https://github.com/umano/AndroidSlidingUpPanel) Adapter | com.github.kaichunlin.transition:slidinguppanel:0.8.0|
 
 As an example, if an app requires both the core & slidinguppanel libraries, then build.gradle will look like below:
@@ -65,7 +65,7 @@ As an example, if an app requires both the core & slidinguppanel libraries, then
        //other dependencies
        ...
 
-       compile 'com.github.kaichunlin.transition:core:0.8.0'
+       compile 'com.github.kaichunlin.transition:core:0.8.1'
        compile 'com.github.kaichunlin.transition:slidinguppanel:0.8.0'
      }
 
