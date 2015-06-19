@@ -10,12 +10,13 @@ import android.widget.ImageView;
 import com.kaichunlin.transition.util.TransitionStateHolder;
 import com.kaichunlin.transition.util.ViewUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Provides transition support to a MenuItem
- * <p>
+ * <p/>
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuItemTransition.Setup> {
@@ -24,7 +25,7 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
     private boolean mStarted;
     private boolean mSetVisibleOnStartTransition;
     private boolean mInvalidateOptionOnStopTransition;
-    private Activity mActivity;
+    private WeakReference<Activity> mActivityRef;
 
     public MenuItemTransition(Toolbar toolbar) {
         this(null, toolbar, null);
@@ -45,7 +46,6 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
     }
 
     /**
-     *
      * @param setVisibleOnStartAnimation should the visibility of the target MenuItem be forcibly set when {@link #startTransition()} is called
      * @return
      */
@@ -71,7 +71,7 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
         }
         if (mTransittingMenuItems.size() == 0) {
             mTransittingMenuItems.clear();
-            List<MenuItem> list = ViewUtil.getVisibleMenuItem(mToolbar);
+            List<MenuItem> list = ViewUtil.getVisibleMenuItemList(mToolbar);
             for (int i = 0; i < list.size(); i++) {
                 MenuItem menuItem = list.get(i);
                 TransitionManager transitionManager = new TransitionManager(getId());
@@ -114,19 +114,25 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
         for (TransitionManager ani : mTransittingMenuItems) {
             ani.end();
         }
-        List<MenuItem> list = ViewUtil.getVisibleMenuItem(mToolbar);
+        List<MenuItem> list = ViewUtil.getVisibleMenuItemList(mToolbar);
         for (MenuItem menuItem : list) {
             menuItem.setActionView(null);
         }
         mTransittingMenuItems.clear();
         if (mInvalidateOptionOnStopTransition) {
-            mActivity.invalidateOptionsMenu();
+            Activity activity = getActivity();
+            if (activity != null) {
+                activity.invalidateOptionsMenu();
+            }
         }
         mStarted = false;
     }
 
+    private Activity getActivity() {
+        return mActivityRef == null ? null : mActivityRef.get();
+    }
+
     /**
-     *
      * @return should {@link Activity#invalidateOptionsMenu()} be called when transition stops
      */
     public boolean isInvalidateOptionOnStopTransition() {
@@ -134,14 +140,14 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
     }
 
     /**
-     * Sets whether or not to call {@link Activity#invalidateOptionsMenu()} after a transition stops
+     * Sets whether or not to call {@link Activity#invalidateOptionsMenu()} after a transition stops.
      *
-     * @param activity Activity that should have its {@link Activity#invalidateOptionsMenu()} method called, or null if invalidateOptionOnStopAnimation parameter is false
+     * @param activity                        Activity that should have its {@link Activity#invalidateOptionsMenu()} method called, or null if invalidateOptionOnStopAnimation parameter is false
      * @param invalidateOptionOnStopAnimation
      * @return
      */
     public MenuItemTransition setInvalidateOptionOnStopTransition(Activity activity, boolean invalidateOptionOnStopAnimation) {
-        this.mActivity = activity;
+        this.mActivityRef = new WeakReference<>(activity);
         this.mInvalidateOptionOnStopTransition = invalidateOptionOnStopAnimation;
         return self();
     }

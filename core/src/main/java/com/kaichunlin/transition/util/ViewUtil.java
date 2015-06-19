@@ -23,7 +23,7 @@ public class ViewUtil {
      * @param toolbar
      * @return the list of visible MenuItems
      */
-    public static List<MenuItem> getVisibleMenuItem(Toolbar toolbar) {
+    public static List<MenuItem> getVisibleMenuItemList(Toolbar toolbar) {
         List<MenuItem> list = new ArrayList<>();
         for (int i = 0; i < toolbar.getChildCount(); i++) {
             final View v = toolbar.getChildAt(i);
