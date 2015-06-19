@@ -1,7 +1,13 @@
 # android-transition
-=================
+
 Android-Transition allows the easy creation of view transitions that reacts to user inputs. The library is designed to be general enough such that the same transition can be applied to
 differnt UI components like [Drawer](https://developer.android.com/reference/android/support/v4/widget/DrawerLayout.html), [SlidingUpPanel](https://github.com/umano/AndroidSlidingUpPanel), [ViewPager](https://developer.android.com/reference/android/support/v4/view/ViewPager.html), [ObservableScrollView](https://github.com/ksoichiro/Android-ObservableScrollView) (work in progress), etc., as long as appropriate adapter is used.
+
+## Changelog
+
+Core module has been updated to 0.8.1 to fix incorrect position on some devices when transiting MenuItem. On Android Studio update Gradle dependency to:
+
+    compile 'com.github.kaichunlin.transition:core:0.8.1'
 
 
 ### Download from Google Play
@@ -44,7 +50,7 @@ Integration
 --------
 The simplest way to integrate Android-Transition is to grab them from Maven Central or jCenter. On Android Studio, add the code below to Gradle dependencies:
 
-    compile 'com.github.kaichunlin.transition:core:0.8.0'
+    compile 'com.github.kaichunlin.transition:core:0.8.1'
 
 Adapters that adapts to UI components not found in Android framework or Android Support Library are provided as their own libraries, the table below is the list of libraries:
 
