@@ -16,7 +16,7 @@ import java.util.Map;
 public class ObservableScrollViewCallbacksAdapter extends BaseAdapter implements ObservableScrollViewCallbacks {
 
     private enum Direction {
-        UNKONW,
+        UNKOWN,
         UP,
         DOWN
     }
@@ -26,7 +26,7 @@ public class ObservableScrollViewCallbacksAdapter extends BaseAdapter implements
     private int mStartY;
     private int mLastScrollY;
     private boolean mResetStartLocationOnChangeDirection;
-    private Direction mDirection = Direction.UNKONW;
+    private Direction mDirection = Direction.UNKOWN;
     private OnChangeDirectionListener mOnChangeDirectionListener;
 
     @Override
@@ -69,10 +69,10 @@ public class ObservableScrollViewCallbacksAdapter extends BaseAdapter implements
 
     /**
      *
-     * @param resetingStartLocationOnChangeDirection
+     * @param resetStartLocationOnChangeDirection
      */
-    public void setResetingStartLocationOnChangeDirection(boolean resetingStartLocationOnChangeDirection) {
-        mResetStartLocationOnChangeDirection = resetingStartLocationOnChangeDirection;
+    public void setResetStartLocationOnChangeDirection(boolean resetStartLocationOnChangeDirection) {
+        mResetStartLocationOnChangeDirection = resetStartLocationOnChangeDirection;
     }
 
     @Override
