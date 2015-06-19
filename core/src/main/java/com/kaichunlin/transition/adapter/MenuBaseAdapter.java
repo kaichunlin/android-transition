@@ -5,7 +5,7 @@ import android.view.Menu;
 
 /**
  * Adds support for {@link android.view.MenuItem} transition
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/5/11.
  */
 public abstract class MenuBaseAdapter extends BaseAdapter {

@@ -8,7 +8,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
  * Adapter for SlidingUpPanelLayout, the transition range goes from 0.0f to 1.0f, where 0.0f is the collapsed state and 1.0f is the expanded state.
- * <p/>
+ * <p>
  * Created by Kai-Chun Lin on 2015/4/14.
  */
 public class SlidingUpPanelLayoutAdapter extends MenuBaseAdapter implements SlidingUpPanelLayout.PanelSlideListener {
