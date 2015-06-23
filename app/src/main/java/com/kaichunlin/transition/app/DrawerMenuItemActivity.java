@@ -50,13 +50,16 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
         );
 
         //set up the transition
+        //Creates a shared configuration that: applies alpha, the transition effect is applied in a cascading manner
+        // (v.s. simultaneously), MenuItem will reset to enabled when transiting, and invalidates menu on transition
+        // completion
         MenuItemTransitionBuilder builder = MenuItemTransitionBuilder.transit("Flip", toolbar).alpha(1f, 0.5f).scaleX(1f, 0f).translationX(0, 30).cascade(0.3f).visibleOnStartAnimation(true).invalidateOptionOnStopTransition(this, true);
         mFlipOpen = builder.build();
         mFlipClose = builder.reverse().translationX(0, -30).build();
         //overrides some transition while reusing the rest, so clone it
         mShrinkClose = builder.id("Shrink").scale(1f, 0f).build();
         mShrinkOpen = builder.reverse().translationX(0, 30).build();
-        builder=MenuItemTransitionBuilder.transit("Rotate", toolbar).rotation(0f, 180f).scale(1f, 0f).cascade(0.15f).visibleOnStartAnimation(true).invalidateOptionOnStopTransition(this, true);
+        builder = MenuItemTransitionBuilder.transit("Rotate", toolbar).rotation(0f, 180f).scale(1f, 0f).cascade(0.15f).visibleOnStartAnimation(true).invalidateOptionOnStopTransition(this, true);
         mRotateOpen = builder.build();
         mRotateClose = builder.reverse().build();
 
