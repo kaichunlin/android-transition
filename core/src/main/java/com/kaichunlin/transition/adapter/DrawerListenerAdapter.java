@@ -25,12 +25,6 @@ public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayo
     public DrawerListenerAdapter(ActionBarDrawerToggle mDrawerToggle, int mDrawerId) {
         this.mDrawerToggle = mDrawerToggle;
         this.mDrawerId = mDrawerId;
-        mMenuHandler = new DefaultMenuOptionHandler(this) {
-            @Override
-            boolean isOpened(Activity activity) {
-                return DrawerListenerAdapter.this.isOpened(activity);
-            }
-        };
     }
 
     /**
@@ -125,5 +119,15 @@ public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayo
      */
     public void setDrawerId(int drawerId) {
         mDrawerId = drawerId;
+    }
+
+    @Override
+    protected MenuOptionHandler createMenuHandler() {
+        return new MenuOptionHandler(this, new MenuOptionHandler.AdapterState() {
+            @Override
+            public boolean isOpened(Activity activity) {
+                return DrawerListenerAdapter.this.isOpened(activity);
+            }
+        });
     }
 }

@@ -15,15 +15,6 @@ public class SlidingUpPanelLayoutAdapter extends MenuBaseAdapter implements Slid
     private boolean mIsExpanded;
     private SlidingUpPanelLayout.PanelSlideListener mListener;
 
-    public SlidingUpPanelLayoutAdapter() {
-        mMenuHandler = new DefaultMenuOptionHandler(this) {
-            @Override
-            boolean isOpened(Activity activity) {
-                return mIsExpanded;
-            }
-        };
-    }
-
     /**
      * Sets a listener that can provide further customization, the respective calls to the listener is performed after the adapter has completed its own processing.
      *
@@ -86,5 +77,15 @@ public class SlidingUpPanelLayoutAdapter extends MenuBaseAdapter implements Slid
         if (mListener != null) {
             mListener.onPanelHidden(panel);
         }
+    }
+
+    @Override
+    protected MenuOptionHandler createMenuHandler() {
+        return new MenuOptionHandler(this, new MenuOptionHandler.AdapterState() {
+            @Override
+            public boolean isOpened(Activity activity) {
+                return mIsExpanded;
+            }
+        });
     }
 }

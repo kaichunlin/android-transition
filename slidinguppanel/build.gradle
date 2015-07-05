@@ -27,5 +27,5 @@ dependencies {
 }
 
 // This is the library version used when deploying the artifact
-version = "0.8.0"
+version = "0.8.2"
 apply from: '../upload.gradle';

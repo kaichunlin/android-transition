@@ -10,13 +10,19 @@ import com.kaichunlin.transition.MenuItemTransition;
  * <p>
  * Created by Kai on 2015/5/10.
  */
-public abstract class DefaultMenuOptionHandler {
+public class MenuOptionHandler {
     private final ITransitionAdapter mAdapter;
+    private final AdapterState mAdapterState;
     private MenuOptionConfiguration mOpenConfig;
     private MenuOptionConfiguration mCloseConfig;
 
-    public DefaultMenuOptionHandler(ITransitionAdapter adapter) {
+    public MenuOptionHandler(ITransitionAdapter adapter, AdapterState adapterState) {
         mAdapter = adapter;
+        mAdapterState = adapterState;
+    }
+
+    public AdapterState getAdapterState() {
+        return mAdapterState;
     }
 
     /**
@@ -25,7 +31,9 @@ public abstract class DefaultMenuOptionHandler {
      * @param activity
      * @return
      */
-    abstract boolean isOpened(Activity activity);
+    public boolean isOpened(Activity activity) {
+        return mAdapterState.isOpened(activity);
+    }
 
     /**
      * Syncs current state of Menu with transitions
@@ -34,7 +42,11 @@ public abstract class DefaultMenuOptionHandler {
      * @param menu
      */
     public void onCreateOptionsMenu(Activity activity, Menu menu) {
-        if (isOpened(activity)) {
+        onCreateOptionsMenu(activity, menu, mAdapterState);
+    }
+
+    protected void onCreateOptionsMenu(Activity activity, Menu menu, AdapterState adapterState) {
+        if (adapterState.isOpened(activity)) {
             boolean hasOpen = mOpenConfig != null;
             if (hasOpen && mOpenConfig.getMenuId() > 0) {
                 activity.getMenuInflater().inflate(mOpenConfig.getMenuId(), menu);
@@ -132,5 +144,9 @@ public abstract class DefaultMenuOptionHandler {
      */
     public void clearOptions() {
         setupOptions(null, null, null);
+    }
+
+    public interface AdapterState {
+        boolean isOpened(Activity activity);
     }
 }
