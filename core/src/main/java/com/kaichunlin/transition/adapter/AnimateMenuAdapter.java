@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.animation.LinearInterpolator;
 
 /**
- * This adapter allows the traditional animate method of creating both animations and transitions.
+ * This adapter integrates traditional animations using the same methods and logic as the rest of the framework.
  * <p>
  * TODO animation state callback
  * <p>
@@ -29,6 +29,11 @@ public class AnimateMenuAdapter extends MenuBaseAdapter implements ValueAnimator
         mAdapter = null;
     }
 
+    /**
+     * Wraps an existing MenuBaseAdapter to reuse its onCreateOptionsMenu(...) logic and its transition effects
+     *
+     * @param adapter
+     */
     public AnimateMenuAdapter(MenuBaseAdapter adapter) {
         mAdapter = adapter;
     }
@@ -42,14 +47,14 @@ public class AnimateMenuAdapter extends MenuBaseAdapter implements ValueAnimator
     }
 
     /**
-     *
+     * Starts the animation with the default duration (300 ms)
      */
     public void startAnimation() {
         startAnimation(mDuration);
     }
 
     /**
-     * Starts the animation
+     * Starts the animation with the specified duration
      *
      * @param duration
      */
