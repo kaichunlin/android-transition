@@ -5,9 +5,11 @@ differnt UI components like [Drawer](https://developer.android.com/reference/and
 
 ## Changelog
 
-Core module has been updated to 0.8.1 to fix incorrect position on some devices when transiting MenuItem. On Android Studio update Gradle dependency to:
+[AnimateMenuAdapter]
+(https://github.com/kaichunlin/android-transition/blob/d4bb037a6ffe2aa3f6f45a692f28b43d1a7fdcbd/core/src/main/java/com/kaichunlin/transition/adapter/AnimateMenuAdapter.java) is added that can animate MenuItems. Core and SlidingUpPanel module have been updated to 0.8.2 to support this addition. On Android Studio update Gradle dependency to:
 
-    compile 'com.github.kaichunlin.transition:core:0.8.1'
+    compile 'com.github.kaichunlin.transition:core:0.8.2'
+    compile 'com.github.kaichunlin.transition:slidinguppanel:0.8.2'
 
 
 ### Download from Google Play
@@ -50,14 +52,14 @@ Integration
 --------
 The simplest way to integrate Android-Transition is to grab them from Maven Central or jCenter. On Android Studio, add the code below to Gradle dependencies:
 
-    compile 'com.github.kaichunlin.transition:core:0.8.1'
+    compile 'com.github.kaichunlin.transition:core:0.8.2'
 
 Adapters that adapts to UI components not found in Android framework or Android Support Library are provided as their own libraries, the table below is the list of libraries:
 
 | Library       | Function           | Description in build.gradle  |
 |:-------------|:-------------|:-----|
-| core | Provides core transition function and adapters | com.github.kaichunlin.transition:core:0.8.1 |
-| slidinguppanel | [AndroidSlidingUpPanel](https://github.com/umano/AndroidSlidingUpPanel) Adapter | com.github.kaichunlin.transition:slidinguppanel:0.8.0|
+| core | Provides core transition function and adapters | com.github.kaichunlin.transition:core:0.8.2 |
+| slidinguppanel | [AndroidSlidingUpPanel](https://github.com/umano/AndroidSlidingUpPanel) Adapter | com.github.kaichunlin.transition:slidinguppanel:0.8.2|
 
 As an example, if an app requires both the core & slidinguppanel libraries, then build.gradle will look like below:
 
@@ -65,8 +67,8 @@ As an example, if an app requires both the core & slidinguppanel libraries, then
        //other dependencies
        ...
 
-       compile 'com.github.kaichunlin.transition:core:0.8.1'
-       compile 'com.github.kaichunlin.transition:slidinguppanel:0.8.0'
+       compile 'com.github.kaichunlin.transition:core:0.8.2'
+       compile 'com.github.kaichunlin.transition:slidinguppanel:0.8.2'
      }
 
 Usage
