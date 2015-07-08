@@ -1,6 +1,10 @@
 package com.kaichunlin.transition;
 
 import android.app.Activity;
+import android.support.annotation.CheckResult;
+import android.support.annotation.FloatRange;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.animation.Interpolator;
@@ -21,7 +25,7 @@ public class MenuItemTransitionBuilder extends BaseTransitionBuilder<MenuItemTra
      * @param toolbar
      * @return
      */
-    public static MenuItemTransitionBuilder transit(Toolbar toolbar) {
+    public static MenuItemTransitionBuilder transit(@NonNull Toolbar toolbar) {
         return new MenuItemTransitionBuilder(toolbar);
     }
 
@@ -31,7 +35,7 @@ public class MenuItemTransitionBuilder extends BaseTransitionBuilder<MenuItemTra
      * @param toolbar
      * @return
      */
-    public static MenuItemTransitionBuilder transit(String id, Toolbar toolbar) {
+    public static MenuItemTransitionBuilder transit(String id, @NonNull Toolbar toolbar) {
         return new MenuItemTransitionBuilder(id, toolbar);
     }
 
@@ -41,23 +45,23 @@ public class MenuItemTransitionBuilder extends BaseTransitionBuilder<MenuItemTra
     private Activity mActivity;
     private boolean mInvalidateOptionOnStopAnimation;
 
-    private MenuItemTransitionBuilder(Toolbar toolbar) {
+    private MenuItemTransitionBuilder(@NonNull Toolbar toolbar) {
         mToolbar = toolbar;
     }
 
-    private MenuItemTransitionBuilder(String id, Toolbar toolbar) {
+    private MenuItemTransitionBuilder(String id, @NonNull Toolbar toolbar) {
         mId = id;
         mToolbar = toolbar;
     }
 
     @Override
-    public MenuItemTransitionBuilder alpha(float start, float end) {
+    public MenuItemTransitionBuilder alpha(@FloatRange(from = 0.0, to=1.0) float start, @FloatRange(from = 0.0, to=1.0) float end) {
         transitFloat(ALPHA, start, end);
         return self();
     }
 
     @Override
-    public MenuItemTransitionBuilder alpha(float end) {
+    public MenuItemTransitionBuilder alpha(@FloatRange(from = 0.0, to=1.0) float end) {
         return alpha(1f, end);
     }
 
@@ -95,36 +99,36 @@ public class MenuItemTransitionBuilder extends BaseTransitionBuilder<MenuItemTra
     }
 
     @Override
-    public MenuItemTransitionBuilder scaleX(float start, float end) {
+    public MenuItemTransitionBuilder scaleX(@FloatRange(from = 0.0, to=1.0) float start,@FloatRange(from = 0.0, to=1.0)  float end) {
         transitFloat(SCALE_X, start, end);
         return self();
     }
 
     @Override
-    public MenuItemTransitionBuilder scaleX(float end) {
+    public MenuItemTransitionBuilder scaleX(@FloatRange(from = 0.0, to=1.0) float end) {
         return scaleX(0f, end);
     }
 
     @Override
-    public MenuItemTransitionBuilder scaleY(float start, float end) {
+    public MenuItemTransitionBuilder scaleY(@FloatRange(from = 0.0, to=1.0) float start, @FloatRange(from = 0.0, to=1.0) float end) {
         transitFloat(SCALE_Y, start, end);
         return self();
     }
 
     @Override
-    public MenuItemTransitionBuilder scaleY(float end) {
+    public MenuItemTransitionBuilder scaleY(@FloatRange(from = 0.0, to=1.0) float end) {
         return scaleY(0f, end);
     }
 
     @Override
-    public MenuItemTransitionBuilder scale(float start, float end) {
+    public MenuItemTransitionBuilder scale(@FloatRange(from = 0.0, to=1.0) float start, @FloatRange(from = 0.0, to=1.0) float end) {
         transitFloat(SCALE_X, start, end);
         transitFloat(SCALE_Y, start, end);
         return self();
     }
 
     @Override
-    public MenuItemTransitionBuilder scale(float end) {
+    public MenuItemTransitionBuilder scale(@FloatRange(from = 0.0, to=1.0) float end) {
         return scale(0f, end);
     }
 
@@ -161,13 +165,13 @@ public class MenuItemTransitionBuilder extends BaseTransitionBuilder<MenuItemTra
     }
 
     @Override
-    public MenuItemTransitionBuilder transitFloat(String property, float start, float end) {
+    public MenuItemTransitionBuilder transitFloat(@NonNull String property, float start, float end) {
         mHolders.put(property, PropertyValuesHolder.ofFloat(property, start, end));
         return self();
     }
 
     @Override
-    public MenuItemTransitionBuilder transitInt(String property, int start, int end) {
+    public MenuItemTransitionBuilder transitInt(@NonNull String property, int start, int end) {
         mHolders.put(property, PropertyValuesHolder.ofInt(property, start, end));
         return self();
     }
@@ -178,7 +182,7 @@ public class MenuItemTransitionBuilder extends BaseTransitionBuilder<MenuItemTra
      * @param cascade
      * @return
      */
-    public MenuItemTransitionBuilder cascade(float cascade) {
+    public MenuItemTransitionBuilder cascade(@FloatRange(from=0.0) float cascade) {
         mCascade = cascade;
         return self();
     }
@@ -201,22 +205,23 @@ public class MenuItemTransitionBuilder extends BaseTransitionBuilder<MenuItemTra
      * @param invalidateOptionOnStopAnimation
      * @return
      */
-    public MenuItemTransitionBuilder invalidateOptionOnStopTransition(Activity activity, boolean invalidateOptionOnStopAnimation) {
+    public MenuItemTransitionBuilder invalidateOptionOnStopTransition(@NonNull Activity activity, boolean invalidateOptionOnStopAnimation) {
         mActivity = activity;
         mInvalidateOptionOnStopAnimation = invalidateOptionOnStopAnimation;
         return self();
     }
 
+    @CheckResult
     @Override
     public MenuItemTransitionBuilder clone() {
         MenuItemTransitionBuilder clone = (MenuItemTransitionBuilder) super.clone();
         return clone;
     }
 
+    @CheckResult(suggest = "The created MenuItemTransition should be utilized")
     @Override
     public MenuItemTransition createTransition() {
         MenuItemTransition vt = new MenuItemTransition(mId, mToolbar);
-        vt.setId(mId);
         //TODO clone() is required since the class implements ViewTransition.Setup and passes itself to ViewTransition, without clone ViewTransitions made from the same Builder will have their states intertwined
         vt.setSetup(clone());
         vt.setVisibleOnStartAnimation(mVisibleOnStartTransition);
@@ -232,7 +237,7 @@ public class MenuItemTransitionBuilder extends BaseTransitionBuilder<MenuItemTra
     }
 
     @Override
-    public void setupAnimation(MenuItem mMenuItem, TransitionManager transitionManager, int itemIndex, int menuCount) {
+    public void setupAnimation(@NonNull MenuItem mMenuItem, @NonNull TransitionManager transitionManager, @IntRange(from=0) int itemIndex, @IntRange(from=0) int menuCount) {
         for (DelayedEvaluator de : mDelayed) {
             de.evaluate(transitionManager.getTarget(), this);
         }

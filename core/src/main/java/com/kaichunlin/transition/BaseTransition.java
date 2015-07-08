@@ -1,5 +1,8 @@
 package com.kaichunlin.transition;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.animation.Interpolator;
 
@@ -16,12 +19,12 @@ abstract class BaseTransition<T extends BaseTransition, S extends BaseTransition
     View mTarget;
     boolean mUpdateStateAfterUpdateProgress;
 
-    public BaseTransition(String id) {
+    public BaseTransition(@Nullable String id) {
         this.mId = id;
     }
 
     @Override
-    public T setId(String id) {
+    public T setId(@Nullable String id) {
         mId = id;
         return self();
     }
@@ -32,7 +35,7 @@ abstract class BaseTransition<T extends BaseTransition, S extends BaseTransition
     }
 
     @Override
-    public T setSetup(S setup) {
+    public T setSetup(@NonNull S setup) {
         mSetup = setup;
         return self();
     }
@@ -52,7 +55,7 @@ abstract class BaseTransition<T extends BaseTransition, S extends BaseTransition
     }
 
     @Override
-    public void setTarget(View target) {
+    public void setTarget(@Nullable View target) {
         mTarget = target;
         invalidate();
     }
@@ -75,11 +78,12 @@ abstract class BaseTransition<T extends BaseTransition, S extends BaseTransition
     protected abstract T self();
 
     @Override
-    public T setInterpolator(Interpolator interpolator) {
+    public T setInterpolator(@Nullable Interpolator interpolator) {
         mInterpolator = interpolator;
         return self();
     }
 
+    @CheckResult
     @Override
     public BaseTransition clone() {
         BaseTransition newClone = null;

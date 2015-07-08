@@ -4,7 +4,11 @@ apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    buildToolsVersion '23.0.0 rc2'
+
+    lintOptions {
+        abortOnError false;
+    }
 
     defaultConfig {
         minSdkVersion 11
@@ -27,5 +31,5 @@ dependencies {
 }
 
 // This is the library version used when deploying the artifact
-version = "0.8.2"
+version = "0.8.3"
 apply from: '../upload.gradle';

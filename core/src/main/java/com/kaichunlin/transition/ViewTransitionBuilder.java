@@ -2,6 +2,12 @@ package com.kaichunlin.transition;
 
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.support.annotation.CheckResult;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.annotation.FloatRange;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -39,7 +45,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param view
      * @return
      */
-    public static ViewTransitionBuilder transit(View view) {
+    public static ViewTransitionBuilder transit(@Nullable View view) {
         return new ViewTransitionBuilder(view);
     }
 
@@ -51,7 +57,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     private ViewTransitionBuilder() {
     }
 
-    private ViewTransitionBuilder(View view) {
+    private ViewTransitionBuilder(@Nullable View view) {
         mView = view;
     }
 
@@ -59,7 +65,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param view the view the created {@link ViewTransition} should manipulate
      * @return
      */
-    public ViewTransitionBuilder target(View view) {
+    public ViewTransitionBuilder target(@Nullable View view) {
         mView = view;
         return self();
     }
@@ -70,13 +76,13 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param setup
      * @return
      */
-    public ViewTransitionBuilder addTransitionController(ITransitionController setup) {
+    public ViewTransitionBuilder addTransitionController(@NonNull ITransitionController setup) {
         mTransitionControllersList.add(setup);
         return self();
     }
 
     @Override
-    public ViewTransitionBuilder alpha(float end) {
+    public ViewTransitionBuilder alpha(@FloatRange(from = 0.0, to=1.0) float end) {
         return alpha(ViewHelper.getAlpha(mView), end);
     }
 
@@ -96,17 +102,17 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     }
 
     @Override
-    public ViewTransitionBuilder scaleX(float end) {
+    public ViewTransitionBuilder scaleX(@FloatRange(from = 0.0, to=1.0) float end) {
         return scaleX(ViewHelper.getScaleX(mView), end);
     }
 
     @Override
-    public ViewTransitionBuilder scaleY(float end) {
+    public ViewTransitionBuilder scaleY(@FloatRange(from = 0.0, to=1.0) float end) {
         return scaleY(ViewHelper.getScaleY(mView), end);
     }
 
     @Override
-    public ViewTransitionBuilder scale(float end) {
+    public ViewTransitionBuilder scale(@FloatRange(from = 0.0, to=1.0) float end) {
         return scaleX(ViewHelper.getScaleX(mView), end).scaleY(ViewHelper.getScaleY(mView), end);
     }
 
@@ -143,7 +149,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param percent
      * @return
      */
-    public ViewTransitionBuilder translationXAsFractionOfWidth(final View targetView, final float percent) {
+    public ViewTransitionBuilder translationXAsFractionOfWidth(@NonNull final View targetView, final float percent) {
         return translationX(targetView.getWidth() * percent);
     }
 
@@ -152,7 +158,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param percent
      * @return
      */
-    public ViewTransitionBuilder delayTranslationXAsFractionOfWidth(final View targetView, final float percent) {
+    public ViewTransitionBuilder delayTranslationXAsFractionOfWidth(@NonNull final View targetView, final float percent) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
             public void evaluate(View view, BaseTransitionBuilder builder) {
@@ -195,7 +201,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param percent
      * @return
      */
-    public ViewTransitionBuilder translationYAsFractionOfHeight(final View targetView, final float percent) {
+    public ViewTransitionBuilder translationYAsFractionOfHeight(@NonNull final View targetView, final float percent) {
         return translationY(targetView.getHeight() * percent);
     }
 
@@ -204,7 +210,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param percent
      * @return
      */
-    public ViewTransitionBuilder delayTranslationYAsFractionOfHeight(final View targetView, final float percent) {
+    public ViewTransitionBuilder delayTranslationYAsFractionOfHeight(@NonNull final View targetView, final float percent) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
             public void evaluate(View view, BaseTransitionBuilder builder) {
@@ -224,6 +230,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
         return y(ViewHelper.getY(mView), end);
     }
 
+    @CheckResult
     @Override
     public ViewTransitionBuilder clone() {
         ViewTransitionBuilder newCopy = (ViewTransitionBuilder) super.clone();
@@ -250,7 +257,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param setup
      * @return
      */
-    public ViewTransitionBuilder addSetup(ViewTransition.Setup setup) {
+    public ViewTransitionBuilder addSetup(@NonNull ViewTransition.Setup setup) {
         mSetupList.add(setup);
         return self();
     }
@@ -261,7 +268,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param toColorId
      * @return
      */
-    public ViewTransitionBuilder backgroundColorResource(Resources res, int fromColorId, int toColorId) {
+    public ViewTransitionBuilder backgroundColorResource(@NonNull Resources res, @ColorRes int fromColorId, @ColorRes int toColorId) {
         return backgroundColor(res.getColor(fromColorId), res.getColor(toColorId));
     }
 
@@ -270,7 +277,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param toColor
      * @return
      */
-    public ViewTransitionBuilder backgroundColor(final int fromColor, final int toColor) {
+    public ViewTransitionBuilder backgroundColor(@ColorInt final int fromColor, @ColorInt final int toColor) {
         addSetup(new ViewTransition.Setup() {
             @Override
             public void setupAnimation(final TransitionManager transitionManager) {
@@ -289,7 +296,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param toColorId
      * @return
      */
-    public ViewTransitionBuilder backgroundColorResourceHSV(Resources res, int fromColorId, int toColorId) {
+    public ViewTransitionBuilder backgroundColorResourceHSV(@NonNull Resources res, @ColorRes int fromColorId, @ColorRes int toColorId) {
         return backgroundColorHSV(res.getColor(fromColorId), res.getColor(toColorId));
     }
 
@@ -298,7 +305,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param toColor
      * @return
      */
-    public ViewTransitionBuilder backgroundColorHSV(final int fromColor, final int toColor) {
+    public ViewTransitionBuilder backgroundColorHSV(@ColorInt final int fromColor, @ColorInt final int toColor) {
         addSetup(new ViewTransition.Setup() {
             @Override
             public void setupAnimation(final TransitionManager transitionManager) {
@@ -334,7 +341,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param vgt
      * @return
      */
-    public ViewTransitionBuilder transitViewGroup(ViewGroupTransition vgt) {
+    public ViewTransitionBuilder transitViewGroup(@NonNull ViewGroupTransition vgt) {
         ViewGroup vg = (ViewGroup) mView;
         int total = vg.getChildCount();
         View view;
@@ -352,11 +359,12 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @param adapter
      * @return
      */
-    public ViewTransitionBuilder adapter(ITransitionAdapter adapter) {
+    public ViewTransitionBuilder adapter(@Nullable ITransitionAdapter adapter) {
         mAdapter = adapter;
         return self();
     }
 
+    @CheckResult(suggest = "The created ViewTransition should be utilized")
     @Override
     public ViewTransition createTransition() {
         ViewTransition vt = new ViewTransition();
@@ -379,7 +387,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     }
 
     @Override
-    public void setupAnimation(TransitionManager transitionManager) {
+    public void setupAnimation(@NonNull TransitionManager transitionManager) {
         if (mView == null) {
             mView = transitionManager.getTarget();
         }

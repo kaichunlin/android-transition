@@ -1,5 +1,7 @@
 package com.kaichunlin.transition.adapter;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -76,45 +78,54 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
         }
     };
 
-    public static OnPageChangeListenerAdapter bind(ViewPager viewPager) {
+    @CheckResult
+    public static OnPageChangeListenerAdapter bind(@NonNull ViewPager viewPager) {
         return bind(viewPager, false);
     }
 
-    public static OnPageChangeListenerAdapter bind(ViewPager viewPager, boolean reverseDrawingOrder) {
+    @CheckResult
+    public static OnPageChangeListenerAdapter bind(@NonNull ViewPager viewPager, boolean reverseDrawingOrder) {
         OnPageChangeListenerAdapter adapter = new OnPageChangeListenerAdapter(viewPager);
         adapter.init(reverseDrawingOrder);
         return adapter;
     }
 
-    public static OnPageChangeListenerAdapter bindWithRotationYTransition(ViewPager viewPager) {
+    @CheckResult
+    public static OnPageChangeListenerAdapter bindWithRotationYTransition(@NonNull ViewPager viewPager) {
         return bindWithRotationYTransition(bind(viewPager));
     }
 
-    public static OnPageChangeListenerAdapter bindWithRotationYTransition(OnPageChangeListenerAdapter adapter) {
+    @CheckResult
+    public static OnPageChangeListenerAdapter bindWithRotationYTransition(@NonNull OnPageChangeListenerAdapter adapter) {
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER).rotationY(0, -40).alpha(1f, 0.25f));
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, LEFT_OF_CENTER).rotationY(0, 40).alpha(1f, 0.25f));
         return adapter;
     }
 
-    public static OnPageChangeListenerAdapter bindWithZoomOutTransition(ViewPager viewPager) {
+    @CheckResult
+    public static OnPageChangeListenerAdapter bindWithZoomOutTransition(@NonNull ViewPager viewPager) {
         return bindWithZoomOutTransition(bind(viewPager));
     }
 
-    public static OnPageChangeListenerAdapter bindWithZoomOutTransition(OnPageChangeListenerAdapter adapter) {
+    @CheckResult
+    public static OnPageChangeListenerAdapter bindWithZoomOutTransition(@NonNull OnPageChangeListenerAdapter adapter) {
         return adapter.addAndSetTransition(ViewTransitionBuilder.transit().scale(1f, 0.85f).alpha(1f, 0.5f), CENTER, RIGHT_OF_CENTER * 0.15f);
     }
 
-    public static OnPageChangeListenerAdapter bindWithDepthTransition(ViewPager viewPager) {
+    @CheckResult
+    public static OnPageChangeListenerAdapter bindWithDepthTransition(@NonNull ViewPager viewPager) {
         return bindWithDepthTransition(bind(viewPager, true));
     }
 
-    public static OnPageChangeListenerAdapter bindWithDepthTransition(OnPageChangeListenerAdapter adapter) {
+    @CheckResult
+    public static OnPageChangeListenerAdapter bindWithDepthTransition(@NonNull OnPageChangeListenerAdapter adapter) {
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER * 0.25f).scale(1f, 0.75f).id("RIGHT_1"));
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER).alpha(1f, 0.5f).id("RIGHT_2").addTransitionController(RIGHT_IN_PLACE));
         return adapter;
     }
 
-    public static OnPageChangeListenerAdapter bindWithRotate(OnPageChangeListenerAdapter adapter) {
+    @CheckResult
+    public static OnPageChangeListenerAdapter bindWithRotate(@NonNull OnPageChangeListenerAdapter adapter) {
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, LEFT_OF_CENTER).id("LEFT_CENTER").addTransitionController(LEFT_IN_PLACE));
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, LEFT_OF_CENTER * 0.5f).rotationY(0, -90).scale(1f, 0.5f).id("LEFT"));
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER).id("RIGHT_CENTER").addTransitionController(RIGHT_IN_PLACE));
@@ -122,7 +133,7 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
         return adapter;
     }
 
-    private static TransitionStateHolder getTransitionStateHolder(View view) {
+    private static TransitionStateHolder getTransitionStateHolder(@NonNull View view) {
         return (TransitionStateHolder) view.getTag(R.id.debug_id);
     }
 
@@ -138,11 +149,11 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
         mViewPager.setPageTransformer(reverseDrawingOrder, this);
     }
 
-    public OnPageChangeListenerAdapter addAndSetTransition(ViewTransitionBuilder builder) {
+    public OnPageChangeListenerAdapter addAndSetTransition(@NonNull ViewTransitionBuilder builder) {
         return addAndSetTransition(builder, CENTER, LEFT_OF_CENTER);
     }
 
-    public OnPageChangeListenerAdapter addAndSetTransition(ViewTransitionBuilder builder, float start, float end) {
+    public OnPageChangeListenerAdapter addAndSetTransition(@NonNull ViewTransitionBuilder builder, float start, float end) {
         ViewTransition vt = builder.range(start, end).id("LEFT").build();
         mTransitionList.put(vt.getId(), vt);
         vt = builder.clone().range(-start, -end).id("RIGHT").build();
@@ -158,7 +169,7 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
         throw new UnsupportedOperationException();
     }
 
-    private void startTransition(View page) {
+    private void startTransition(@NonNull View page) {
         PageHolder holder = mAnimationListMap.get(page);
         if (holder == null) {
             holder = new PageHolder(page, mTransitionList);
@@ -176,7 +187,7 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
         throw new UnsupportedOperationException();
     }
 
-    protected void updateProgress(View page, float value) {
+    protected void updateProgress(@NonNull View page, float value) {
         PageHolder holder = mAnimationListMap.get(page);
         if (holder == null) {
             Log.e(getClass().getSimpleName(), "updateProgress: NULL");
@@ -198,7 +209,7 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
     }
 
     @Override
-    public void transformPage(View page, float position) {
+    public void transformPage(@NonNull View page, float position) {
 //        if(!page.getTag(R.mId.debug_id).equals("1")) {
 //            return;
 //        }
@@ -229,7 +240,7 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
     private static class PageHolder {
         final Map<String, ITransition> mAnimationList = new HashMap<>();
 
-        public PageHolder(View page, Map<String, ITransition> animationList) {
+        public PageHolder(@NonNull View page, @NonNull Map<String, ITransition> animationList) {
             for (ITransition trans : animationList.values()) {
                 trans = trans.clone();
                 trans.setTarget(page);

@@ -1,5 +1,6 @@
 package com.kaichunlin.transition.adapter;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.kaichunlin.transition.BaseTransitionBuilder;
@@ -18,17 +19,17 @@ public abstract class BaseAdapter implements ITransitionAdapter {
     boolean mTransitioning;
 
     @Override
-    public void addTransition(BaseTransitionBuilder transitionBuilder) {
+    public void addTransition(@NonNull BaseTransitionBuilder transitionBuilder) {
         addTransition(transitionBuilder.build());
     }
 
     @Override
-    public void addTransition(ITransition transition) {
+    public void addTransition(@NonNull ITransition transition) {
         mTransitionList.put(transition.getId(), transition);
     }
 
     @Override
-    public boolean removeTransition(ITransition transition) {
+    public boolean removeTransition(@NonNull ITransition transition) {
         if (mTransitionList.remove(transition.getId()) == null) {
             //fallback check
             for (Map.Entry<String, ITransition> entry : mTransitionList.entrySet()) {

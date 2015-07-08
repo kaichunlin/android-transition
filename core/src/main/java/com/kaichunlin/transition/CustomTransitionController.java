@@ -22,11 +22,6 @@ public abstract class CustomTransitionController extends BaseTransitionControlle
     protected abstract void updateProgress(View target, float progress);
 
     @Override
-    public String getId() {
-        return mId;
-    }
-
-    @Override
     public float getStart() {
         return mStart;
     }

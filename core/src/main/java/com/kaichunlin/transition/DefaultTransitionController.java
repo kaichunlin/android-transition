@@ -1,5 +1,8 @@
 package com.kaichunlin.transition;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.nineoldandroids.animation.Animator;
@@ -7,7 +10,7 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ValueAnimator;
 
 /**
- * NineOldAndroids's ObjectAnimator is used to provide required transition behavior.
+ * NineOldAndroids' ObjectAnimator is used to provide required transition behavior.
  * <p>
  * TODO may be possible to switch to use NineOldDroid's ViewPropertyAnimator for better performance
  * <p>
@@ -16,13 +19,14 @@ import com.nineoldandroids.animation.ValueAnimator;
 public class DefaultTransitionController extends BaseTransitionController implements Cloneable {
     protected AnimatorSet mAnimSet;
 
+
     /**
      * Wraps an Animator as a DefaultTransitionController
      *
      * @param anim
      * @return
      */
-    public static DefaultTransitionController wrap(Animator anim) {
+    public static DefaultTransitionController wrap(@NonNull Animator anim) {
         AnimatorSet set = new AnimatorSet();
         set.play(anim);
         return new DefaultTransitionController(set);
@@ -34,11 +38,11 @@ public class DefaultTransitionController extends BaseTransitionController implem
      * @param animSet
      * @return
      */
-    public static ITransitionController wrap(AnimatorSet animSet) {
+    public static ITransitionController wrap(@NonNull AnimatorSet animSet) {
         return new DefaultTransitionController(animSet);
     }
 
-    public DefaultTransitionController(AnimatorSet mAnimSet) {
+    public DefaultTransitionController(@NonNull AnimatorSet mAnimSet) {
         this(null, mAnimSet);
     }
 
@@ -47,7 +51,7 @@ public class DefaultTransitionController extends BaseTransitionController implem
      * @param target the View that should be transitioned
      * @param mAnimSet
      */
-    public DefaultTransitionController(View target, AnimatorSet mAnimSet) {
+    public DefaultTransitionController(@Nullable View target, @NonNull AnimatorSet mAnimSet) {
         super(target);
         this.mAnimSet = mAnimSet;
         mStartDelay = mAnimSet.getStartDelay();
@@ -172,9 +176,10 @@ public class DefaultTransitionController extends BaseTransitionController implem
     }
 
     private void appendLog(String msg) {
-        getTransitionStateHolder().append(mId, this, msg);
+        getTransitionStateHolder().append(getId(), this, msg);
     }
 
+    @CheckResult
     @Override
     public DefaultTransitionController clone() {
         return (DefaultTransitionController) super.clone();

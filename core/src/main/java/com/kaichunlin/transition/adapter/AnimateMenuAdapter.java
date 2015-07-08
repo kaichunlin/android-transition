@@ -3,6 +3,9 @@ package com.kaichunlin.transition.adapter;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.animation.LinearInterpolator;
 
@@ -34,15 +37,15 @@ public class AnimateMenuAdapter extends MenuBaseAdapter implements ValueAnimator
      *
      * @param adapter
      */
-    public AnimateMenuAdapter(MenuBaseAdapter adapter) {
+    public AnimateMenuAdapter(@Nullable MenuBaseAdapter adapter) {
         mAdapter = adapter;
     }
 
-    public void setMenuOptionHandler(MenuOptionHandler menuOptionHandler) {
+    public void setMenuOptionHandler(@NonNull MenuOptionHandler menuOptionHandler) {
         mMenuOptionHandler = menuOptionHandler;
     }
 
-    public void setmDuration(int duration) {
+    public void setmDuration(@IntRange(from=0) int duration) {
         mDuration = duration;
     }
 
@@ -58,7 +61,7 @@ public class AnimateMenuAdapter extends MenuBaseAdapter implements ValueAnimator
      *
      * @param duration
      */
-    public void startAnimation(int duration) {
+    public void startAnimation(@IntRange(from=0) int duration) {
         stopAnimation();
         mValueAnimator = new ValueAnimator();
         mValueAnimator.setFloatValues();
@@ -126,7 +129,7 @@ public class AnimateMenuAdapter extends MenuBaseAdapter implements ValueAnimator
     }
 
     @Override
-    public void setupOption(Activity activity, MenuOptionConfiguration openConfig) {
+    public void setupOption(@NonNull Activity activity, @Nullable MenuOptionConfiguration openConfig) {
         if (mAdapter == null) {
             super.setupOption(activity, openConfig);
         } else {
@@ -135,7 +138,7 @@ public class AnimateMenuAdapter extends MenuBaseAdapter implements ValueAnimator
     }
 
     @Override
-    public void setupOpenOption(Activity activity, MenuOptionConfiguration openConfig) {
+    public void setupOpenOption(@NonNull Activity activity, @Nullable MenuOptionConfiguration openConfig) {
         if (mAdapter == null) {
             super.setupOpenOption(activity, openConfig);
         } else {
@@ -144,7 +147,7 @@ public class AnimateMenuAdapter extends MenuBaseAdapter implements ValueAnimator
     }
 
     @Override
-    public void setupCloseOption(Activity activity, MenuOptionConfiguration closeConfig) {
+    public void setupCloseOption(@NonNull Activity activity, @Nullable MenuOptionConfiguration closeConfig) {
         if (mAdapter == null) {
             super.setupCloseOption(activity, closeConfig);
         } else {
@@ -153,7 +156,7 @@ public class AnimateMenuAdapter extends MenuBaseAdapter implements ValueAnimator
     }
 
     @Override
-    public void setupOptions(Activity activity, MenuOptionConfiguration openConfig, MenuOptionConfiguration closeConfig) {
+    public void setupOptions(@NonNull Activity activity, @Nullable MenuOptionConfiguration openConfig, @Nullable MenuOptionConfiguration closeConfig) {
         if (mAdapter == null) {
             super.setupOptions(activity, openConfig, closeConfig);
         } else {
@@ -162,7 +165,7 @@ public class AnimateMenuAdapter extends MenuBaseAdapter implements ValueAnimator
     }
 
     @Override
-    public void onCreateOptionsMenu(Activity activity, Menu menu) {
+    public void onCreateOptionsMenu(@NonNull Activity activity, @NonNull Menu menu) {
         if (mAdapter == null) {
             super.onCreateOptionsMenu(activity, menu);
         } else {

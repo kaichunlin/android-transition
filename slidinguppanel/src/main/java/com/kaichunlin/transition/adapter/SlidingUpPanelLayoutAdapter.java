@@ -1,6 +1,7 @@
 package com.kaichunlin.transition.adapter;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.kaichunlin.transition.ITransition;
@@ -20,7 +21,7 @@ public class SlidingUpPanelLayoutAdapter extends MenuBaseAdapter implements Slid
      *
      * @param listener
      */
-    public void setPanelSlideListener(SlidingUpPanelLayout.PanelSlideListener listener) {
+    public void setPanelSlideListener(@Nullable SlidingUpPanelLayout.PanelSlideListener listener) {
         mListener = listener;
     }
 

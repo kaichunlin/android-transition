@@ -1,6 +1,9 @@
 package com.kaichunlin.transition;
 
 import android.app.Activity;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,19 +30,19 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
     private boolean mInvalidateOptionOnStopTransition;
     private WeakReference<Activity> mActivityRef;
 
-    public MenuItemTransition(Toolbar toolbar) {
+    public MenuItemTransition(@NonNull Toolbar toolbar) {
         this(null, toolbar, null);
     }
 
-    public MenuItemTransition(String id, Toolbar toolbar) {
+    public MenuItemTransition(@Nullable String id, @NonNull Toolbar toolbar) {
         this(id, toolbar, null);
     }
 
-    public MenuItemTransition(Toolbar toolbar, View view) {
+    public MenuItemTransition(@NonNull Toolbar toolbar, @Nullable View view) {
         this(null, toolbar, view);
     }
 
-    public MenuItemTransition(String id, Toolbar toolbar, View view) {
+    public MenuItemTransition(@Nullable String id, @NonNull Toolbar toolbar, @Nullable View view) {
         super(id);
         this.mToolbar = toolbar;
         this.mTarget = view;
@@ -146,12 +149,13 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
      * @param invalidateOptionOnStopAnimation
      * @return
      */
-    public MenuItemTransition setInvalidateOptionOnStopTransition(Activity activity, boolean invalidateOptionOnStopAnimation) {
+    public MenuItemTransition setInvalidateOptionOnStopTransition(@NonNull Activity activity, boolean invalidateOptionOnStopAnimation) {
         this.mActivityRef = new WeakReference<>(activity);
         this.mInvalidateOptionOnStopTransition = invalidateOptionOnStopAnimation;
         return self();
     }
 
+    @CheckResult
     @Override
     public MenuItemTransition clone() {
         MenuItemTransition newCopy = (MenuItemTransition) super.clone();

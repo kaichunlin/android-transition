@@ -1,5 +1,8 @@
 package com.kaichunlin.transition;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.animation.Interpolator;
 
@@ -40,7 +43,7 @@ public class TransitionManager implements /*TimeAnimator.TimeListener,*/ Cloneab
      * @param mAnim
      * @return
      */
-    public ITransitionController addAnimatorAsTransition(Animator mAnim) {
+    public ITransitionController addAnimatorAsTransition(@NonNull Animator mAnim) {
         AnimatorSet as = new AnimatorSet();
         as.play(mAnim);
         return addAnimatorSetAsTransition(null, as);
@@ -53,7 +56,7 @@ public class TransitionManager implements /*TimeAnimator.TimeListener,*/ Cloneab
      * @param animator
      * @return
      */
-    public ITransitionController addAnimatorAsTransition(View target, Animator animator) {
+    public ITransitionController addAnimatorAsTransition(@Nullable View target, @NonNull Animator animator) {
         AnimatorSet as = new AnimatorSet();
         as.play(animator);
         return addAnimatorSetAsTransition(target, as);
@@ -65,7 +68,7 @@ public class TransitionManager implements /*TimeAnimator.TimeListener,*/ Cloneab
      * @param animatorSet
      * @return
      */
-    public ITransitionController addAnimatorSetAsTransition(AnimatorSet animatorSet) {
+    public ITransitionController addAnimatorSetAsTransition(@NonNull AnimatorSet animatorSet) {
         return addAnimatorSetAsTransition(null, animatorSet);
     }
 
@@ -76,7 +79,7 @@ public class TransitionManager implements /*TimeAnimator.TimeListener,*/ Cloneab
      * @param animatorSet
      * @return
      */
-    public ITransitionController addAnimatorSetAsTransition(View target, AnimatorSet animatorSet) {
+    public ITransitionController addAnimatorSetAsTransition(@Nullable View target, @NonNull AnimatorSet animatorSet) {
         return addTransitionController(new DefaultTransitionController(target, animatorSet));
     }
 
@@ -84,7 +87,7 @@ public class TransitionManager implements /*TimeAnimator.TimeListener,*/ Cloneab
      * @param transitionController the ITransitionController to be managed by this object
      * @return
      */
-    public ITransitionController addTransitionController(ITransitionController transitionController) {
+    public ITransitionController addTransitionController(@NonNull ITransitionController transitionController) {
         transitionController.setId(mId);
         boolean changed = mTransitionControls.add(transitionController);
         if (TransitionConfig._debug && !changed) {
@@ -203,7 +206,7 @@ public class TransitionManager implements /*TimeAnimator.TimeListener,*/ Cloneab
     /**
      * @param target the view that all {@link ITransitionController} managed by this object should work on
      */
-    public void setTarget(View target) {
+    public void setTarget(@Nullable View target) {
         mTarget = target;
         for (ITransitionController at : mTransitionControls) {
             at.setTarget(target);
@@ -229,7 +232,7 @@ public class TransitionManager implements /*TimeAnimator.TimeListener,*/ Cloneab
     /**
      * @param interpolator the Interpolator to be applied to all {@link ITransitionController} managed by this object
      */
-    public void setInterpolator(Interpolator interpolator) {
+    public void setInterpolator(@Nullable Interpolator interpolator) {
         mInterpolator = interpolator;
     }
 
@@ -240,6 +243,7 @@ public class TransitionManager implements /*TimeAnimator.TimeListener,*/ Cloneab
         mUpdateStateAfterUpdateProgress = updateStateAfterUpdateProgress;
     }
 
+    @CheckResult
     @Override
     public TransitionManager clone() {
         TransitionManager newClone = null;

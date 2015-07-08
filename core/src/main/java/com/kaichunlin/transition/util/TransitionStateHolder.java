@@ -1,5 +1,6 @@
 package com.kaichunlin.transition.util;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class TransitionStateHolder {
     private Calendar mEndTime;
     private Map<String, List<TransitionState>> tranStateMap = new HashMap<>();
 
-    public TransitionStateHolder(String id) {
+    public TransitionStateHolder(@NonNull String id) {
         mId = id;
     }
 
@@ -31,11 +32,11 @@ public class TransitionStateHolder {
         mEndTime = Calendar.getInstance();
     }
 
-    public void append(String id, Object appendingClass, String message) {
+    public void append(@NonNull String id, @NonNull Object appendingClass, @NonNull String message) {
         append(new TransitionState(id, appendingClass, message));
     }
 
-    public void append(TransitionState transitionState) {
+    public void append(@NonNull TransitionState transitionState) {
         List<TransitionState> list = tranStateMap.get(transitionState.subId);
         if (list == null) {
             list = new ArrayList<>();

@@ -1,6 +1,7 @@
 package com.kaichunlin.transition.util;
 
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v7.internal.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
@@ -23,7 +24,7 @@ public class ViewUtil {
      * @param toolbar
      * @return the list of visible MenuItems
      */
-    public static List<MenuItem> getVisibleMenuItemList(Toolbar toolbar) {
+    public static List<MenuItem> getVisibleMenuItemList(@NonNull Toolbar toolbar) {
         List<MenuItem> list = new ArrayList<>();
         for (int i = 0; i < toolbar.getChildCount(); i++) {
             final View v = toolbar.getChildAt(i);
@@ -46,7 +47,7 @@ public class ViewUtil {
      * @param view
      * @param listener
      */
-    public static void executeOnGlobalLayout(final View view, final ViewTreeObserver.OnGlobalLayoutListener listener) {
+    public static void executeOnGlobalLayout(@NonNull final View view, @NonNull final ViewTreeObserver.OnGlobalLayoutListener listener) {
         ViewTreeObserver vto = view.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override

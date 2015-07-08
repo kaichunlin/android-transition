@@ -1,6 +1,8 @@
 package com.kaichunlin.transition.adapter;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.Menu;
 
 import com.kaichunlin.transition.MenuItemTransition;
@@ -16,7 +18,7 @@ public class MenuOptionHandler {
     private MenuOptionConfiguration mOpenConfig;
     private MenuOptionConfiguration mCloseConfig;
 
-    public MenuOptionHandler(ITransitionAdapter adapter, AdapterState adapterState) {
+    public MenuOptionHandler(@NonNull ITransitionAdapter adapter, @NonNull AdapterState adapterState) {
         mAdapter = adapter;
         mAdapterState = adapterState;
     }
@@ -31,7 +33,7 @@ public class MenuOptionHandler {
      * @param activity
      * @return
      */
-    public boolean isOpened(Activity activity) {
+    public boolean isOpened(@NonNull Activity activity) {
         return mAdapterState.isOpened(activity);
     }
 
@@ -41,11 +43,11 @@ public class MenuOptionHandler {
      * @param activity
      * @param menu
      */
-    public void onCreateOptionsMenu(Activity activity, Menu menu) {
+    public void onCreateOptionsMenu(@NonNull Activity activity, @NonNull Menu menu) {
         onCreateOptionsMenu(activity, menu, mAdapterState);
     }
 
-    protected void onCreateOptionsMenu(Activity activity, Menu menu, AdapterState adapterState) {
+    protected void onCreateOptionsMenu(@NonNull Activity activity, @NonNull Menu menu, @NonNull AdapterState adapterState) {
         if (adapterState.isOpened(activity)) {
             boolean hasOpen = mOpenConfig != null;
             if (hasOpen && mOpenConfig.getMenuId() > 0) {
@@ -78,7 +80,7 @@ public class MenuOptionHandler {
      * @param activity
      * @param openConfig
      */
-    public void setupOption(Activity activity, MenuOptionConfiguration openConfig) {
+    public void setupOption(@NonNull Activity activity, @Nullable MenuOptionConfiguration openConfig) {
         MenuItemTransition transition = openConfig.getTransition();
         setupOptions(activity, openConfig, new MenuOptionConfiguration(transition.clone().reverse(), openConfig.getMenuId()));
     }
@@ -89,7 +91,7 @@ public class MenuOptionHandler {
      * @param activity
      * @param openConfig
      */
-    public void setupOpenOption(Activity activity, MenuOptionConfiguration openConfig) {
+    public void setupOpenOption(@NonNull Activity activity, @Nullable MenuOptionConfiguration openConfig) {
         MenuItemTransition transition = openConfig.getTransition();
         setupOptions(activity, openConfig, new MenuOptionConfiguration(transition.clone().reverse(), -1));
     }
@@ -100,7 +102,7 @@ public class MenuOptionHandler {
      * @param activity
      * @param closeConfig
      */
-    public void setupCloseOption(Activity activity, MenuOptionConfiguration closeConfig) {
+    public void setupCloseOption(@NonNull Activity activity, @Nullable MenuOptionConfiguration closeConfig) {
         MenuItemTransition transition = closeConfig.getTransition();
         setupOptions(activity, new MenuOptionConfiguration(transition.clone().reverse(), -1), closeConfig);
     }
@@ -112,7 +114,7 @@ public class MenuOptionHandler {
      * @param openConfig
      * @param closeConfig
      */
-    public void setupOptions(Activity activity, MenuOptionConfiguration openConfig, MenuOptionConfiguration closeConfig) {
+    public void setupOptions(@NonNull Activity activity, @Nullable MenuOptionConfiguration openConfig, @Nullable MenuOptionConfiguration closeConfig) {
         if (mOpenConfig != null) {
             mAdapter.removeTransition(mOpenConfig.getTransition());
         }

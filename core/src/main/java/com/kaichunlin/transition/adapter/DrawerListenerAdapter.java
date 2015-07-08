@@ -1,6 +1,9 @@
 package com.kaichunlin.transition.adapter;
 
 import android.app.Activity;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.View;
@@ -19,10 +22,10 @@ public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayo
     private int mDrawerId;
     private DrawerLayout mDrawerLayout;
 
-    public DrawerListenerAdapter(ActionBarDrawerToggle mDrawerToggle) {
+    public DrawerListenerAdapter(@NonNull ActionBarDrawerToggle mDrawerToggle) {
         this(mDrawerToggle, 0);
     }
-    public DrawerListenerAdapter(ActionBarDrawerToggle mDrawerToggle, int mDrawerId) {
+    public DrawerListenerAdapter(@NonNull ActionBarDrawerToggle mDrawerToggle, @IdRes int mDrawerId) {
         this.mDrawerToggle = mDrawerToggle;
         this.mDrawerId = mDrawerId;
     }
@@ -31,12 +34,12 @@ public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayo
      * @param activity
      * @return is the drawer in the opened state
      */
-    public boolean isOpened(Activity activity) {
+    public boolean isOpened(@NonNull Activity activity) {
         return mDrawerLayout.isDrawerOpen(activity.findViewById(mDrawerId));
     }
 
     @Override
-    public void onDrawerOpened(View view) {
+    public void onDrawerOpened(@NonNull View view) {
         mDrawerToggle.onDrawerOpened(view);
         stopTransition();
         mOpened = true;
@@ -47,7 +50,7 @@ public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayo
     }
 
     @Override
-    public void onDrawerClosed(View view) {
+    public void onDrawerClosed(@NonNull View view) {
         mDrawerToggle.onDrawerClosed(view);
         stopTransition();
         mOpened = false;
@@ -100,7 +103,7 @@ public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayo
      *
      * @param mDrawerListener
      */
-    public void setDrawerListener(DrawerLayout.DrawerListener mDrawerListener) {
+    public void setDrawerListener(@Nullable DrawerLayout.DrawerListener mDrawerListener) {
         this.mDrawerListener = mDrawerListener;
     }
 
@@ -108,7 +111,7 @@ public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayo
      *
      * @param drawerLayout
      */
-    public void setDrawerLayout(DrawerLayout drawerLayout) {
+    public void setDrawerLayout(@NonNull DrawerLayout drawerLayout) {
         this.mDrawerLayout = drawerLayout;
         drawerLayout.setDrawerListener(this);
     }
@@ -117,7 +120,7 @@ public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayo
      *
      * @param drawerId Drawer view ID
      */
-    public void setDrawerId(int drawerId) {
+    public void setDrawerId(@IdRes int drawerId) {
         mDrawerId = drawerId;
     }
 
@@ -125,7 +128,7 @@ public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayo
     protected MenuOptionHandler createMenuHandler() {
         return new MenuOptionHandler(this, new MenuOptionHandler.AdapterState() {
             @Override
-            public boolean isOpened(Activity activity) {
+            public boolean isOpened(@NonNull Activity activity) {
                 return DrawerListenerAdapter.this.isOpened(activity);
             }
         });

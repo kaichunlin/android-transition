@@ -1,5 +1,8 @@
 package com.kaichunlin.transition;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.FloatRange;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.animation.Interpolator;
 
@@ -97,7 +100,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T alpha(float start, float end) {
+    public T alpha(@FloatRange(from = 0.0, to=1.0) float start, @FloatRange(from = 0.0, to=1.0) float end) {
         transitFloat(ALPHA, start, end);
         return self();
     }
@@ -109,7 +112,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public abstract T alpha(float end);
+    public abstract T alpha(@FloatRange(from = 0.0, to=1.0) float end);
 
     /**
      * Similar to alpha(float), but wait until the transition is about to start to perform the evaluation
@@ -117,7 +120,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T delayAlpha(final float end) {
+    public T delayAlpha(@FloatRange(from = 0.0, to=1.0) final float end) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
             public void evaluate(View view, BaseTransitionBuilder builder) {
@@ -242,7 +245,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T scaleX(float start, float end) {
+    public T scaleX(@FloatRange(from = 0.0, to=1.0) float start, @FloatRange(from = 0.0, to=1.0) float end) {
         transitFloat(SCALE_X, start, end);
         return self();
     }
@@ -253,7 +256,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public abstract T scaleX(float end);
+    public abstract T scaleX(@FloatRange(from = 0.0, to=1.0) float end);
 
     /**
      * Similar to scaleX(float), but wait until the transition is about to start to perform the evaluation
@@ -261,7 +264,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T delayScaleX(final float end) {
+    public T delayScaleX(@FloatRange(from = 0.0, to=1.0) final float end) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
             public void evaluate(View view, BaseTransitionBuilder builder) {
@@ -278,7 +281,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T scaleY(float start, float end) {
+    public T scaleY(@FloatRange(from = 0.0, to=1.0) float start, @FloatRange(from = 0.0, to=1.0) float end) {
         transitFloat(SCALE_Y, start, end);
         return self();
     }
@@ -289,7 +292,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public abstract T scaleY(float end);
+    public abstract T scaleY(@FloatRange(from = 0.0, to=1.0) float end);
 
     /**
      * Similar to scaleX(float), but wait until the transition is about to start to perform the evaluation
@@ -297,7 +300,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T delayScaleY(final float end) {
+    public T delayScaleY(@FloatRange(from = 0.0, to=1.0) final float end) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
             public void evaluate(View view, BaseTransitionBuilder builder) {
@@ -314,7 +317,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T scale(float start, float end) {
+    public T scale(@FloatRange(from = 0.0, to=1.0) float start, @FloatRange(from = 0.0, to=1.0) float end) {
         transitFloat(SCALE_X, start, end);
         transitFloat(SCALE_Y, start, end);
         return self();
@@ -326,7 +329,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public abstract T scale(float end);
+    public abstract T scale(@FloatRange(from = 0.0, to=1.0) float end);
 
     /**
      * Similar to scale(float), but wait until the transition is about to start to perform the evaluation
@@ -334,7 +337,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T delayScale(final float end) {
+    public T delayScale(@FloatRange(from = 0.0, to=1.0) final float end) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
             public void evaluate(View view, BaseTransitionBuilder builder) {
@@ -496,7 +499,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T transitFloat(String property, float start, float end) {
+    public T transitFloat(@NonNull String property, float start, float end) {
         mHolders.put(property, PropertyValuesHolder.ofFloat(property, start, end));
         mShadowHolders.put(property, ShadowValuesHolder.ofFloat(property, start, end));
         return self();
@@ -510,7 +513,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T transitInt(String property, int start, int end) {
+    public T transitInt(@NonNull String property, int start, int end) {
         mHolders.put(property, PropertyValuesHolder.ofInt(property, start, end));
         mShadowHolders.put(property, ShadowValuesHolder.ofInt(property, start, end));
         return self();
@@ -531,6 +534,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
         return self();
     }
 
+    @CheckResult
     /**
      * Asks the subclass to create and set a ITransition
      *
@@ -538,6 +542,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      */
     abstract U createTransition();
 
+    @CheckResult
     /**
      * Builds a ITransition, the created object will not be modified when the builder's modifier methods are called.
      *
@@ -562,13 +567,14 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param delayed
      * @return
      */
-    public T addDelayedEvaluator(DelayedEvaluator delayed) {
+    public T addDelayedEvaluator(@NonNull DelayedEvaluator delayed) {
         mDelayed.add(delayed);
         return self();
     }
 
     protected abstract T self();
 
+    @CheckResult
     @Override
     public BaseTransitionBuilder clone() {
         BaseTransitionBuilder newCopy = null;
@@ -599,28 +605,29 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
         float fStart, fEnd;
         boolean isFloat;
 
-        ShadowValuesHolder(String property, float start, float end) {
+        ShadowValuesHolder(@NonNull String property, float start, float end) {
             this.property = property;
             fStart = start;
             fEnd = end;
             isFloat = true;
         }
 
-        ShadowValuesHolder(String property, int start, int end) {
+        ShadowValuesHolder(@NonNull String property, int start, int end) {
             this.property = property;
             iStart = start;
             iEnd = end;
         }
 
 
-        static ShadowValuesHolder ofFloat(String property, float start, float end) {
+        static ShadowValuesHolder ofFloat(@NonNull String property, float start, float end) {
             return new ShadowValuesHolder(property, start, end);
         }
 
-        static ShadowValuesHolder ofInt(String property, int start, int end) {
+        static ShadowValuesHolder ofInt(@NonNull String property, int start, int end) {
             return new ShadowValuesHolder(property, start, end);
         }
 
+        @CheckResult
         PropertyValuesHolder createReverse() {
             if (isFloat) {
                 return PropertyValuesHolder.ofFloat(property, fEnd, fStart);
@@ -629,6 +636,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
             }
         }
 
+        @CheckResult
         protected ShadowValuesHolder clone() {
             try {
                 return (ShadowValuesHolder) super.clone();

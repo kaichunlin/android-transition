@@ -1,5 +1,7 @@
 package com.kaichunlin.transition.adapter;
 
+import android.support.annotation.NonNull;
+
 import com.kaichunlin.transition.MenuItemTransition;
 
 /**
@@ -12,11 +14,11 @@ public class MenuOptionConfiguration {
     private final MenuItemTransition mTransition;
     private final int mMenuId;
 
-    public MenuOptionConfiguration(MenuItemTransition transition) {
+    public MenuOptionConfiguration(@NonNull MenuItemTransition transition) {
         this(transition, -1);
     }
 
-    public MenuOptionConfiguration(MenuItemTransition transition, int menuId) {
+    public MenuOptionConfiguration(@NonNull MenuItemTransition transition, int menuId) {
         mTransition = transition;
         mMenuId = menuId;
     }

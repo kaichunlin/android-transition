@@ -1,5 +1,8 @@
 package com.kaichunlin.transition;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.animation.Interpolator;
 
@@ -11,7 +14,7 @@ import com.kaichunlin.transition.util.TransitionStateHolder;
  * Created by Kai-Chun Lin on 2015/4/28.
  */
 public abstract class BaseTransitionController implements ITransitionController {
-    String mId;
+    private String mId;
     View mTarget;
     float mStart = DEFAULT_START;
     float mEnd = DEFAULT_END;
@@ -29,7 +32,7 @@ public abstract class BaseTransitionController implements ITransitionController 
     /**
      * @param target the view this object should manipulate
      */
-    public BaseTransitionController(View target) {
+    public BaseTransitionController(@Nullable View target) {
         this.mTarget = target;
     }
 
@@ -40,12 +43,15 @@ public abstract class BaseTransitionController implements ITransitionController 
     }
 
     @Override
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         mId = id;
     }
 
     @Override
     public String getId() {
+        if (mId == null) {
+            mId = toString();
+        }
         return mId;
     }
 
@@ -84,8 +90,8 @@ public abstract class BaseTransitionController implements ITransitionController 
     }
 
     @Override
-    public ITransitionController setEnd(float mEnd) {
-        this.mEnd = mEnd;
+    public ITransitionController setEnd(float end) {
+        this.mEnd = end;
         updateProgressWidth();
         return this;
     }
@@ -111,13 +117,13 @@ public abstract class BaseTransitionController implements ITransitionController 
     }
 
     @Override
-    public ITransitionController setTarget(View target) {
+    public ITransitionController setTarget(@Nullable View target) {
         this.mTarget = target;
         return this;
     }
 
     @Override
-    public void setInterpolator(Interpolator interpolator) {
+    public void setInterpolator(@Nullable Interpolator interpolator) {
         mInterpolator = interpolator;
     }
 
@@ -137,6 +143,7 @@ public abstract class BaseTransitionController implements ITransitionController 
         return mEnable;
     }
 
+    @CheckResult
     @Override
     public BaseTransitionController clone() {
         try {

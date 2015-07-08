@@ -1,6 +1,7 @@
 package com.kaichunlin.transition.adapter;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.view.Menu;
 
 /**
@@ -24,11 +25,11 @@ public abstract class MenuBaseAdapter extends BaseAdapter {
         return mMenuHandler;
     }
 
-    public void onCreateOptionsMenu(Activity activity, Menu menu) {
+    public void onCreateOptionsMenu(@NonNull Activity activity, @NonNull Menu menu) {
         onCreateOptionsMenu(activity, menu, mMenuHandler.getAdapterState());
     }
 
-    protected void onCreateOptionsMenu(Activity activity, Menu menu, MenuOptionHandler.AdapterState adapterState) {
+    protected void onCreateOptionsMenu(@NonNull Activity activity, @NonNull Menu menu, @NonNull MenuOptionHandler.AdapterState adapterState) {
         createMenuHandlerIfNecessary();
         mMenuHandler.onCreateOptionsMenu(activity, menu, adapterState);
     }
@@ -45,22 +46,22 @@ public abstract class MenuBaseAdapter extends BaseAdapter {
      * @param activity
      * @param openConfig
      */
-    public void setupOption(Activity activity, MenuOptionConfiguration openConfig) {
+    public void setupOption(@NonNull Activity activity, MenuOptionConfiguration openConfig) {
         createMenuHandlerIfNecessary();
         mMenuHandler.setupOption(activity, openConfig);
     }
 
-    public void setupOpenOption(Activity activity, MenuOptionConfiguration openConfig) {
+    public void setupOpenOption(@NonNull Activity activity, MenuOptionConfiguration openConfig) {
         createMenuHandlerIfNecessary();
         mMenuHandler.setupOpenOption(activity, openConfig);
     }
 
-    public void setupCloseOption(Activity activity, MenuOptionConfiguration closeConfig) {
+    public void setupCloseOption(@NonNull Activity activity, MenuOptionConfiguration closeConfig) {
         createMenuHandlerIfNecessary();
         mMenuHandler.setupCloseOption(activity, closeConfig);
     }
 
-    public void setupOptions(Activity activity, MenuOptionConfiguration openConfig, MenuOptionConfiguration closeConfig) {
+    public void setupOptions(@NonNull Activity activity, MenuOptionConfiguration openConfig, MenuOptionConfiguration closeConfig) {
         createMenuHandlerIfNecessary();
         mMenuHandler.setupOptions(activity, openConfig, closeConfig);
     }

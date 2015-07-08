@@ -1,5 +1,10 @@
 package com.kaichunlin.transition;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
+
 import com.kaichunlin.transition.util.TransitionStateHolder;
 
 import java.util.Iterator;
@@ -10,6 +15,7 @@ import java.util.WeakHashMap;
  * <p>
  * Created by Kai-Chun Lin on 2015/4/18.
  */
+@UiThread
 public class ViewTransition extends BaseTransition<ViewTransition, ViewTransition.Setup> {
     private static final Object HARD_REF = new Object();
     private final WeakHashMap<Object, Setup> mSetup = new WeakHashMap<>();
@@ -20,7 +26,7 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
         this(null, null);
     }
 
-    public ViewTransition(Setup setup) {
+    public ViewTransition(@Nullable Setup setup) {
         this(null, setup);
     }
 
@@ -29,11 +35,11 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
      * @param id unique ID that can identify the transition
      * @param setup creates the {@link ITransitionController}'s when {@link #startTransition()} is called
      */
-    public ViewTransition(String id, Setup setup) {
+    public ViewTransition (@Nullable String id, @Nullable Setup setup) {
         this(id, HARD_REF, setup);
     }
 
-    public ViewTransition(String id, Object weakLink, Setup setup) {
+    public ViewTransition(@Nullable String id, @Nullable Object weakLink, @Nullable Setup setup) {
         super(id);
         if (setup != null) {
             mSetup.put(weakLink, setup);
@@ -41,12 +47,18 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
     }
 
     @Override
-    public ViewTransition setSetup(Setup setup) {
+    public ViewTransition setSetup(@Nullable Setup setup) {
         mSetup.put(HARD_REF, setup);
         return self();
     }
 
-    public void setSetup(Object weakLink, Setup setup) {
+    /**
+     * May be removed in the future!
+     *
+     * @param weakLink
+     * @param setup
+     */
+    public void setSetup(@NonNull Object weakLink, @NonNull Setup setup) {
         mSetup.put(weakLink, setup);
     }
 
@@ -110,6 +122,7 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
         }
     }
 
+    @CheckResult
     @Override
     public ViewTransition clone() {
         ViewTransition newCopy = (ViewTransition) super.clone();
@@ -129,6 +142,7 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
         return this;
     }
 
+    @Nullable
     public void setSetupCreator(SetupCreator setupCreator) {
         this.mSetupCreator = setupCreator;
     }
