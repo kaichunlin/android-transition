@@ -338,16 +338,18 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     }
 
     /**
-     * @param vgt
+     * Throws ClassCastException if the target view is not a ViewGroup. Apply the specified {@link ViewGroupTransition} to all the children views of the target view.
+     *
+     * @param viewGroupTransition
      * @return
      */
-    public ViewTransitionBuilder transitViewGroup(@NonNull ViewGroupTransition vgt) {
+    public ViewTransitionBuilder transitViewGroup(@NonNull ViewGroupTransition viewGroupTransition) {
         ViewGroup vg = (ViewGroup) mView;
         int total = vg.getChildCount();
         View view;
         for (int i = 0; i < total; i++) {
             view = vg.getChildAt(i);
-            vgt.transit(target(view), vg, view, i, total);
+            viewGroupTransition.transit(target(view), vg, view, i, total);
         }
         return self();
     }
@@ -418,6 +420,14 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * Allows customized {@link ViewTransition} to be applied to each child view of a ViewGroup
      */
     public interface ViewGroupTransition {
-        void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View view, int index, int total);
+        /**
+         *
+         * @param builder
+         * @param viewGroup the parent ViewGroup this view belongs to
+         * @param childView the child view to be transitioned
+         * @param index curr
+         * @param total total number of children
+         */
+        void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View childView, int index, int total);
     }
 }
