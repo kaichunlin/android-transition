@@ -542,7 +542,6 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      */
     abstract U createTransition();
 
-    @CheckResult
     /**
      * Builds a ITransition, the created object will not be modified when the builder's modifier methods are called.
      *

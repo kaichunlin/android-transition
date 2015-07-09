@@ -353,7 +353,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     }
 
     /**
-     * Sets the {@link ITransitionAdapter}, once set {@link build()} would automatically add
+     * Sets the {@link ITransitionAdapter}, once set calling {@link build()} would automatically add
      * the created {@link ViewTransition} to the adapter.
      *
      * @param adapter

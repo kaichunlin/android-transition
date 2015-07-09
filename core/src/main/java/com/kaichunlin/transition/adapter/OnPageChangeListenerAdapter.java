@@ -90,41 +90,34 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
         return adapter;
     }
 
-    @CheckResult
     public static OnPageChangeListenerAdapter bindWithRotationYTransition(@NonNull ViewPager viewPager) {
         return bindWithRotationYTransition(bind(viewPager));
     }
 
-    @CheckResult
     public static OnPageChangeListenerAdapter bindWithRotationYTransition(@NonNull OnPageChangeListenerAdapter adapter) {
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER).rotationY(0, -40).alpha(1f, 0.25f));
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, LEFT_OF_CENTER).rotationY(0, 40).alpha(1f, 0.25f));
         return adapter;
     }
 
-    @CheckResult
     public static OnPageChangeListenerAdapter bindWithZoomOutTransition(@NonNull ViewPager viewPager) {
         return bindWithZoomOutTransition(bind(viewPager));
     }
 
-    @CheckResult
     public static OnPageChangeListenerAdapter bindWithZoomOutTransition(@NonNull OnPageChangeListenerAdapter adapter) {
         return adapter.addAndSetTransition(ViewTransitionBuilder.transit().scale(1f, 0.85f).alpha(1f, 0.5f), CENTER, RIGHT_OF_CENTER * 0.15f);
     }
 
-    @CheckResult
     public static OnPageChangeListenerAdapter bindWithDepthTransition(@NonNull ViewPager viewPager) {
         return bindWithDepthTransition(bind(viewPager, true));
     }
 
-    @CheckResult
     public static OnPageChangeListenerAdapter bindWithDepthTransition(@NonNull OnPageChangeListenerAdapter adapter) {
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER * 0.25f).scale(1f, 0.75f).id("RIGHT_1"));
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER).alpha(1f, 0.5f).id("RIGHT_2").addTransitionController(RIGHT_IN_PLACE));
         return adapter;
     }
 
-    @CheckResult
     public static OnPageChangeListenerAdapter bindWithRotate(@NonNull OnPageChangeListenerAdapter adapter) {
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, LEFT_OF_CENTER).id("LEFT_CENTER").addTransitionController(LEFT_IN_PLACE));
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, LEFT_OF_CENTER * 0.5f).rotationY(0, -90).scale(1f, 0.5f).id("LEFT"));
