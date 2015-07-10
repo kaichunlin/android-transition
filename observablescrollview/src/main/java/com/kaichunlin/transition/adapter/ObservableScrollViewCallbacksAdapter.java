@@ -1,5 +1,7 @@
 package com.kaichunlin.transition.adapter;
 
+import android.support.annotation.NonNull;
+
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.kaichunlin.transition.BaseTransitionBuilder;
@@ -40,7 +42,7 @@ public class ObservableScrollViewCallbacksAdapter extends BaseAdapter implements
      * @param transitionBuilder
      * @param range
      */
-    public void addTransition(BaseTransitionBuilder transitionBuilder, int range) {
+    public void addTransition(@NonNull BaseTransitionBuilder transitionBuilder, int range) {
         addTransition(transitionBuilder.build(), range);
     }
 
@@ -55,7 +57,7 @@ public class ObservableScrollViewCallbacksAdapter extends BaseAdapter implements
      * @param transition
      * @param range
      */
-    public void addTransition(ITransition transition, int range) {
+    public void addTransition(@NonNull ITransition transition, int range) {
         super.addTransition(transition);
         mRanges.put(transition, range);
     }

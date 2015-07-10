@@ -125,8 +125,8 @@ public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayo
     }
 
     @Override
-    protected MenuOptionHandler createMenuHandler() {
-        return new MenuOptionHandler(this, new MenuOptionHandler.AdapterState() {
+    protected IMenuOptionHandler createMenuHandler() {
+        return new DefaultMenuOptionHandler(this, new IMenuOptionHandler.AdapterState() {
             @Override
             public boolean isOpened(@NonNull Activity activity) {
                 return DrawerListenerAdapter.this.isOpened(activity);

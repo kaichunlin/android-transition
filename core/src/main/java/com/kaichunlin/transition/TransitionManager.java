@@ -117,7 +117,7 @@ public class TransitionManager implements /*TimeAnimator.TimeListener,*/ Cloneab
 //                this.dummy = dummy;
 //            }
 //        }, "dummy", 0, 1);
-//        dummyAnim.setDuration(Integer.MAX_VALUE);
+//        dummyAnim.setAnimationDuration(Integer.MAX_VALUE);
 //        mInternalAnimSet.play(dummyAnim).with(mTimeAnim);
 //        mInternalAnimSet.start();
 

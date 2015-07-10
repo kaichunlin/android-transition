@@ -6,7 +6,9 @@ import android.util.Log;
 import com.kaichunlin.transition.BaseTransitionBuilder;
 import com.kaichunlin.transition.ITransition;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,8 +17,19 @@ import java.util.Map;
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 public abstract class BaseAdapter implements ITransitionAdapter {
+    protected final List<TransitionListener> transitionListenerList=new ArrayList<>();
     protected final Map<String, ITransition> mTransitionList = new HashMap<>();
     boolean mTransitioning;
+
+    @Override
+    public void addTransitionListener(TransitionListener transitionListener) {
+        transitionListenerList.add(transitionListener);
+    }
+
+    @Override
+    public void removeTransitionListener(TransitionListener transitionListener) {
+        transitionListenerList.remove(transitionListener);
+    }
 
     @Override
     public void addTransition(@NonNull BaseTransitionBuilder transitionBuilder) {
@@ -26,6 +39,13 @@ public abstract class BaseAdapter implements ITransitionAdapter {
     @Override
     public void addTransition(@NonNull ITransition transition) {
         mTransitionList.put(transition.getId(), transition);
+    }
+
+    @Override
+    public void addAllTransitions(@NonNull List<ITransition> transitionsList) {
+        for(ITransition transition:transitionsList) {
+            mTransitionList.put(transition.getId(), transition);
+        }
     }
 
     @Override
@@ -42,6 +62,17 @@ public abstract class BaseAdapter implements ITransitionAdapter {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void removeAllTransitions() {
+        stopTransition();
+        mTransitionList.clear();
+    }
+
+    @Override
+    public List<ITransition> getTransitions() {
+        return new ArrayList<>(mTransitionList.values());
     }
 
     /**
@@ -61,6 +92,12 @@ public abstract class BaseAdapter implements ITransitionAdapter {
         if (mTransitioning) {
             return false;
         }
+
+        //call listeners so they can perform their actions first, like modifying this adapter's transitions
+        for (int i = 0; i < transitionListenerList.size(); i++) {
+            transitionListenerList.get(i).onStartTransition();
+        }
+
         for (ITransition trans : mTransitionList.values()) {
             trans.startTransition();
         }
@@ -78,6 +115,11 @@ public abstract class BaseAdapter implements ITransitionAdapter {
         for (ITransition trans : mTransitionList.values()) {
             trans.updateProgress(value);
         }
+
+        //TODO
+        for (int i = 0; i < transitionListenerList.size(); i++) {
+            transitionListenerList.get(i).onStartTransition();
+        }
     }
 
     /**
@@ -88,13 +130,10 @@ public abstract class BaseAdapter implements ITransitionAdapter {
         for (ITransition trans : mTransitionList.values()) {
             trans.stopTransition();
         }
+        for (int i = 0; i < transitionListenerList.size(); i++) {
+            transitionListenerList.get(i).onStopTransition();
+        }
         mTransitioning = false;
-    }
-
-    @Override
-    public void clearTransition() {
-        stopTransition();
-        mTransitionList.clear();
     }
 
     @Override

@@ -81,8 +81,8 @@ public class SlidingUpPanelLayoutAdapter extends MenuBaseAdapter implements Slid
     }
 
     @Override
-    protected MenuOptionHandler createMenuHandler() {
-        return new MenuOptionHandler(this, new MenuOptionHandler.AdapterState() {
+    protected IMenuOptionHandler createMenuHandler() {
+        return new DefaultMenuOptionHandler(this, new IMenuOptionHandler.AdapterState() {
             @Override
             public boolean isOpened(Activity activity) {
                 return mIsExpanded;
