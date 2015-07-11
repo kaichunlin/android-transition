@@ -32,11 +32,18 @@ public interface ITransition<S extends BaseTransition.Setup> extends Cloneable {
     boolean startTransition();
 
     /**
-     * Updates the transition range
+     * Updates the transition progress
      *
      * @param progress
      */
     void updateProgress(float progress);
+
+    /**
+     * Sets the transition range
+     *
+     * @param progress
+     */
+    void setProgress(float progress);
 
     /**
      * Stops the transition

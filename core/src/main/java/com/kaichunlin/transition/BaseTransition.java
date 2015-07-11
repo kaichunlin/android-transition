@@ -35,9 +35,11 @@ abstract class BaseTransition<T extends BaseTransition, S extends BaseTransition
     }
 
     @Override
-    public T setSetup(@NonNull S setup) {
-        mSetup = setup;
-        return self();
+    public void setProgress(float progress) {
+        //TODO optimize
+        startTransition();
+        updateProgress(progress);
+        stopTransition();
     }
 
     @Override
@@ -51,6 +53,12 @@ abstract class BaseTransition<T extends BaseTransition, S extends BaseTransition
         }
 
         mReverse = !mReverse;
+        return self();
+    }
+
+    @Override
+    public T setSetup(@NonNull S setup) {
+        mSetup = setup;
         return self();
     }
 
