@@ -19,7 +19,7 @@ import java.util.Set;
  * <p>
  * Created by Kai-Chun Lin on 2015/4/14.
  */
-public class TransitionManager implements /*TimeAnimator.TimeListener,*/ Cloneable {
+public class TransitionManager implements Cloneable {
     private Set<ITransitionController> mTransitionControls = new HashSet<>();
     //    private final TimeAnimator mTimeAnim;
 //    private final AnimatorSet mInternalAnimSet;
@@ -105,21 +105,6 @@ public class TransitionManager implements /*TimeAnimator.TimeListener,*/ Cloneab
         }
 
         mLastProgress = Float.MIN_VALUE;
-//        //XXX share this among all TransitionManager's
-//        ValueAnimator dummyAnim = ObjectAnimator.ofInt(new Object() {
-//            private int dummy;
-//
-//            public int getDummy() {
-//                return dummy;
-//            }
-//
-//            public void setDummy(int dummy) {
-//                this.dummy = dummy;
-//            }
-//        }, "dummy", 0, 1);
-//        dummyAnim.setAnimationDuration(Integer.MAX_VALUE);
-//        mInternalAnimSet.play(dummyAnim).with(mTimeAnim);
-//        mInternalAnimSet.start();
 
         for (ITransitionController ctrl : mTransitionControls) {
             if (mInterpolator != null) {
