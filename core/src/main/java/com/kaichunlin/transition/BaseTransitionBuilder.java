@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.animation.Interpolator;
 
+import com.kaichunlin.transition.adapter.AnimationAdapter;
 import com.nineoldandroids.animation.PropertyValuesHolder;
 
 import java.util.ArrayList;
@@ -559,6 +560,8 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
         }
         return vt;
     }
+
+    public abstract <V extends AnimationAdapter> V buildAnimationAdapter();
 
     /**
      * Adds a DelayedEvaluator whose evaluate(View, BaseTransitionBuilder) method will only be called when the transition is about to start

@@ -2,6 +2,7 @@ package com.kaichunlin.transition.adapter;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.os.Handler;
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.view.animation.LinearInterpolator;
@@ -18,10 +19,17 @@ import android.view.animation.LinearInterpolator;
  * Created by Kai on 2015/7/10.
  */
 public class AnimationAdapter extends BaseAdapter implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener, ITransitionAdapter.TransitionListener {
+    private final Runnable mStartAnimation = new Runnable() {
+        @Override
+        public void run() {
+            startAnimation();
+        }
+    };
     final BaseAdapter mAdapter;
     private ValueAnimator mValueAnimator;
     private boolean mReverse;
     private int mDuration = 300;
+    private Handler mHandler;
 
     public AnimationAdapter() {
         mAdapter = null;
@@ -104,6 +112,25 @@ public class AnimationAdapter extends BaseAdapter implements ValueAnimator.Anima
         mValueAnimator.addUpdateListener(this);
         mValueAnimator.addListener(this);
         mValueAnimator.start();
+    }
+
+    public void startAnimationDelayed(@IntRange(from = 0) int delay) {
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
+        mHandler.postDelayed(mStartAnimation, delay);
+    }
+
+    public void startAnimationDelayed(@IntRange(from = 0) final int duration, @IntRange(from = 0) int delay) {
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startAnimation(duration);
+            }
+        }, delay);
     }
 
     /**

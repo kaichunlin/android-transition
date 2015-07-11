@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.animation.Interpolator;
 
+import com.kaichunlin.transition.adapter.MenuAnimationAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.PropertyValuesHolder;
@@ -229,6 +230,13 @@ public class MenuItemTransitionBuilder extends BaseTransitionBuilder<MenuItemTra
             vt.setInvalidateOptionOnStopTransition(mActivity, mInvalidateOptionOnStopAnimation);
         }
         return vt;
+    }
+
+    @Override
+    public MenuAnimationAdapter buildAnimationAdapter() {
+        MenuAnimationAdapter adapter=new MenuAnimationAdapter();
+        adapter.addTransition(mStart < mEnd?build():build().reverse());
+        return adapter;
     }
 
     @Override
