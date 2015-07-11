@@ -12,13 +12,7 @@ import android.view.Menu;
  * Created by Kai on 2015/6/22.
  */
 public class MenuAnimationAdapter extends AnimationAdapter implements IMenuOptionHandler {
-    private IMenuOptionHandler mMenuOptionHandler = new DefaultMenuOptionHandler(this, new IMenuOptionHandler.AdapterState() {
-        @Override
-        public boolean isOpened(Activity activity) {
-            return mOpened;
-        }
-    });
-    private boolean mOpened;
+    private IMenuOptionHandler mMenuOptionHandler = new DefaultMenuOptionHandler(this, getAdapterState());
 
     public MenuAnimationAdapter() {
         super();
@@ -35,39 +29,30 @@ public class MenuAnimationAdapter extends AnimationAdapter implements IMenuOptio
 
     @Override
     public void startAnimation(@IntRange(from = 0) int duration) {
-        setAnimationInReverse(mOpened);
+        AdapterState adapterState = getAdapterState();
+        adapterState.setState(adapterState.getState() == AdapterState.OPEN ? AdapterState.CLOSE : AdapterState.OPEN);
+
+        setAnimationInReverse(adapterState.isOpen());
         super.startAnimation(duration);
-        mOpened=!mOpened;
+    }
+
+    public void setOpened(boolean opened) {
+        getAdapterState().setState(opened ? AdapterState.OPEN : AdapterState.CLOSE);
     }
 
     public void setMenuOptionHandler(@NonNull IMenuOptionHandler menuOptionHandler) {
         mMenuOptionHandler = menuOptionHandler;
     }
 
-    protected IMenuOptionHandler createMenuHandler() {
-        return mMenuOptionHandler;
-    }
-
     private IMenuOptionHandler getHandler() {
-        return mAdapter == null?mMenuOptionHandler:(IMenuOptionHandler)mAdapter;
-    }
-
-    @Override
-    public AdapterState getAdapterState() {
-        getHandler().getAdapterState();
-        return null;
-    }
-
-    @Override
-    public boolean isOpened(@NonNull Activity activity) {
-        return getHandler().isOpened(activity);
+        return mAdapter == null ? mMenuOptionHandler : (IMenuOptionHandler) mAdapter;
     }
 
     public void onCreateOptionsMenu(@NonNull Activity activity, @NonNull Menu menu) {
         if (mAdapter == null) {
             mMenuOptionHandler.onCreateOptionsMenu(activity, menu);
         } else {
-            ((MenuBaseAdapter)mAdapter).onCreateOptionsMenu(activity, menu, mMenuOptionHandler.getAdapterState());
+            ((MenuBaseAdapter) mAdapter).onCreateOptionsMenu(activity, menu, mMenuOptionHandler.getAdapterState());
         }
     }
 
@@ -77,24 +62,24 @@ public class MenuAnimationAdapter extends AnimationAdapter implements IMenuOptio
     }
 
     public void setupOption(@NonNull Activity activity, @Nullable MenuOptionConfiguration openConfig) {
-            getHandler().setupOption(activity, openConfig);
+        getHandler().setupOption(activity, openConfig);
     }
 
     public void setupOpenOption(@NonNull Activity activity, @Nullable MenuOptionConfiguration openConfig) {
-            getHandler().setupOpenOption(activity, openConfig);
+        getHandler().setupOpenOption(activity, openConfig);
     }
 
     public void setupCloseOption(@NonNull Activity activity, @Nullable MenuOptionConfiguration closeConfig) {
-            getHandler().setupCloseOption(activity, closeConfig);
+        getHandler().setupCloseOption(activity, closeConfig);
     }
 
     public void setupOptions(@NonNull Activity activity, @Nullable MenuOptionConfiguration openConfig, @Nullable MenuOptionConfiguration closeConfig) {
-            getHandler().setupOptions(activity, openConfig, closeConfig);
+        getHandler().setupOptions(activity, openConfig, closeConfig);
     }
 
     @Override
     public void clearOptions() {
-            getHandler().clearOptions();
+        getHandler().clearOptions();
     }
 
     @Override

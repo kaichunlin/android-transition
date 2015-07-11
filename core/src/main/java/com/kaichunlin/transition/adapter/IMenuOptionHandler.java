@@ -12,14 +12,6 @@ public interface IMenuOptionHandler {
     AdapterState getAdapterState();
 
     /**
-     * Is it the opened state, the definition of opened state is dependent on the ITransitionAdapter
-     *
-     * @param activity
-     * @return
-     */
-    boolean isOpened(@NonNull Activity activity);
-
-    /**
      * Syncs current state of Menu with transitions
      *
      * @param activity
@@ -78,8 +70,4 @@ public interface IMenuOptionHandler {
     MenuOptionConfiguration getOpenConfig();
 
     MenuOptionConfiguration getCloseConfig();
-
-    interface AdapterState {
-        boolean isOpened(Activity activity);
-    }
 }

@@ -2,7 +2,6 @@ package com.kaichunlin.transition.adapter;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.Menu;
 
 /**
@@ -30,16 +29,6 @@ public abstract class MenuBaseAdapter extends BaseAdapter implements IMenuOption
         if (mMenuHandler == null) {
             mMenuHandler = createMenuHandler();
         }
-    }
-
-    @Override
-    public AdapterState getAdapterState() {
-        return mMenuHandler.getAdapterState();
-    }
-
-    @Override
-    public boolean isOpened(@NonNull Activity activity) {
-        return mMenuHandler.isOpened(activity);
     }
 
     public void onCreateOptionsMenu(@NonNull Activity activity, @NonNull Menu menu) {

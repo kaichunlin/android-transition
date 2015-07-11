@@ -52,7 +52,7 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
             }
         }
     };
-    
+
     /**
      * Keeps the right fragment in the center of the screen
      */
@@ -154,15 +154,22 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
         return this;
     }
 
-    protected void startTransition() {
+    public void startTransition() {
         throw new UnsupportedOperationException();
     }
 
-    protected boolean startTransition(float progress) {
+    public boolean startTransition(float progress) {
         throw new UnsupportedOperationException();
     }
 
-    private void startTransition(@NonNull View page) {
+    private boolean startTransition(@NonNull View page) {
+        if (getAdapterState().isTransiting()) {
+            return false;
+        }
+
+        getAdapterState().setTransiting(true);
+        notifyStartTransition();
+
         PageHolder holder = mAnimationListMap.get(page);
         if (holder == null) {
             holder = new PageHolder(page, mTransitionList);
@@ -174,16 +181,20 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
                 trans.startTransition();
             }
         }
+
+        return true;
     }
 
-    protected void updateProgress(float value) {
+    public void updateProgress(float value) {
         throw new UnsupportedOperationException();
     }
 
     protected void updateProgress(@NonNull View page, float value) {
         PageHolder holder = mAnimationListMap.get(page);
         if (holder == null) {
-            Log.e(getClass().getSimpleName(), "updateProgress: NULL");
+            if(TransitionConfig.isDebug()) {
+                Log.e(getClass().getSimpleName(), "updateProgress: NULL");
+            }
             return;
         }
         for (ITransition trans : holder.mAnimationList.values()) {
@@ -192,13 +203,15 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
     }
 
     public void stopTransition() {
+        getAdapterState().setTransiting(false);
+        notifyStopTransition();
+
         for (PageHolder holder : mAnimationListMap.values()) {
             for (ITransition trans : holder.mAnimationList.values()) {
                 trans.stopTransition();
             }
         }
         mAnimationListMap.clear();
-        mTransitioning = false;
     }
 
     @Override

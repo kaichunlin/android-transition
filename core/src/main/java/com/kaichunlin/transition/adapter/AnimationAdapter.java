@@ -14,15 +14,14 @@ import android.view.animation.LinearInterpolator;
  * However it must be noted that when AnimationAdapter reuses transitions configured for another {@link BaseAdapter}, any changes made
  * to the other {@link BaseAdapter} may effect AnimationAdapter and cause strange errors. For more complex case, {@link UnifiedAdapter}
  * should be used instead.
- * <p/>
+ * <p>
  * Created by Kai on 2015/7/10.
  */
-public class AnimationAdapter extends BaseAdapter implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
+public class AnimationAdapter extends BaseAdapter implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener, ITransitionAdapter.TransitionListener {
     final BaseAdapter mAdapter;
     private ValueAnimator mValueAnimator;
     private boolean mReverse;
     private int mDuration = 300;
-    private Animator.AnimatorListener mAnimatorListener;
 
     public AnimationAdapter() {
         mAdapter = null;
@@ -49,8 +48,32 @@ public class AnimationAdapter extends BaseAdapter implements ValueAnimator.Anima
         return mReverse;
     }
 
-    public void setAnimatorListener(@Nullable Animator.AnimatorListener animatorListener) {
-        mAnimatorListener = animatorListener;
+    @Override
+    public void addTransitionListener(TransitionListener transitionListener) {
+        super.addTransitionListener(transitionListener);
+
+        if (mAdapter != null) {
+            mAdapter.addTransitionListener(this);
+        }
+    }
+
+    @Override
+    public void removeTransitionListener(TransitionListener transitionListener) {
+        super.removeTransitionListener(transitionListener);
+
+        if (mAdapter != null) {
+            mAdapter.removeTransitionListener(this);
+        }
+    }
+
+    @Override
+    public void onStartTransition(ITransitionAdapter adapter) {
+        notifyStartTransition();
+    }
+
+    @Override
+    public void onStopTransition(ITransitionAdapter adapter) {
+        notifyStopTransition();
     }
 
     /**
@@ -133,7 +156,7 @@ public class AnimationAdapter extends BaseAdapter implements ValueAnimator.Anima
         }
     }
 
-    private BaseAdapter getAdapter() {
+    private ITransitionAdapter getAdapter() {
         return mAdapter == null ? this : mAdapter;
     }
 
@@ -144,33 +167,21 @@ public class AnimationAdapter extends BaseAdapter implements ValueAnimator.Anima
 
     @Override
     public void onAnimationStart(Animator animation) {
-        if (mAnimatorListener != null) {
-            mAnimatorListener.onAnimationStart(animation);
-        }
     }
 
     @Override
     public void onAnimationEnd(Animator animation) {
         stopTransition();
         mValueAnimator = null;
-        if (mAnimatorListener != null) {
-            mAnimatorListener.onAnimationEnd(animation);
-        }
     }
 
     @Override
     public void onAnimationCancel(Animator animation) {
         stopTransition();
         mValueAnimator = null;
-        if (mAnimatorListener != null) {
-            mAnimatorListener.onAnimationCancel(animation);
-        }
     }
 
     @Override
     public void onAnimationRepeat(Animator animation) {
-        if (mAnimatorListener != null) {
-            mAnimatorListener.onAnimationRepeat(animation);
-        }
     }
 }

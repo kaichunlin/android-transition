@@ -29,18 +29,13 @@ public class DefaultMenuOptionHandler implements IMenuOptionHandler {
     }
 
     @Override
-    public boolean isOpened(@NonNull Activity activity) {
-        return mAdapterState.isOpened(activity);
-    }
-
-    @Override
     public void onCreateOptionsMenu(@NonNull Activity activity, @NonNull Menu menu) {
         onCreateOptionsMenu(activity, menu, mAdapterState);
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Activity activity, @NonNull Menu menu, @NonNull AdapterState adapterState) {
-        if (adapterState.isOpened(activity)) {
+        if (adapterState.isOpen()) {
             boolean hasOpen = mOpenConfig != null;
             if (hasOpen && mOpenConfig.getMenuId() > 0) {
                 activity.getMenuInflater().inflate(mOpenConfig.getMenuId(), menu);
@@ -94,7 +89,7 @@ public class DefaultMenuOptionHandler implements IMenuOptionHandler {
         mOpenConfig = openConfig;
         mCloseConfig = closeConfig;
 
-        if (activity != null && isOpened(activity)) {
+        if (activity != null && mAdapterState.isOpen()) {
             if (mCloseConfig != null) {
                 if (mCloseConfig.getTransition().isInvalidateOptionOnStopTransition()) {
                     activity.invalidateOptionsMenu();

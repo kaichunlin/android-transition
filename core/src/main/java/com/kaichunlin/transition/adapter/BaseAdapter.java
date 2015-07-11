@@ -17,9 +17,14 @@ import java.util.Map;
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 public abstract class BaseAdapter implements ITransitionAdapter {
-    protected final List<TransitionListener> transitionListenerList=new ArrayList<>();
+    private final AdapterState mAdapterState = new AdapterState();
+    protected final List<TransitionListener> transitionListenerList = new ArrayList<>();
     protected final Map<String, ITransition> mTransitionList = new HashMap<>();
-    boolean mTransitioning;
+
+    @Override
+    public AdapterState getAdapterState() {
+        return mAdapterState;
+    }
 
     @Override
     public void addTransitionListener(TransitionListener transitionListener) {
@@ -43,7 +48,7 @@ public abstract class BaseAdapter implements ITransitionAdapter {
 
     @Override
     public void addAllTransitions(@NonNull List<ITransition> transitionsList) {
-        for(ITransition transition:transitionsList) {
+        for (ITransition transition : transitionsList) {
             mTransitionList.put(transition.getId(), transition);
         }
     }
@@ -75,35 +80,32 @@ public abstract class BaseAdapter implements ITransitionAdapter {
         return new ArrayList<>(mTransitionList.values());
     }
 
-    /**
-     * Starts the transition,
-     */
-    protected void startTransition() {
+    @Override
+    public void startTransition() {
         startTransition(0);
     }
 
-    /**
-     * Starts the transition, isTransitioning() will always returns true after this method is executed
-     *
-     * @param progress the starting transition progress, the valid value range depends on the specific Adapter implementation
-     * @return true if the call caused the transition to be started, false if the transition is already in the started state
-     */
-    protected boolean startTransition(float progress) {
-        if (mTransitioning) {
+    @Override
+    public boolean startTransition(float progress) {
+        if (mAdapterState.isTransiting()) {
             return false;
         }
 
+        mAdapterState.setTransiting(true);
         //call listeners so they can perform their actions first, like modifying this adapter's transitions
-        for (int i = 0; i < transitionListenerList.size(); i++) {
-            transitionListenerList.get(i).onStartTransition();
-        }
+        notifyStartTransition();
 
         for (ITransition trans : mTransitionList.values()) {
             trans.startTransition();
         }
         updateProgress(progress);
-        mTransitioning = true;
         return true;
+    }
+
+    protected void notifyStartTransition() {
+        for (int i = 0; i < transitionListenerList.size(); i++) {
+            transitionListenerList.get(i).onStartTransition(this);
+        }
     }
 
     /**
@@ -111,14 +113,9 @@ public abstract class BaseAdapter implements ITransitionAdapter {
      *
      * @param value
      */
-    protected void updateProgress(float value) {
+    public void updateProgress(float value) {
         for (ITransition trans : mTransitionList.values()) {
             trans.updateProgress(value);
-        }
-
-        //TODO
-        for (int i = 0; i < transitionListenerList.size(); i++) {
-            transitionListenerList.get(i).onStartTransition();
         }
     }
 
@@ -127,17 +124,21 @@ public abstract class BaseAdapter implements ITransitionAdapter {
      */
     @Override
     public void stopTransition() {
+        if (!mAdapterState.isTransiting()) {
+            return;
+        }
+
+        mAdapterState.setTransiting(false);
+        notifyStopTransition();
+
         for (ITransition trans : mTransitionList.values()) {
             trans.stopTransition();
         }
-        for (int i = 0; i < transitionListenerList.size(); i++) {
-            transitionListenerList.get(i).onStopTransition();
-        }
-        mTransitioning = false;
     }
 
-    @Override
-    public boolean isTransitioning() {
-        return mTransitioning;
+    protected void notifyStopTransition() {
+        for (int i = 0; i < transitionListenerList.size(); i++) {
+            transitionListenerList.get(i).onStopTransition(this);
+        }
     }
 }

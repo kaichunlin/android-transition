@@ -89,7 +89,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
     }
 
     //TODO this applies the range value to all the values set before this call and after the last withRange call
-    public T withRange(float start, float end) {
+    private T withRange(float start, float end) {
         return self();
     }
 
@@ -100,19 +100,19 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T alpha(@FloatRange(from = 0.0, to=1.0) float start, @FloatRange(from = 0.0, to=1.0) float end) {
+    public T alpha(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
         transitFloat(ALPHA, start, end);
         return self();
     }
 
 
     /**
-     *Changes the alpha value from the target view's current value to the end value
+     * Changes the alpha value from the target view's current value to the end value
      *
      * @param end
      * @return self
      */
-    public abstract T alpha(@FloatRange(from = 0.0, to=1.0) float end);
+    public abstract T alpha(@FloatRange(from = 0.0, to = 1.0) float end);
 
     /**
      * Similar to alpha(float), but wait until the transition is about to start to perform the evaluation
@@ -120,7 +120,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T delayAlpha(@FloatRange(from = 0.0, to=1.0) final float end) {
+    public T delayAlpha(@FloatRange(from = 0.0, to = 1.0) final float end) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
             public void evaluate(View view, BaseTransitionBuilder builder) {
@@ -143,7 +143,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
     }
 
     /**
-     *Changes the rotation value from the target view's current value to the end value
+     * Changes the rotation value from the target view's current value to the end value
      *
      * @param end
      * @return self
@@ -179,7 +179,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
     }
 
     /**
-     *Changes the rotationX value from the target view's current value to the end value
+     * Changes the rotationX value from the target view's current value to the end value
      *
      * @param end
      * @return self
@@ -215,7 +215,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
     }
 
     /**
-     *Changes the rotationY value from the target view's current value to the end value
+     * Changes the rotationY value from the target view's current value to the end value
      *
      * @param end
      * @return self
@@ -245,18 +245,18 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T scaleX(@FloatRange(from = 0.0, to=1.0) float start, @FloatRange(from = 0.0, to=1.0) float end) {
+    public T scaleX(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
         transitFloat(SCALE_X, start, end);
         return self();
     }
 
     /**
-     *Changes the scaleX value from the target view's current value to the end value
+     * Changes the scaleX value from the target view's current value to the end value
      *
      * @param end
      * @return self
      */
-    public abstract T scaleX(@FloatRange(from = 0.0, to=1.0) float end);
+    public abstract T scaleX(@FloatRange(from = 0.0, to = 1.0) float end);
 
     /**
      * Similar to scaleX(float), but wait until the transition is about to start to perform the evaluation
@@ -264,7 +264,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T delayScaleX(@FloatRange(from = 0.0, to=1.0) final float end) {
+    public T delayScaleX(@FloatRange(from = 0.0, to = 1.0) final float end) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
             public void evaluate(View view, BaseTransitionBuilder builder) {
@@ -281,18 +281,18 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T scaleY(@FloatRange(from = 0.0, to=1.0) float start, @FloatRange(from = 0.0, to=1.0) float end) {
+    public T scaleY(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
         transitFloat(SCALE_Y, start, end);
         return self();
     }
 
     /**
-     *Changes the scaleY value from the target view's current value to the end value
+     * Changes the scaleY value from the target view's current value to the end value
      *
      * @param end
      * @return self
      */
-    public abstract T scaleY(@FloatRange(from = 0.0, to=1.0) float end);
+    public abstract T scaleY(@FloatRange(from = 0.0, to = 1.0) float end);
 
     /**
      * Similar to scaleX(float), but wait until the transition is about to start to perform the evaluation
@@ -300,7 +300,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T delayScaleY(@FloatRange(from = 0.0, to=1.0) final float end) {
+    public T delayScaleY(@FloatRange(from = 0.0, to = 1.0) final float end) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
             public void evaluate(View view, BaseTransitionBuilder builder) {
@@ -317,19 +317,19 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T scale(@FloatRange(from = 0.0, to=1.0) float start, @FloatRange(from = 0.0, to=1.0) float end) {
+    public T scale(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
         transitFloat(SCALE_X, start, end);
         transitFloat(SCALE_Y, start, end);
         return self();
     }
 
     /**
-     *Changes the scale value from the target view's current value to the end value
+     * Changes the scale value from the target view's current value to the end value
      *
      * @param end
      * @return self
      */
-    public abstract T scale(@FloatRange(from = 0.0, to=1.0) float end);
+    public abstract T scale(@FloatRange(from = 0.0, to = 1.0) float end);
 
     /**
      * Similar to scale(float), but wait until the transition is about to start to perform the evaluation
@@ -337,7 +337,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
      * @param end
      * @return self
      */
-    public T delayScale(@FloatRange(from = 0.0, to=1.0) final float end) {
+    public T delayScale(@FloatRange(from = 0.0, to = 1.0) final float end) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
             public void evaluate(View view, BaseTransitionBuilder builder) {
@@ -360,7 +360,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
     }
 
     /**
-     *Changes the translationX value from the target view's current value to the end value
+     * Changes the translationX value from the target view's current value to the end value
      *
      * @param end
      * @return self
@@ -396,7 +396,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
     }
 
     /**
-     *Changes the translationY value from the target view's current value to the end value
+     * Changes the translationY value from the target view's current value to the end value
      *
      * @param end
      * @return self
@@ -432,7 +432,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
     }
 
     /**
-     *Changes the x value from the target view's current value to the end value
+     * Changes the x value from the target view's current value to the end value
      *
      * @param end
      * @return self
@@ -442,7 +442,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
     /**
      * Similar to x(float), but wait until the transition is about to start to perform the evaluation
      *
-     *  @param end
+     * @param end
      * @return self
      */
     public T delayX(final float end) {
@@ -545,17 +545,16 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
     /**
      * Builds a ITransition, the created object will not be modified when the builder's modifier methods are called.
      *
-     *
      * @return
      */
     public final U build() {
         U vt = createTransition();
         vt.setId(mId);
 
-        if(mInterpolator!=null) {
+        if (mInterpolator != null) {
             vt.setInterpolator(mInterpolator);
         }
-        if(mReverse) {
+        if (mReverse) {
             vt.reverse();
         }
         return vt;
@@ -563,6 +562,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
 
     /**
      * Adds a DelayedEvaluator whose evaluate(View, BaseTransitionBuilder) method will only be called when the transition is about to start
+     *
      * @param delayed
      * @return
      */
