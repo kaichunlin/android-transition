@@ -26,7 +26,7 @@ public class DefaultTransitionController extends BaseTransitionController implem
      * @param anim
      * @return
      */
-    public static DefaultTransitionController wrap(@NonNull Animator anim) {
+    public static DefaultTransitionController wrapAnimator(@NonNull Animator anim) {
         AnimatorSet set = new AnimatorSet();
         set.play(anim);
         return new DefaultTransitionController(set);
@@ -38,7 +38,7 @@ public class DefaultTransitionController extends BaseTransitionController implem
      * @param animSet
      * @return
      */
-    public static ITransitionController wrap(@NonNull AnimatorSet animSet) {
+    public static ITransitionController wrapAnimatorSet(@NonNull AnimatorSet animSet) {
         return new DefaultTransitionController(animSet);
     }
 

@@ -1,5 +1,6 @@
 package com.kaichunlin.transition;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.annotation.CheckResult;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 
 import com.kaichunlin.transition.adapter.AnimationAdapter;
 import com.kaichunlin.transition.adapter.ITransitionAdapter;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorInflater;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ArgbEvaluator;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -83,7 +86,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     }
 
     @Override
-    public ViewTransitionBuilder alpha(@FloatRange(from = 0.0, to=1.0) float end) {
+    public ViewTransitionBuilder alpha(@FloatRange(from = 0.0, to = 1.0) float end) {
         return alpha(ViewHelper.getAlpha(mView), end);
     }
 
@@ -103,17 +106,17 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     }
 
     @Override
-    public ViewTransitionBuilder scaleX(@FloatRange(from = 0.0, to=1.0) float end) {
+    public ViewTransitionBuilder scaleX(@FloatRange(from = 0.0, to = 1.0) float end) {
         return scaleX(ViewHelper.getScaleX(mView), end);
     }
 
     @Override
-    public ViewTransitionBuilder scaleY(@FloatRange(from = 0.0, to=1.0) float end) {
+    public ViewTransitionBuilder scaleY(@FloatRange(from = 0.0, to = 1.0) float end) {
         return scaleY(ViewHelper.getScaleY(mView), end);
     }
 
     @Override
-    public ViewTransitionBuilder scale(@FloatRange(from = 0.0, to=1.0) float end) {
+    public ViewTransitionBuilder scale(@FloatRange(from = 0.0, to = 1.0) float end) {
         return scaleX(ViewHelper.getScaleX(mView), end).scaleY(ViewHelper.getScaleY(mView), end);
     }
 
@@ -285,7 +288,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
                 ObjectAnimator animator = ObjectAnimator.ofInt(transitionManager.getTarget(), "backgroundColor", fromColor, toColor);
                 animator.setDuration(10_000);
                 animator.setEvaluator(new ArgbEvaluator());
-                transitionManager.addTransitionController(DefaultTransitionController.wrap(animator));
+                transitionManager.addTransitionController(DefaultTransitionController.wrapAnimator(animator));
             }
         });
         return self();
@@ -332,10 +335,49 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
                     }
                 });
 
-                transitionManager.addTransitionController(DefaultTransitionController.wrap(anim));
+                transitionManager.addTransitionController(DefaultTransitionController.wrapAnimator(anim));
             }
         });
         return self();
+    }
+
+    /**
+     * TODO Current support is rudimentary, may expand support if there are enough demand for this
+     * <p>
+     * Converts an animator to ITransition when built, note that not all functions of Animator are supported.
+     * <p>
+     * Non-working functions: repeatMode, repeatCount, delay, duration (when in a set), Interpolator.
+     * <p>
+     * Furthermore, {@link #transitViewGroup(ViewGroupTransition)} does not work with this method
+     *
+     * @param animator
+     * @return
+     */
+    public ViewTransitionBuilder animator(@NonNull final Animator animator) {
+        addSetup(new ViewTransition.Setup() {
+            @Override
+            public void setupAnimation(TransitionManager transitionManager) {
+                Animator animator2 = animator.clone();
+                if (animator2 instanceof AnimatorSet) {
+                    transitionManager.addTransitionController(DefaultTransitionController.wrapAnimatorSet((AnimatorSet) animator2));
+                } else {
+                    transitionManager.addTransitionController(DefaultTransitionController.wrapAnimator(animator2));
+                }
+            }
+        });
+        return self();
+    }
+
+    /**
+     * @see {@link #animator(Animator)}
+     *
+     * @param context
+     * @param animatorId
+     * @return
+     */
+    public ViewTransitionBuilder animator(@NonNull Context context, int animatorId) {
+        animator(AnimatorInflater.loadAnimator(context, animatorId));
+        return this;
     }
 
     /**
@@ -386,8 +428,8 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
 
     @Override
     public AnimationAdapter buildAnimationAdapter() {
-        AnimationAdapter adapter=new AnimationAdapter();
-        adapter.addTransition(mStart < mEnd?build():build().reverse());
+        AnimationAdapter adapter = new AnimationAdapter();
+        adapter.addTransition(mStart < mEnd ? build() : build().reverse());
 
         return adapter;
     }
@@ -430,12 +472,11 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      */
     public interface ViewGroupTransition {
         /**
-         *
          * @param builder
          * @param viewGroup the parent ViewGroup this view belongs to
          * @param childView the child view to be transitioned
-         * @param index curr
-         * @param total total number of children
+         * @param index     curr
+         * @param total     total number of children
          */
         void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View childView, int index, int total);
     }
