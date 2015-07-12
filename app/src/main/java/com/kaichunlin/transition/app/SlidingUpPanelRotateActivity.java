@@ -32,9 +32,9 @@ public class SlidingUpPanelRotateActivity extends AppCompatActivity {
         //code to transit view
         mSlidingUpPanelLayoutAdapter = new SlidingUpPanelLayoutAdapter();
         mSlidingUpPanelLayoutAdapter.addTransition(
-                ViewTransitionBuilder.transit(findViewById(R.id.content_bg)).rotationY(90).endRange(0.25f).id("DROID"));
+                ViewTransitionBuilder.transit(findViewById(R.id.content_bg)).rotationY(90).endRange(0.25f).id("BG"));
         mSlidingUpPanelLayoutAdapter.addTransition(
-                ViewTransitionBuilder.transit(findViewById(R.id.content_bg2)).rotationY(270, 360).range(0.25f, 0.5f).id("JOKER"));
+                ViewTransitionBuilder.transit(findViewById(R.id.content_bg2)).rotationY(270, 360).range(0.25f, 0.5f).id("BG_2"));
         supl.setPanelSlideListener(mSlidingUpPanelLayoutAdapter);
         mSlidingUpPanelLayoutAdapter.setPanelSlideListener(new DialogPanelSlideListener(this));
     }

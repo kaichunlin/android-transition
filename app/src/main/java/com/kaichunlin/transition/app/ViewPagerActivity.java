@@ -58,11 +58,11 @@ public class ViewPagerActivity extends AppCompatActivity {
 
         switch (menu.getItemId()) {
             case R.id.trans_y:
-                adapter.clearTransition();
+                adapter.removeAllTransitions();
                 OnPageChangeListenerAdapter.bindWithRotationYTransition(adapter);
                 break;
             case R.id.zoom:
-                adapter.clearTransition();
+                adapter.removeAllTransitions();
                 OnPageChangeListenerAdapter.bindWithZoomOutTransition(adapter);
                 break;
             case R.id.depth:

@@ -8,25 +8,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 
+import com.kaichunlin.transition.Animation.Animation;
 import com.kaichunlin.transition.MenuItemTransition;
 import com.kaichunlin.transition.MenuItemTransitionBuilder;
 import com.kaichunlin.transition.adapter.DrawerListenerAdapter;
+import com.kaichunlin.transition.adapter.ITransitionAdapter;
 import com.kaichunlin.transition.adapter.MenuOptionConfiguration;
 
 import kaichunlin.transition.app.R;
 
 
 public class DrawerMenuItemActivity extends AppCompatActivity implements View.OnClickListener {
-
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private DrawerListenerAdapter mDrawerListenerAdapter;
-    MenuItemTransition mFlipOpen;
-    MenuItemTransition mFlipClose;
-    MenuItemTransition mShrinkOpen;
-    MenuItemTransition mShrinkClose;
-    MenuItemTransition mRotateOpen;
-    MenuItemTransition mRotateClose;
+    private MenuItemTransition mFlipOpen;
+    private MenuItemTransition mFlipClose;
+    private MenuItemTransition mShrinkOpen;
+    private MenuItemTransition mShrinkClose;
+    private MenuItemTransition mRotateOpen;
+    private MenuItemTransition mRotateClose;
+    private Animation mStartAnimation;
+    private boolean mFirstTimeAnimation = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,20 +56,36 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
         //Creates a shared configuration that: applies alpha, the transition effect is applied in a cascading manner
         // (v.s. simultaneously), MenuItem will reset to enabled when transiting, and invalidates menu on transition
         // completion
-        MenuItemTransitionBuilder builder = MenuItemTransitionBuilder.transit("Flip", toolbar).alpha(1f, 0.5f).scaleX(1f, 0f).translationX(0, 30).cascade(0.3f).visibleOnStartAnimation(true).invalidateOptionOnStopTransition(this, true);
-        mFlipOpen = builder.build();
+        MenuItemTransitionBuilder sharedBuilder = MenuItemTransitionBuilder.transit(toolbar).visibleOnStartAnimation(true).invalidateOptionOnStopTransition(this, true);
+        MenuItemTransitionBuilder builder = sharedBuilder.clone().id("Flip").alpha(1f, 0.5f).translationX(0, 30).cascade(0.3f);
+        mFlipOpen = builder.scaleX(1f, 0f).build();
         mFlipClose = builder.reverse().translationX(0, -30).build();
-        //overrides some transition while reusing the rest, so clone it
-        mShrinkClose = builder.id("Shrink").scale(1f, 0f).build();
+        mShrinkClose = builder.scale(1f, 0f).id("Shrink").build();
         mShrinkOpen = builder.reverse().translationX(0, 30).build();
-        builder = MenuItemTransitionBuilder.transit("Rotate", toolbar).rotation(0f, 180f).scale(1f, 0f).cascade(0.15f).visibleOnStartAnimation(true).invalidateOptionOnStopTransition(this, true);
-        mRotateOpen = builder.build();
+        builder = sharedBuilder.id("Rotate").rotation(0f, 180f).cascade(0.15f);
+        mRotateOpen = builder.scale(1f, 0f).build();
         mRotateClose = builder.reverse().build();
 
         //set up the adapter
         mDrawerListenerAdapter = new DrawerListenerAdapter(mDrawerToggle, R.id.drawerList);
         mDrawerListenerAdapter.setDrawerLayout(mDrawerLayout);
         mDrawerListenerAdapter.setDrawerListener(new DialogDrawerListener(this));
+
+        mStartAnimation = new Animation(mFlipOpen.clone().reverse());
+
+        //this is to prevent conflict when the drawer is being opened while the above mStartAnimation is still in progress
+        //unfortunately there's no way to reconcile the two, so the transiting/animating View will "jump" to a new state
+        //TODO evaluate if it's possible to reconcile the two states automatically, maybe if they share the same ITransition instance?
+        mDrawerListenerAdapter.addTransitionListener(new ITransitionAdapter.TransitionListener() {
+            @Override
+            public void onStartTransition(ITransitionAdapter adapter) {
+                mStartAnimation.cancelAnimation();
+            }
+
+            @Override
+            public void onStopTransition(ITransitionAdapter adapter) {
+            }
+        });
 
         //set the initial options
         onClick(findViewById(R.id.flip_fade));
@@ -82,6 +101,14 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         mDrawerListenerAdapter.onCreateOptionsMenu(this, menu);
+
+        //TODO make it a build-in function for AnimationAdapter
+        if (mFirstTimeAnimation) {
+            //wait after onCreateOptionsMenu is called to start the animation
+            //startAnimationDelayed is used with a delay of 0 to allow menu to be properly added to the view before executing mStartAnimation
+            mStartAnimation.startAnimationDelayed(800, 0);
+            mFirstTimeAnimation = false;
+        }
 
         return super.onCreateOptionsMenu(menu);
     }

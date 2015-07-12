@@ -22,10 +22,12 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
-import com.kaichunlin.transition.CustomTransitionController;
+import com.kaichunlin.transition.ITransitionHandler;
 import com.kaichunlin.transition.ViewTransitionBuilder;
 import com.kaichunlin.transition.adapter.SlidingUpPanelLayoutAdapter;
-import com.kaichunlin.transition.util.ViewUtil;
+import com.kaichunlin.transition.adapter.UnifiedAdapter;
+import com.kaichunlin.transition.internal.ITransitionController;
+import com.kaichunlin.transition.util.TransitionUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import kaichunlin.transition.app.R;
@@ -33,10 +35,11 @@ import kaichunlin.transition.app.R;
 
 public class SlidingUpPanelActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private SlidingUpPanelLayoutAdapter mSlidingUpPanelLayoutAdapter;
+    private UnifiedAdapter mUnifiedAdapter;
     private Toolbar mToolbar;
     private Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
     private View mLastSelection;
+    private Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,17 +59,19 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
         SlidingUpPanelLayout supl = ((SlidingUpPanelLayout) findViewById(R.id.sliding_layout));
 
         //set up the adapter
-        mSlidingUpPanelLayoutAdapter = new SlidingUpPanelLayoutAdapter();
+        SlidingUpPanelLayoutAdapter mSlidingUpPanelLayoutAdapter = new SlidingUpPanelLayoutAdapter();
         supl.setPanelSlideListener(mSlidingUpPanelLayoutAdapter);
         //the adapter accepts another SlidingUpPanelLayout.PanelSlideListener so other customizations can be performed
         mSlidingUpPanelLayoutAdapter.setPanelSlideListener(new DialogPanelSlideListener(this));
 
+        mUnifiedAdapter = new UnifiedAdapter(mSlidingUpPanelLayoutAdapter);
+
         //this is required since some transition requires the width/height/position of a view, which is not yet properly initialized until layout is complete
         //in this example, another way of achieving correct behavior without using ViewUtil.executeOnGlobalLayout() would be to change all
         // translationYAsFractionOfHeight() calls to delayTranslationYAsFractionOfHeight() which would defer the calculation until the transition is just about to start
-        ViewUtil.executeOnGlobalLayout(findViewById(R.id.rotate_slide), new ViewTreeObserver.OnGlobalLayoutListener() {
+        TransitionUtil.executeOnGlobalLayout(findViewById(R.id.rotate_slide), new ViewTreeObserver.OnGlobalLayoutListener() {
             public void onGlobalLayout() {
-                updateTransition(findViewById(R.id.rotate_slide));
+                updateTransition(findViewById(R.id.rotate_slide), false);
             }
         });
     }
@@ -76,6 +81,8 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.sliding_up_panel, menu);
 
+        mMenu = menu;
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -83,6 +90,7 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
     public boolean onOptionsItemSelected(MenuItem menu) {
         super.onOptionsItemSelected(menu);
 
+        boolean changeInterpolator = true;
         switch (menu.getItemId()) {
             case R.id.menu_default:
                 mInterpolator = new AccelerateDecelerateInterpolator();
@@ -102,78 +110,104 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
             case R.id.menu_anticipate:
                 mInterpolator = new AnticipateInterpolator();
                 break;
+            case R.id.menu_animate:
+                changeInterpolator = false;
+
+                startAnimation();
+                break;
         }
-        updateTransition(mLastSelection);
+        if (changeInterpolator) {
+            updateTransition(mLastSelection, false);
+        }
 
         return true;
     }
 
-    @Override
-    public void onClick(View v) {
-        updateTransition(v);
+    private void startAnimation() {
+        mUnifiedAdapter.startAnimation();
+        mUnifiedAdapter.setReverseAnimation(!mUnifiedAdapter.isReverseAnimation());
     }
 
-    public void updateTransition(View v) {
-        mSlidingUpPanelLayoutAdapter.clearTransition();
+    @Override
+    public void onClick(View v) {
+        updateTransition(v, mUnifiedAdapter.isReverseAnimation());
+    }
+
+    public void updateTransition(View v, boolean animate) {
+        if (animate) {
+            startAnimation();
+        }
+
+        //TODO removeAllTransitions() has to be called *after* mAnimationAdapter.resetAnimation(), this subtle order of execution requirement should be removed
+        mUnifiedAdapter.removeAllTransitions();
         mLastSelection = v;
 
+        boolean enableAnimationMenu = true;
+
         //configure a builder with properties shared by all instances and just clone it for future use
-        //since adapter(ITransitionAdapter) is set, simply call build() would add the resultant ViewTransition to the adapter
-        ViewTransitionBuilder baseBuilder = ViewTransitionBuilder.transit(mToolbar).interpolator(mInterpolator).adapter(mSlidingUpPanelLayoutAdapter);
+        //since adapter(ITransitionAdapter) is set, simply call buildFor(mUnifiedAdapter) would add the resultant ViewTransition to the adapter
+        ViewTransitionBuilder baseBuilder = ViewTransitionBuilder.transit(mToolbar).interpolator(mInterpolator);
         ViewTransitionBuilder builder;
         ((ImageView) findViewById(R.id.content_bg)).setColorFilter(null);
         boolean setHalfHeight = false;
         switch (v.getId()) {
-            //TODO visual artifact on Android 5.1 when rotationX is ~45, why???
+            //TODO visual artifact on Android 5.1 (Nexus 7 2013) when rotationX is ~45, why???
             case R.id.rotate_slide:
                 builder = baseBuilder.clone();
-                builder.scale(0.8f).rotationX(40).translationYAsFractionOfHeight(-1f).build();
+                builder.scale(0.8f).rotationX(40).translationYAsFractionOfHeight(-1f).buildFor(mUnifiedAdapter);
 
                 builder = baseBuilder.clone().target(findViewById(R.id.content_bg)).rotationX(42f).scale(0.8f).translationYAsFractionOfHeight(-0.5f);
-                builder.build();
-                builder.target(findViewById(R.id.content)).build();
+                builder.buildFor(mUnifiedAdapter);
+                builder.target(findViewById(R.id.content)).buildFor(mUnifiedAdapter);
 
                 builder = baseBuilder.clone().target(findViewById(R.id.content));
                 builder.transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
                     @Override
-                    public void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View view, int index, int total) {
-                        builder.range((total - 1 - index) * 0.1f, 1f).translationYAsFractionOfHeight(viewGroup, 1f).build();
+                    public void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View childView, int index, int total) {
+                        builder.range((total - 1 - index) * 0.1f, 1f).translationYAsFractionOfHeight(viewGroup, 1f).buildFor(mUnifiedAdapter);
                     }
                 });
+
+                enableAnimationMenu = false;
                 break;
             case R.id.sliding_actionbar_view:
-                baseBuilder.clone().translationYAsFractionOfHeight(-1f).build();
+                baseBuilder.clone().translationYAsFractionOfHeight(-1f).buildFor(mUnifiedAdapter);
                 builder = baseBuilder.clone().target(findViewById(R.id.content)).translationYAsFractionOfHeight(-0.5f);
-                builder.build();
+                builder.buildFor(mUnifiedAdapter);
                 //apply the exact same transition to another view
-                builder.target(findViewById(R.id.content_bg2)).build();
+                builder.target(findViewById(R.id.content_bg2)).buildFor(mUnifiedAdapter);
                 break;
             case R.id.change_actionbar_color:
-                baseBuilder.clone().backgroundColorResource(getResources(), R.color.primary, R.color.accent).build();
+                baseBuilder.clone().backgroundColorResource(getResources(), R.color.primary, R.color.accent).buildFor(mUnifiedAdapter);
                 break;
             case R.id.change_actionbar_color_hsv:
-                baseBuilder.clone().backgroundColorResourceHSV(getResources(), R.color.primary, R.color.drawer_opened).build();
+                baseBuilder.clone().backgroundColorResourceHSV(getResources(), R.color.primary, R.color.drawer_opened).buildFor(mUnifiedAdapter);
                 break;
             case R.id.fading_actionbar:
-                baseBuilder.clone().alpha(1f, 0f).build();
+                baseBuilder.clone().alpha(1f, 0f).buildFor(mUnifiedAdapter);
                 break;
             case R.id.rotating_actionbar:
-                baseBuilder.clone().delayTranslationYAsFractionOfHeight(-0.5f).delayRotationX(90f).scale(0.8f).build();
+                baseBuilder.clone().delayTranslationYAsFractionOfHeight(-0.5f).delayRotationX(90f).scale(0.8f).buildFor(mUnifiedAdapter);
                 break;
             case R.id.grayscale_bg:
                 //Uses a CustomTransitionController that applies a ColorMatrixColorFilter to the background view
-                baseBuilder.clone().addTransitionController(new CustomTransitionController() {
+                baseBuilder.clone().addTransitionHandler(new ITransitionHandler() {
                     ColorMatrix matrix = new ColorMatrix();
 
                     @Override
-                    public void updateProgress(View target, float progress) {
+                    public void onUpdateProgress(ITransitionController controller, View target, float progress) {
                         matrix.setSaturation(1 - progress);
                         ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
                         ((ImageView) findViewById(R.id.content_bg)).setColorFilter(filter);
                     }
-                }).build();
+                }).buildFor(mUnifiedAdapter);
                 setHalfHeight = true;
                 break;
+        }
+
+        //only show animate MenuItem when it's not the first option
+        if (mMenu != null) {
+            mMenu.findItem(R.id.menu_animate).setEnabled(enableAnimationMenu);
         }
 
         setSlidingUpPanelHeight(setHalfHeight);
@@ -181,12 +215,12 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
 
     private void setSlidingUpPanelHeight(boolean halfHeight) {
         SlidingUpPanelLayout supl = ((SlidingUpPanelLayout) findViewById(R.id.sliding_layout));
-        View panel=supl.getChildAt(1);
+        View panel = supl.getChildAt(1);
         ViewGroup.LayoutParams params = panel.getLayoutParams();
-        Rect rectangle= new Rect();
-        Window window= getWindow();
+        Rect rectangle = new Rect();
+        Window window = getWindow();
         window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
-        int height= rectangle.bottom - rectangle.top;
+        int height = rectangle.bottom - rectangle.top;
         params.height = halfHeight ? height / 2 : height;
         supl.requestLayout();
     }
