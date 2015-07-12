@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kaichunlin.transition.adapter.AnimationAdapter;
 import com.kaichunlin.transition.adapter.ITransitionAdapter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorInflater;
@@ -424,14 +423,6 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
         }
 
         return vt;
-    }
-
-    @Override
-    public AnimationAdapter buildAnimationAdapter() {
-        AnimationAdapter adapter = new AnimationAdapter();
-        adapter.addTransition(mStart < mEnd ? build() : build().reverse());
-
-        return adapter;
     }
 
     @Override

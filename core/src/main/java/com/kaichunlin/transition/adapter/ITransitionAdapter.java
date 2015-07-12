@@ -2,6 +2,7 @@ package com.kaichunlin.transition.adapter;
 
 import com.kaichunlin.transition.BaseTransitionBuilder;
 import com.kaichunlin.transition.ITransition;
+import com.kaichunlin.transition.IBaseTransition;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * <p>
  * Created by Kai-Chun Lin on 2015/5/20.
  */
-public interface ITransitionAdapter {
+public interface ITransitionAdapter extends IBaseTransition {
     AdapterState getAdapterState();
 
     void addTransitionListener(TransitionListener transitionListener);
@@ -44,23 +45,12 @@ public interface ITransitionAdapter {
     List<ITransition> getTransitions();
 
     /**
-     * Starts the transition,
-     */
-    void startTransition();
-
-    /**
      * Starts the transition, {@link #getAdapterState()}.isTransitioning() will always returns true after this method is executed.
      *
      * @param progress the starting transition progress, the valid value range depends on the specific Adapter implementation
      * @return true if the call caused the transition to be started, false if the transition is already in the started state
      */
     boolean startTransition(float progress);
-    void updateProgress(float value);
-
-    /**
-     * Stops all transitions
-     */
-    void stopTransition();
 
     /**
      * Stops and clears all transitions

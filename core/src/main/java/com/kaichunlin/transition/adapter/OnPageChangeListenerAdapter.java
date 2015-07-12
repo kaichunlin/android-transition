@@ -154,7 +154,7 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
         return this;
     }
 
-    public void startTransition() {
+    public boolean startTransition() {
         throw new UnsupportedOperationException();
     }
 

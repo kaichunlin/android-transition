@@ -16,7 +16,7 @@ public class UnifiedAdapter extends AnimationAdapter {
     private boolean mUpdateProgressAdapter = true;
     private boolean mUpdateAnimationAdapter = true;
 
-    public UnifiedAdapter(BaseAdapter progressAdapter) {
+    public UnifiedAdapter(@NonNull BaseAdapter progressAdapter) {
         this(progressAdapter, new AnimationAdapter());
     }
 
@@ -24,26 +24,26 @@ public class UnifiedAdapter extends AnimationAdapter {
      * @param progressAdapter its methods should not be called elsewhere
      * @param animationAdapter its methods should not be called elsewhere
      */
-    public UnifiedAdapter(BaseAdapter progressAdapter, AnimationAdapter animationAdapter) {
+    public UnifiedAdapter(@NonNull BaseAdapter progressAdapter, @NonNull AnimationAdapter animationAdapter) {
         super(progressAdapter);
-        mAdapter.addTransitionListener(this);
+        getAdapter().addTransitionListener(this);
         mAnimationAdapter = animationAdapter;
         mAnimationAdapter.addTransitionListener(this);
     }
 
-    public void setAnimationInReverse(boolean reverse) {
-        mAnimationAdapter.setAnimationInReverse(reverse);
+    public void setReverseAnimation(boolean reverse) {
+        mAnimationAdapter.setReverseAnimation(reverse);
     }
 
-    public boolean isAnimationInReverse() {
-        return mAnimationAdapter.isAnimationInReverse();
+    public boolean isReverseAnimation() {
+        return mAnimationAdapter.isReverseAnimation();
     }
 
     @Override
     public void onStartTransition(ITransitionAdapter adapter) {
         if (mUpdateProgressAdapter) {
-            mAdapter.removeAllTransitions();
-            mAdapter.addAllTransitions(getTransitions());
+            getAdapter().removeAllTransitions();
+            getAdapter().addAllTransitions(getTransitions());
             mUpdateProgressAdapter = false;
         }
         super.onStartTransition(adapter);
@@ -92,16 +92,16 @@ public class UnifiedAdapter extends AnimationAdapter {
     @Override
     public boolean startTransition(float progress) {
         if (mUpdateProgressAdapter) {
-            mAdapter.removeAllTransitions();
-            mAdapter.addAllTransitions(getTransitions());
+            getAdapter().removeAllTransitions();
+            getAdapter().addAllTransitions(getTransitions());
             mUpdateProgressAdapter = false;
         }
-        return mAdapter.startTransition(progress);
+        return getAdapter().startTransition(progress);
     }
 
     @Override
     public void updateProgress(float value) {
-        mAdapter.updateProgress(value);
+        getAdapter().updateProgress(value);
     }
 
     @Override

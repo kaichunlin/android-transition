@@ -1,11 +1,10 @@
 package com.kaichunlin.transition.adapter;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
-import android.os.Handler;
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
-import android.view.animation.LinearInterpolator;
+
+import com.kaichunlin.transition.Animation;
+import com.kaichunlin.transition.IAnimation;
 
 /**
  * This adapter integrates traditional animations using the same methods and logic as the rest of the framework. It can be configured
@@ -18,21 +17,12 @@ import android.view.animation.LinearInterpolator;
  * <p>
  * Created by Kai on 2015/7/10.
  */
-public class AnimationAdapter extends BaseAdapter implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener, ITransitionAdapter.TransitionListener {
-    private final Runnable mStartAnimation = new Runnable() {
-        @Override
-        public void run() {
-            startAnimation();
-        }
-    };
-    final BaseAdapter mAdapter;
-    private ValueAnimator mValueAnimator;
-    private boolean mReverse;
-    private int mDuration = 300;
-    private Handler mHandler;
+public class AnimationAdapter extends BaseAdapter implements IAnimation, ITransitionAdapter.TransitionListener {
+    private final BaseAdapter mAdapter;
+    private IAnimation mAnimation;
 
     public AnimationAdapter() {
-        mAdapter = null;
+        this(null);
     }
 
     /**
@@ -42,18 +32,7 @@ public class AnimationAdapter extends BaseAdapter implements ValueAnimator.Anima
      */
     public AnimationAdapter(@Nullable BaseAdapter adapter) {
         mAdapter = adapter;
-    }
-
-    public void setAnimationDuration(@IntRange(from = 0) int duration) {
-        mDuration = duration;
-    }
-
-    public void setAnimationInReverse(boolean reverse) {
-        mReverse = reverse;
-    }
-
-    public boolean isAnimationInReverse() {
-        return mReverse;
+        mAnimation=new Animation(getAdapter());
     }
 
     @Override
@@ -84,94 +63,62 @@ public class AnimationAdapter extends BaseAdapter implements ValueAnimator.Anima
         notifyStopTransition();
     }
 
-    /**
-     * Starts the animation with the default duration (300 ms)
-     */
-    public void startAnimation() {
-        startAnimation(mDuration);
+    @Override
+    public void setAnimationDuration(@IntRange(from = 0) int duration) {
+        mAnimation.setAnimationDuration(duration);
     }
 
-    /**
-     * Starts the animation with the specified duration
-     *
-     * @param duration
-     */
+    @Override
+    public int getAnimationDuration() {
+        return mAnimation.getAnimationDuration();
+    }
+
+    @Override
+    public void setReverseAnimation(boolean reverse) {
+        mAnimation.setReverseAnimation(reverse);
+    }
+
+    @Override
+    public boolean isReverseAnimation() {
+        return mAnimation.isReverseAnimation();
+    }
+
+    @Override
+    public void startAnimation() {
+        mAnimation.startAnimation();
+    }
+
+    @Override
     public void startAnimation(@IntRange(from = 0) int duration) {
-        stopAnimation();
-
-        getAdapter().startTransition(mReverse ? 1 : 0);
-
-        mValueAnimator = new ValueAnimator();
-        mValueAnimator.setDuration(duration);
-        mValueAnimator.setInterpolator(new LinearInterpolator());
-        if (mReverse) {
-            mValueAnimator.setFloatValues(1, 0);
-        } else {
-            mValueAnimator.setFloatValues(0, 1);
-        }
-        mValueAnimator.addUpdateListener(this);
-        mValueAnimator.addListener(this);
-        mValueAnimator.start();
+        mAnimation.startAnimation(duration);
     }
 
     public void startAnimationDelayed(@IntRange(from = 0) int delay) {
-        if (mHandler == null) {
-            mHandler = new Handler();
-        }
-        mHandler.postDelayed(mStartAnimation, delay);
+        mAnimation.startAnimationDelayed(delay);
     }
 
     public void startAnimationDelayed(@IntRange(from = 0) final int duration, @IntRange(from = 0) int delay) {
-        if (mHandler == null) {
-            mHandler = new Handler();
-        }
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startAnimation(duration);
-            }
-        }, delay);
+        mAnimation.startAnimationDelayed(duration, delay);
     }
 
-    /**
-     * Cancels the animation, i.e. the affected Views will retain their last states
-     */
+    @Override
     public void cancelAnimation() {
-        if (mValueAnimator != null) {
-            mValueAnimator.cancel();
-            mValueAnimator = null;
-        }
+        mAnimation.cancelAnimation();
     }
 
-    /**
-     * Ends the animation, i.e. the affected Views will jump to their final states
-     */
+    @Override
     public void endAnimation() {
-        if (mValueAnimator != null) {
-            mValueAnimator.end();
-            mValueAnimator = null;
-        }
+        mAnimation.endAnimation();
     }
 
-    /**
-     * Stops the animation, i.e. the affected Views will reverse to their original states
-     */
+    @Override
     public void stopAnimation() {
-        if (mValueAnimator != null) {
-            mValueAnimator.cancel();
-            stopTransition();
-            mValueAnimator = null;
-        }
+        mAnimation.stopAnimation();
     }
 
-    /**
-     *
-     */
+    @Override
     public void resetAnimation() {
-        //TODO optimize
-        getAdapter().startTransition();
-        getAdapter().updateProgress(mReverse ? 1 : 0);
-        getAdapter().stopTransition();
+        mAnimation.resetAnimation();
     }
 
     @Override
@@ -183,32 +130,7 @@ public class AnimationAdapter extends BaseAdapter implements ValueAnimator.Anima
         }
     }
 
-    private ITransitionAdapter getAdapter() {
+    protected ITransitionAdapter getAdapter() {
         return mAdapter == null ? this : mAdapter;
-    }
-
-    @Override
-    public void onAnimationUpdate(ValueAnimator animation) {
-        getAdapter().updateProgress((Float) animation.getAnimatedValue());
-    }
-
-    @Override
-    public void onAnimationStart(Animator animation) {
-    }
-
-    @Override
-    public void onAnimationEnd(Animator animation) {
-        stopTransition();
-        mValueAnimator = null;
-    }
-
-    @Override
-    public void onAnimationCancel(Animator animation) {
-        stopTransition();
-        mValueAnimator = null;
-    }
-
-    @Override
-    public void onAnimationRepeat(Animator animation) {
     }
 }

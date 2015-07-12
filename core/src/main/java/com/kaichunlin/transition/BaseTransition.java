@@ -35,6 +35,15 @@ abstract class BaseTransition<T extends BaseTransition, S extends BaseTransition
     }
 
     @Override
+    public boolean startTransition(float progress) {
+        if(startTransition()) {
+            updateProgress(progress);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void setProgress(float progress) {
         //TODO optimize
         startTransition();

@@ -81,8 +81,8 @@ public abstract class BaseAdapter implements ITransitionAdapter {
     }
 
     @Override
-    public void startTransition() {
-        startTransition(0);
+    public boolean startTransition() {
+        return startTransition(0);
     }
 
     @Override
@@ -96,9 +96,9 @@ public abstract class BaseAdapter implements ITransitionAdapter {
         notifyStartTransition();
 
         for (ITransition trans : mTransitionList.values()) {
-            trans.startTransition();
+            trans.startTransition(progress);
         }
-        updateProgress(progress);
+//        updateProgress(progress);
         return true;
     }
 

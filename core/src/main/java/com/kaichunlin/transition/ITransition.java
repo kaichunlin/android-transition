@@ -8,7 +8,7 @@ import android.view.animation.Interpolator;
  * <p>
  * Created by Kai-Chun Lin on 2015/4/18.
  */
-public interface ITransition<S extends BaseTransition.Setup> extends Cloneable {
+public interface ITransition<S extends BaseTransition.Setup> extends IBaseTransition, Cloneable {
 
     /**
      * Sets an ID the transition, used internally for debugging purpose
@@ -25,30 +25,11 @@ public interface ITransition<S extends BaseTransition.Setup> extends Cloneable {
     String getId();
 
     /**
-     * Setup the transition so its range can be updated
-     *
-     * @return
-     */
-    boolean startTransition();
-
-    /**
-     * Updates the transition progress
-     *
-     * @param progress
-     */
-    void updateProgress(float progress);
-
-    /**
      * Sets the transition range
      *
      * @param progress
      */
     void setProgress(float progress);
-
-    /**
-     * Stops the transition
-     */
-    void stopTransition();
 
     /**
      * Reverses the transition

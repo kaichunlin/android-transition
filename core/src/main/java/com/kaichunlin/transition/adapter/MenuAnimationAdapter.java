@@ -32,7 +32,7 @@ public class MenuAnimationAdapter extends AnimationAdapter implements IMenuOptio
         AdapterState adapterState = getAdapterState();
         adapterState.setState(adapterState.getState() == AdapterState.OPEN ? AdapterState.CLOSE : AdapterState.OPEN);
 
-        setAnimationInReverse(adapterState.isOpen());
+        setReverseAnimation(adapterState.isOpen());
         super.startAnimation(duration);
     }
 
@@ -45,14 +45,14 @@ public class MenuAnimationAdapter extends AnimationAdapter implements IMenuOptio
     }
 
     private IMenuOptionHandler getHandler() {
-        return mAdapter == null ? mMenuOptionHandler : (IMenuOptionHandler) mAdapter;
+        return getAdapter() == null ? mMenuOptionHandler : (IMenuOptionHandler) getAdapter();
     }
 
     public void onCreateOptionsMenu(@NonNull Activity activity, @NonNull Menu menu) {
-        if (mAdapter == null) {
+        if (getAdapter() == null) {
             mMenuOptionHandler.onCreateOptionsMenu(activity, menu);
         } else {
-            ((MenuBaseAdapter) mAdapter).onCreateOptionsMenu(activity, menu, mMenuOptionHandler.getAdapterState());
+            ((MenuBaseAdapter) getAdapter()).onCreateOptionsMenu(activity, menu, mMenuOptionHandler.getAdapterState());
         }
     }
 

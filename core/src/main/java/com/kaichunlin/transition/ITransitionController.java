@@ -4,7 +4,7 @@ import android.view.View;
 import android.view.animation.Interpolator;
 
 /**
- * Provides the actual implementation for a transition
+ * Implementors would provide the actual implementation for a transition
  * <p>
  * Created by Kai-Chun Lin on 2015/4/28.
  */

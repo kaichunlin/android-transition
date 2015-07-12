@@ -80,8 +80,8 @@ public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayo
     }
 
     @Override
-    public void startTransition() {
-        startTransition(getAdapterState().isOpen() ? 1f : 0f);
+    public boolean startTransition() {
+        return startTransition(getAdapterState().isOpen() ? 1f : 0f);
     }
 
     @Override
