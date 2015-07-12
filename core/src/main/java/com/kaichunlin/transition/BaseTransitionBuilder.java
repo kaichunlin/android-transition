@@ -6,6 +6,10 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.animation.Interpolator;
 
+import com.kaichunlin.transition.Animation.Animation;
+import com.kaichunlin.transition.Animation.IAnimation;
+import com.kaichunlin.transition.adapter.ITransitionAdapter;
+import com.kaichunlin.transition.internal.ITransitionController;
 import com.nineoldandroids.animation.PropertyValuesHolder;
 
 import java.util.ArrayList;
@@ -563,6 +567,19 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
     public IAnimation buildAnimation() {
         Animation animation=new Animation(mStart < mEnd?build():build().reverse());
         return animation;
+    }
+
+    /**
+     * Sets the {@link ITransitionAdapter}, once set calling {@link build()} would automatically add
+     * the created {@link ViewTransition} to the adapter.
+     *
+     * @param adapter
+     * @return
+     */
+    public U buildFor(@NonNull ITransitionAdapter adapter) {
+        U transition = build();
+        adapter.addTransition(transition);
+        return transition;
     }
 
     /**

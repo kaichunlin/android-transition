@@ -6,7 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 
-import com.kaichunlin.transition.CustomTransitionController;
+import com.kaichunlin.transition.internal.CustomTransitionController;
 import com.kaichunlin.transition.ITransition;
 import com.kaichunlin.transition.R;
 import com.kaichunlin.transition.TransitionConfig;

@@ -1,4 +1,4 @@
-package com.kaichunlin.transition;
+package com.kaichunlin.transition.internal;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.animation.Interpolator;
 
+import com.kaichunlin.transition.R;
+import com.kaichunlin.transition.TransitionConfig;
 import com.kaichunlin.transition.util.TransitionStateHolder;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -19,7 +21,7 @@ import java.util.Set;
  * <p>
  * Created by Kai-Chun Lin on 2015/4/14.
  */
-public class TransitionManager implements Cloneable {
+public class TransitionControllerManager implements Cloneable {
     private Set<ITransitionController> mTransitionControls = new HashSet<>();
     //    private final TimeAnimator mTimeAnim;
 //    private final AnimatorSet mInternalAnimSet;
@@ -29,7 +31,7 @@ public class TransitionManager implements Cloneable {
     float mLastProgress;
     private boolean mUpdateStateAfterUpdateProgress;
 
-    public TransitionManager(String id) {
+    public TransitionControllerManager(String id) {
         mId = id;
 
 //        this.mInternalAnimSet = new AnimatorSet();
@@ -90,7 +92,7 @@ public class TransitionManager implements Cloneable {
     public ITransitionController addTransitionController(@NonNull ITransitionController transitionController) {
         transitionController.setId(mId);
         boolean changed = mTransitionControls.add(transitionController);
-        if (TransitionConfig._debug && !changed) {
+        if (TransitionConfig.isDebug() && !changed) {
             getTransitionStateHolder().append(mId, this, "Possible duplicate: " + transitionController.getId());
         }
         return transitionController;
@@ -230,10 +232,10 @@ public class TransitionManager implements Cloneable {
 
     @CheckResult
     @Override
-    public TransitionManager clone() {
-        TransitionManager newClone = null;
+    public TransitionControllerManager clone() {
+        TransitionControllerManager newClone = null;
         try {
-            newClone = (TransitionManager) super.clone();
+            newClone = (TransitionControllerManager) super.clone();
             Iterator<ITransitionController> at = mTransitionControls.iterator();
             newClone.mTransitionControls = new HashSet<>();
             while (at.hasNext()) {

@@ -1,10 +1,11 @@
-package com.kaichunlin.transition;
+package com.kaichunlin.transition.internal;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.kaichunlin.transition.TransitionConfig;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -97,7 +98,7 @@ public class DefaultTransitionController extends BaseTransitionController implem
     @Override
     public void updateProgress(float progress) {
         String debug = "";
-        final boolean DEBUG = TransitionConfig._debug;
+        final boolean DEBUG = TransitionConfig.isDebug();
         long time=0;
         if (mStart < mEnd && progress >= mStart && progress <= mEnd || mStart > mEnd && progress >= mEnd && progress <= mStart) {
             //forward progression

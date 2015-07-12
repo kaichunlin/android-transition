@@ -3,8 +3,8 @@ package com.kaichunlin.transition.adapter;
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 
-import com.kaichunlin.transition.Animation;
-import com.kaichunlin.transition.IAnimation;
+import com.kaichunlin.transition.Animation.Animation;
+import com.kaichunlin.transition.Animation.IAnimation;
 
 /**
  * This adapter integrates traditional animations using the same methods and logic as the rest of the framework. It can be configured

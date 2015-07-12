@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
+import com.kaichunlin.transition.internal.ITransitionController;
+import com.kaichunlin.transition.internal.TransitionControllerManager;
 import com.kaichunlin.transition.util.TransitionStateHolder;
 
 import java.util.Iterator;
@@ -20,7 +22,7 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
     private static final Object HARD_REF = new Object();
     private final WeakHashMap<Object, Setup> mSetup = new WeakHashMap<>();
     private SetupCreator mSetupCreator;
-    private TransitionManager transitionManager;
+    private TransitionControllerManager transitionControllerManager;
 
     public ViewTransition() {
         this(null, null);
@@ -73,8 +75,8 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
     @Override
     public ViewTransition reverse() {
         super.reverse();
-        if (transitionManager != null) {
-            transitionManager.reverse();
+        if (transitionControllerManager != null) {
+            transitionControllerManager.reverse();
         }
         return self();
     }
@@ -82,16 +84,16 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
     @Override
     public boolean startTransition() {
         //caches result
-        if (transitionManager == null) {
-            transitionManager = new TransitionManager(getId());
+        if (transitionControllerManager == null) {
+            transitionControllerManager = new TransitionControllerManager(getId());
             if (mInterpolator != null) {
-                transitionManager.setInterpolator(mInterpolator);
+                transitionControllerManager.setInterpolator(mInterpolator);
             }
             if (TransitionConfig.isDebug()) {
                 mTarget.setTag(R.id.debug_id, new TransitionStateHolder(getId()));
             }
-            transitionManager.setTarget(mTarget);
-            transitionManager.setUpdateStateAfterUpdateProgress(mUpdateStateAfterUpdateProgress);
+            transitionControllerManager.setTarget(mTarget);
+            transitionControllerManager.setUpdateStateAfterUpdateProgress(mUpdateStateAfterUpdateProgress);
             Setup s = getSetup();
             if (s == null) {
                 if (mSetupCreator == null) {
@@ -101,24 +103,24 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
                 mSetup.put(sc.keyRef, sc.setup);
                 s = sc.setup;
             }
-            s.setupAnimation(transitionManager);
+            s.setupAnimation(transitionControllerManager);
             if (mReverse) {
-                transitionManager.reverse();
+                transitionControllerManager.reverse();
             }
         }
-        transitionManager.start();
+        transitionControllerManager.start();
         return true;
     }
 
     @Override
     public void updateProgress(float progress) {
-        transitionManager.updateProgress(progress);
+        transitionControllerManager.updateProgress(progress);
     }
 
     @Override
     public void stopTransition() {
-        if (transitionManager != null) {
-            transitionManager.end();
+        if (transitionControllerManager != null) {
+            transitionControllerManager.end();
         }
     }
 
@@ -127,14 +129,14 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
     public ViewTransition clone() {
         ViewTransition newCopy = (ViewTransition) super.clone();
         //set to null for now, equivalent to calling invalidate()
-        newCopy.transitionManager = null;
+        newCopy.transitionControllerManager = null;
         return newCopy;
     }
 
     @Override
     protected void invalidate() {
         stopTransition();
-        transitionManager = null;
+        transitionControllerManager = null;
     }
 
     @Override
@@ -169,8 +171,8 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
      */
     public interface Setup extends BaseTransition.Setup {
         /**
-         * @param transitionManager the {@link TransitionManager} that the created {@link ITransitionController} should be added to
+         * @param transitionControllerManager the {@link TransitionControllerManager} that the created {@link ITransitionController} should be added to
          */
-        void setupAnimation(TransitionManager transitionManager);
+        void setupAnimation(TransitionControllerManager transitionControllerManager);
     }
 }

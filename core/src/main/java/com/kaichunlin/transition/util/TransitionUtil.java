@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Useful utility methods for manipulating Views
+ * Support utility methods
  * <p>
  * Created by Kai-Chun Lin on 2015/4/18.
  */
-public class ViewUtil {
+public class TransitionUtil {
     /**
      * Get the list of visible MenuItems
      *

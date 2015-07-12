@@ -12,7 +12,9 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kaichunlin.transition.adapter.ITransitionAdapter;
+import com.kaichunlin.transition.internal.DefaultTransitionController;
+import com.kaichunlin.transition.internal.ITransitionController;
+import com.kaichunlin.transition.internal.TransitionControllerManager;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorInflater;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -55,7 +57,6 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     private List<ITransitionController> mTransitionControllersList = new ArrayList<>();
     private List<ViewTransition.Setup> mSetupList = new ArrayList<>();
     private View mView;
-    private ITransitionAdapter mAdapter;
 
     private ViewTransitionBuilder() {
     }
@@ -283,11 +284,11 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     public ViewTransitionBuilder backgroundColor(@ColorInt final int fromColor, @ColorInt final int toColor) {
         addSetup(new ViewTransition.Setup() {
             @Override
-            public void setupAnimation(final TransitionManager transitionManager) {
-                ObjectAnimator animator = ObjectAnimator.ofInt(transitionManager.getTarget(), "backgroundColor", fromColor, toColor);
+            public void setupAnimation(final TransitionControllerManager transitionControllerManager) {
+                ObjectAnimator animator = ObjectAnimator.ofInt(transitionControllerManager.getTarget(), "backgroundColor", fromColor, toColor);
                 animator.setDuration(10_000);
                 animator.setEvaluator(new ArgbEvaluator());
-                transitionManager.addTransitionController(DefaultTransitionController.wrapAnimator(animator));
+                transitionControllerManager.addTransitionController(DefaultTransitionController.wrapAnimator(animator));
             }
         });
         return self();
@@ -311,7 +312,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     public ViewTransitionBuilder backgroundColorHSV(@ColorInt final int fromColor, @ColorInt final int toColor) {
         addSetup(new ViewTransition.Setup() {
             @Override
-            public void setupAnimation(final TransitionManager transitionManager) {
+            public void setupAnimation(final TransitionControllerManager transitionControllerManager) {
                 //source: http://stackoverflow.com/questions/18216285/android-animate-color-change-from-color-to-color
                 final float[] from = new float[3],
                         to = new float[3];
@@ -330,11 +331,11 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
                         hsv[1] = from[1] + (to[1] - from[1]) * animation.getAnimatedFraction();
                         hsv[2] = from[2] + (to[2] - from[2]) * animation.getAnimatedFraction();
 
-                        transitionManager.getTarget().setBackgroundColor(Color.HSVToColor(hsv));
+                        transitionControllerManager.getTarget().setBackgroundColor(Color.HSVToColor(hsv));
                     }
                 });
 
-                transitionManager.addTransitionController(DefaultTransitionController.wrapAnimator(anim));
+                transitionControllerManager.addTransitionController(DefaultTransitionController.wrapAnimator(anim));
             }
         });
         return self();
@@ -355,12 +356,12 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     public ViewTransitionBuilder animator(@NonNull final Animator animator) {
         addSetup(new ViewTransition.Setup() {
             @Override
-            public void setupAnimation(TransitionManager transitionManager) {
+            public void setupAnimation(TransitionControllerManager transitionControllerManager) {
                 Animator animator2 = animator.clone();
                 if (animator2 instanceof AnimatorSet) {
-                    transitionManager.addTransitionController(DefaultTransitionController.wrapAnimatorSet((AnimatorSet) animator2));
+                    transitionControllerManager.addTransitionController(DefaultTransitionController.wrapAnimatorSet((AnimatorSet) animator2));
                 } else {
-                    transitionManager.addTransitionController(DefaultTransitionController.wrapAnimator(animator2));
+                    transitionControllerManager.addTransitionController(DefaultTransitionController.wrapAnimator(animator2));
                 }
             }
         });
@@ -396,18 +397,6 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
         return self();
     }
 
-    /**
-     * Sets the {@link ITransitionAdapter}, once set calling {@link build()} would automatically add
-     * the created {@link ViewTransition} to the adapter.
-     *
-     * @param adapter
-     * @return
-     */
-    public ViewTransitionBuilder adapter(@Nullable ITransitionAdapter adapter) {
-        mAdapter = adapter;
-        return self();
-    }
-
     @CheckResult(suggest = "The created ViewTransition should be utilized")
     @Override
     public ViewTransition createTransition() {
@@ -418,10 +407,6 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
         //TODO clone() is required since the class implements ViewTransition.Setup and passes itself to ViewTransition, without clone ViewTransitions made from the same Builder will have their states intertwined
         vt.setSetup(clone());
 
-        if (mAdapter != null) {
-            mAdapter.addTransition(vt);
-        }
-
         return vt;
     }
 
@@ -431,22 +416,22 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     }
 
     @Override
-    public void setupAnimation(@NonNull TransitionManager transitionManager) {
+    public void setupAnimation(@NonNull TransitionControllerManager transitionControllerManager) {
         if (mView == null) {
-            mView = transitionManager.getTarget();
+            mView = transitionControllerManager.getTarget();
         }
 
         for (DelayedEvaluator de : mDelayed) {
-            de.evaluate(transitionManager.getTarget(), this);
+            de.evaluate(transitionControllerManager.getTarget(), this);
         }
 
         for (ViewTransition.Setup setup : mSetupList) {
-            setup.setupAnimation(transitionManager);
+            setup.setupAnimation(transitionControllerManager);
         }
 
         for (ITransitionController setup : mTransitionControllersList) {
-            setup.setTarget(transitionManager.getTarget());
-            transitionManager.addTransitionController(setup.clone());
+            setup.setTarget(transitionControllerManager.getTarget());
+            transitionControllerManager.addTransitionController(setup.clone());
         }
 
         ObjectAnimator anim = new ObjectAnimator();
@@ -455,7 +440,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.play(anim);
         animatorSet.setDuration(SCALE_FACTOR);
-        transitionManager.addAnimatorSetAsTransition(mView, animatorSet).setRange(mStart, mEnd);
+        transitionControllerManager.addAnimatorSetAsTransition(mView, animatorSet).setRange(mStart, mEnd);
     }
 
     /**

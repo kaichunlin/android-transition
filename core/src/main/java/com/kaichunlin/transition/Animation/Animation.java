@@ -1,4 +1,4 @@
-package com.kaichunlin.transition;
+package com.kaichunlin.transition.Animation;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.view.animation.LinearInterpolator;
+
+import com.kaichunlin.transition.IBaseTransition;
 
 /**
  * Created by Kai on 2015/7/12.

@@ -1,4 +1,4 @@
-package com.kaichunlin.transition;
+package com.kaichunlin.transition.internal;
 
 import android.view.View;
 import android.view.animation.Interpolator;

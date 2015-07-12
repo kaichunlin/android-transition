@@ -10,8 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.kaichunlin.transition.internal.ITransitionController;
+import com.kaichunlin.transition.internal.TransitionControllerManager;
 import com.kaichunlin.transition.util.TransitionStateHolder;
-import com.kaichunlin.transition.util.ViewUtil;
+import com.kaichunlin.transition.util.TransitionUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import java.util.List;
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuItemTransition.Setup> {
-    private List<TransitionManager> mTransittingMenuItems = new ArrayList<>();
+    private List<TransitionControllerManager> mTransittingMenuItems = new ArrayList<>();
     private final Toolbar mToolbar;
     private boolean mStarted;
     private boolean mSetVisibleOnStartTransition;
@@ -74,14 +76,14 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
         }
         if (mTransittingMenuItems.size() == 0) {
             mTransittingMenuItems.clear();
-            List<MenuItem> list = ViewUtil.getVisibleMenuItemList(mToolbar);
+            List<MenuItem> list = TransitionUtil.getVisibleMenuItemList(mToolbar);
             for (int i = 0; i < list.size(); i++) {
                 MenuItem menuItem = list.get(i);
-                TransitionManager transitionManager = new TransitionManager(getId());
+                TransitionControllerManager transitionControllerManager = new TransitionControllerManager(getId());
                 if (mInterpolator != null) {
-                    transitionManager.setInterpolator(mInterpolator);
+                    transitionControllerManager.setInterpolator(mInterpolator);
                 }
-                mSetup.setupAnimation(menuItem, transitionManager, i, list.size());
+                mSetup.setupAnimation(menuItem, transitionControllerManager, i, list.size());
                 View view;
                 if (mTarget == null) {
                     view = LayoutInflater.from(mToolbar.getContext()).inflate(R.layout.menu_animation, null).findViewById(R.id.menu_animation);
@@ -93,12 +95,12 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
                     view.setTag(R.id.debug_id, new TransitionStateHolder(getId()));
                 }
                 if (mReverse) {
-                    transitionManager.reverse();
+                    transitionControllerManager.reverse();
                 }
                 menuItem.setActionView(view);
-                transitionManager.setTarget(view);
-                transitionManager.start();
-                mTransittingMenuItems.add(transitionManager);
+                transitionControllerManager.setTarget(view);
+                transitionControllerManager.start();
+                mTransittingMenuItems.add(transitionControllerManager);
             }
         }
         mStarted = true;
@@ -107,17 +109,17 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
 
     @Override
     public void updateProgress(float progress) {
-        for (TransitionManager animator : mTransittingMenuItems) {
+        for (TransitionControllerManager animator : mTransittingMenuItems) {
             animator.updateProgress(progress);
         }
     }
 
     @Override
     public void stopTransition() {
-        for (TransitionManager ani : mTransittingMenuItems) {
+        for (TransitionControllerManager ani : mTransittingMenuItems) {
             ani.end();
         }
-        List<MenuItem> list = ViewUtil.getVisibleMenuItemList(mToolbar);
+        List<MenuItem> list = TransitionUtil.getVisibleMenuItemList(mToolbar);
         for (MenuItem menuItem : list) {
             menuItem.setActionView(null);
         }
@@ -160,7 +162,7 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
     public MenuItemTransition clone() {
         MenuItemTransition newCopy = (MenuItemTransition) super.clone();
         newCopy.mTransittingMenuItems = new ArrayList<>();
-        for (TransitionManager tm : mTransittingMenuItems) {
+        for (TransitionControllerManager tm : mTransittingMenuItems) {
             newCopy.mTransittingMenuItems.add(tm.clone());
         }
         return newCopy;
@@ -177,17 +179,17 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
     }
 
     /**
-     * Represents an object that will create {@link ITransitionController} Objects to be added to a {@link TransitionManager}
+     * Represents an object that will create {@link ITransitionController} Objects to be added to a {@link TransitionControllerManager}
      */
     public interface Setup extends BaseTransition.Setup {
         /**
          * Create one or more {@link ITransitionController} for each {@link android.view.MenuItem} and add them to transitionManager
          *
          * @param mMenuItem
-         * @param transitionManager
+         * @param transitionControllerManager
          * @param itemIndex
          * @param menuCount
          */
-        void setupAnimation(MenuItem mMenuItem, TransitionManager transitionManager, int itemIndex, int menuCount);
+        void setupAnimation(MenuItem mMenuItem, TransitionControllerManager transitionControllerManager, int itemIndex, int menuCount);
     }
 }

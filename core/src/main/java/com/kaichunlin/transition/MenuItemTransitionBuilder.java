@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.animation.Interpolator;
 
-import com.kaichunlin.transition.adapter.MenuAnimationAdapter;
+import com.kaichunlin.transition.internal.TransitionControllerManager;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.PropertyValuesHolder;
@@ -238,9 +238,9 @@ public class MenuItemTransitionBuilder extends BaseTransitionBuilder<MenuItemTra
     }
 
     @Override
-    public void setupAnimation(@NonNull MenuItem mMenuItem, @NonNull TransitionManager transitionManager, @IntRange(from=0) int itemIndex, @IntRange(from=0) int menuCount) {
+    public void setupAnimation(@NonNull MenuItem mMenuItem, @NonNull TransitionControllerManager transitionControllerManager, @IntRange(from=0) int itemIndex, @IntRange(from=0) int menuCount) {
         for (DelayedEvaluator de : mDelayed) {
-            de.evaluate(transitionManager.getTarget(), this);
+            de.evaluate(transitionControllerManager.getTarget(), this);
         }
 
         ObjectAnimator anim = new ObjectAnimator();
@@ -249,6 +249,6 @@ public class MenuItemTransitionBuilder extends BaseTransitionBuilder<MenuItemTra
         set.play(anim);
         set.setStartDelay((long) (itemIndex * mCascade * SCALE_FACTOR));
         set.setDuration((long) (SCALE_FACTOR - itemIndex * mCascade * SCALE_FACTOR));
-        transitionManager.addAnimatorSetAsTransition(set).setRange(mStart, mEnd);
+        transitionControllerManager.addAnimatorSetAsTransition(set).setRange(mStart, mEnd);
     }
 }

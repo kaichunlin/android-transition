@@ -1,4 +1,4 @@
-package com.kaichunlin.transition;
+package com.kaichunlin.transition.Animation;
 
 import android.support.annotation.IntRange;
 
