@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 
 import com.kaichunlin.transition.internal.CustomTransitionController;
 import com.kaichunlin.transition.internal.DefaultTransitionController;
-import com.kaichunlin.transition.internal.ITransitionController;
 import com.kaichunlin.transition.internal.TransitionControllerManager;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorInflater;
@@ -55,7 +54,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
         return new ViewTransitionBuilder(view);
     }
 
-    private List<ITransitionController> mTransitionControllersList = new ArrayList<>();
+    private CustomTransitionController mCustomTransitionController;
     private List<ViewTransition.Setup> mSetupList = new ArrayList<>();
     private View mView;
 
@@ -82,7 +81,10 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
      * @return
      */
     public ViewTransitionBuilder addTransitionHandler(@NonNull ITransitionHandler transitionHandler) {
-        mTransitionControllersList.add(new CustomTransitionController(transitionHandler));
+        if(mCustomTransitionController ==null) {
+            mCustomTransitionController =new CustomTransitionController();
+        }
+        mCustomTransitionController.addTransitionHandler(transitionHandler);
         return self();
     }
 
@@ -239,8 +241,6 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     @Override
     public ViewTransitionBuilder clone() {
         ViewTransitionBuilder newCopy = (ViewTransitionBuilder) super.clone();
-        newCopy.mTransitionControllersList = new ArrayList<>();
-        newCopy.mTransitionControllersList.addAll(mTransitionControllersList);
         newCopy.mSetupList = new ArrayList<>();
         newCopy.mSetupList.addAll(mSetupList);
         return newCopy;
@@ -370,7 +370,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     }
 
     /**
-     * @see {@link #animator(Animator)}
+     * See animator(Animator)
      *
      * @param context
      * @param animatorId
@@ -430,9 +430,9 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
             setup.setupAnimation(transitionControllerManager);
         }
 
-        for (ITransitionController setup : mTransitionControllersList) {
-            setup.setTarget(transitionControllerManager.getTarget());
-            transitionControllerManager.addTransitionController(setup.clone());
+        if (mCustomTransitionController != null) {
+            mCustomTransitionController.setTarget(transitionControllerManager.getTarget());
+            transitionControllerManager.addTransitionController(mCustomTransitionController.clone());
         }
 
         ObjectAnimator anim = new ObjectAnimator();

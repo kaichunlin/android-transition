@@ -52,11 +52,6 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
                 controller.getTransitionStateHolder().append(controller.getId(), this, "CUSTOM updateProgress=" + progress + ": \t[" + controller.getStart() + ".." + controller.getEnd() + "], translationX=" + x);
             }
         }
-
-        @Override
-        public void onUpdateTime(ITransitionController controller, View target, int time) {
-
-        }
     };
 
     /**
@@ -81,11 +76,6 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
             if (TransitionConfig.isDebug()) {
                 controller.getTransitionStateHolder().append(controller.getId(), this, "CUSTOM updateProgress=" + progress + ": \t[" + controller.getStart() + ".." + controller.getEnd() + "], translationX=" + x);
             }
-        }
-
-        @Override
-        public void onUpdateTime(ITransitionController controller, View target, int time) {
-
         }
     };
 

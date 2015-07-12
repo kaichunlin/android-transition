@@ -8,8 +8,10 @@ import com.kaichunlin.transition.ITransition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Provides implementation shared by most adapters
@@ -17,9 +19,17 @@ import java.util.Map;
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 public abstract class BaseAdapter implements ITransitionAdapter {
-    private final AdapterState mAdapterState = new AdapterState();
-    protected final List<TransitionListener> transitionListenerList = new ArrayList<>();
+    protected final Set<TransitionListener> transitionListenerList = new HashSet<>();
     protected final Map<String, ITransition> mTransitionList = new HashMap<>();
+    private AdapterState mAdapterState;
+
+    public BaseAdapter() {
+        mAdapterState = new AdapterState();
+    }
+
+    public BaseAdapter(AdapterState adapterState) {
+        mAdapterState = adapterState;
+    }
 
     @Override
     public AdapterState getAdapterState() {
@@ -91,20 +101,19 @@ public abstract class BaseAdapter implements ITransitionAdapter {
             return false;
         }
 
-        mAdapterState.setTransiting(true);
         //call listeners so they can perform their actions first, like modifying this adapter's transitions
         notifyStartTransition();
 
         for (ITransition trans : mTransitionList.values()) {
             trans.startTransition(progress);
         }
-//        updateProgress(progress);
+        mAdapterState.setTransiting(true);
         return true;
     }
 
     protected void notifyStartTransition() {
-        for (int i = 0; i < transitionListenerList.size(); i++) {
-            transitionListenerList.get(i).onStartTransition(this);
+        for (TransitionListener listener:transitionListenerList) {
+            listener.onStartTransition(this);
         }
     }
 
@@ -128,17 +137,17 @@ public abstract class BaseAdapter implements ITransitionAdapter {
             return;
         }
 
-        mAdapterState.setTransiting(false);
         notifyStopTransition();
 
         for (ITransition trans : mTransitionList.values()) {
             trans.stopTransition();
         }
+        mAdapterState.setTransiting(false);
     }
 
     protected void notifyStopTransition() {
-        for (int i = 0; i < transitionListenerList.size(); i++) {
-            transitionListenerList.get(i).onStopTransition(this);
+        for (TransitionListener listener:transitionListenerList) {
+            listener.onStopTransition(this);
         }
     }
 }

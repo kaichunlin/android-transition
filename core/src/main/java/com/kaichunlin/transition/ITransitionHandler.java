@@ -9,5 +9,4 @@ import com.kaichunlin.transition.internal.ITransitionController;
  */
 public interface ITransitionHandler {
     void onUpdateProgress(ITransitionController controller, View target, float progress);
-    void onUpdateTime(ITransitionController controller, View target, int time);
 }

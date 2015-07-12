@@ -36,10 +36,6 @@ public class MenuAnimationAdapter extends AnimationAdapter implements IMenuOptio
         super.startAnimation(duration);
     }
 
-    public void setOpened(boolean opened) {
-        getAdapterState().setState(opened ? AdapterState.OPEN : AdapterState.CLOSE);
-    }
-
     public void setMenuOptionHandler(@NonNull IMenuOptionHandler menuOptionHandler) {
         mMenuOptionHandler = menuOptionHandler;
     }

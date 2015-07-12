@@ -26,13 +26,14 @@ public class AnimationAdapter extends BaseAdapter implements IAnimation, ITransi
     }
 
     /**
-     * Wraps an existing {@link BaseAdapter) to reuse its onCreateOptionsMenu(...) logic and its transition effects
+     * Wraps an existing {@link BaseAdapter} to reuse its onCreateOptionsMenu(...) logic and its transition effects
      *
      * @param adapter
      */
     public AnimationAdapter(@Nullable BaseAdapter adapter) {
+        super(adapter == null ? new AdapterState() : adapter.getAdapterState());
         mAdapter = adapter;
-        mAnimation=new Animation(getAdapter());
+        mAnimation = new Animation(mAdapter == null ? this : mAdapter);
     }
 
     @Override
@@ -131,6 +132,6 @@ public class AnimationAdapter extends BaseAdapter implements IAnimation, ITransi
     }
 
     protected ITransitionAdapter getAdapter() {
-        return mAdapter == null ? this : mAdapter;
+        return mAdapter;
     }
 }

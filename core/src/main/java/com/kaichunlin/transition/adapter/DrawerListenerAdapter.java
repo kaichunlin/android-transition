@@ -69,7 +69,6 @@ public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayo
                 startTransition();
                 break;
             case DrawerLayout.STATE_IDLE:
-                getAdapterState().setState(AdapterState.CLOSE);
                 stopTransition();
                 break;
         }
