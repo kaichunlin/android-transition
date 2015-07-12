@@ -6,13 +6,14 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 
-import com.kaichunlin.transition.internal.CustomTransitionController;
+import com.kaichunlin.transition.ITransitionHandler;
 import com.kaichunlin.transition.ITransition;
 import com.kaichunlin.transition.R;
 import com.kaichunlin.transition.TransitionConfig;
 import com.kaichunlin.transition.ViewTransition;
 import com.kaichunlin.transition.ViewTransitionBuilder;
-import com.kaichunlin.transition.util.TransitionStateHolder;
+import com.kaichunlin.transition.internal.ITransitionController;
+import com.kaichunlin.transition.util.TransitionStateLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,11 +32,11 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
     /**
      * Keeps the left fragment in the center of the screen
      */
-    public static final CustomTransitionController LEFT_IN_PLACE = new CustomTransitionController() {
+    public static final ITransitionHandler LEFT_IN_PLACE = new ITransitionHandler() {
         float oldX;
 
         @Override
-        public void updateProgress(View target, float progress) {
+        public void onUpdateProgress(ITransitionController controller, View target, float progress) {
             float x = 0;
             if (progress <= 0) {
                 x = target.getWidth() * -progress;
@@ -48,19 +49,24 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
                 target.setTranslationX(0);
             }
             if (TransitionConfig.isDebug()) {
-                getTransitionStateHolder().append(getId(), this, "CUSTOM updateProgress=" + progress + ": \t[" + getStart() + ".." + getEnd() + "], translationX=" + x);
+                controller.getTransitionStateHolder().append(controller.getId(), this, "CUSTOM updateProgress=" + progress + ": \t[" + controller.getStart() + ".." + controller.getEnd() + "], translationX=" + x);
             }
+        }
+
+        @Override
+        public void onUpdateTime(ITransitionController controller, View target, int time) {
+
         }
     };
 
     /**
      * Keeps the right fragment in the center of the screen
      */
-    public static final CustomTransitionController RIGHT_IN_PLACE = new CustomTransitionController() {
+    public static final ITransitionHandler RIGHT_IN_PLACE = new ITransitionHandler() {
         float oldX;
 
         @Override
-        public void updateProgress(View target, float progress) {
+        public void onUpdateProgress(ITransitionController controller, View target, float progress) {
             float x = 0;
             if (progress > 0 && progress <= 1) {
                 x = target.getWidth() * -progress;
@@ -73,8 +79,13 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
                 target.setTranslationX(0);
             }
             if (TransitionConfig.isDebug()) {
-                getTransitionStateHolder().append(getId(), this, "CUSTOM updateProgress=" + progress + ": \t[" + getStart() + ".." + getEnd() + "], translationX=" + x);
+                controller.getTransitionStateHolder().append(controller.getId(), this, "CUSTOM updateProgress=" + progress + ": \t[" + controller.getStart() + ".." + controller.getEnd() + "], translationX=" + x);
             }
+        }
+
+        @Override
+        public void onUpdateTime(ITransitionController controller, View target, int time) {
+
         }
     };
 
@@ -114,20 +125,20 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
 
     public static OnPageChangeListenerAdapter bindWithDepthTransition(@NonNull OnPageChangeListenerAdapter adapter) {
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER * 0.25f).scale(1f, 0.75f).id("RIGHT_1"));
-        adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER).alpha(1f, 0.5f).id("RIGHT_2").addTransitionController(RIGHT_IN_PLACE));
+        adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER).alpha(1f, 0.5f).id("RIGHT_2").addTransitionHandler(RIGHT_IN_PLACE));
         return adapter;
     }
 
     public static OnPageChangeListenerAdapter bindWithRotate(@NonNull OnPageChangeListenerAdapter adapter) {
-        adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, LEFT_OF_CENTER).id("LEFT_CENTER").addTransitionController(LEFT_IN_PLACE));
+        adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, LEFT_OF_CENTER).id("LEFT_CENTER").addTransitionHandler(LEFT_IN_PLACE));
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, LEFT_OF_CENTER * 0.5f).rotationY(0, -90).scale(1f, 0.5f).id("LEFT"));
-        adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER).id("RIGHT_CENTER").addTransitionController(RIGHT_IN_PLACE));
+        adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER).id("RIGHT_CENTER").addTransitionHandler(RIGHT_IN_PLACE));
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER * 0.5f).rotationY(0, 90).scale(1f, 0.5f).id("RIGHT"));
         return adapter;
     }
 
-    private static TransitionStateHolder getTransitionStateHolder(@NonNull View view) {
-        return (TransitionStateHolder) view.getTag(R.id.debug_id);
+    private static TransitionStateLogger getTransitionStateHolder(@NonNull View view) {
+        return (TransitionStateLogger) view.getTag(R.id.debug_id);
     }
 
     private final ViewPager mViewPager;

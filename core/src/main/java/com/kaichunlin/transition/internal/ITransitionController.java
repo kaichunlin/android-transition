@@ -3,6 +3,8 @@ package com.kaichunlin.transition.internal;
 import android.view.View;
 import android.view.animation.Interpolator;
 
+import com.kaichunlin.transition.util.TransitionStateLogger;
+
 /**
  * Implementors would provide the actual implementation for a transition
  * <p>
@@ -93,6 +95,8 @@ public interface ITransitionController extends Cloneable {
      * @return is the controlled enabled
      */
     boolean isEnable();
+
+    TransitionStateLogger getTransitionStateHolder();
 
     /**
      * @return a clone that can be independently manipulated

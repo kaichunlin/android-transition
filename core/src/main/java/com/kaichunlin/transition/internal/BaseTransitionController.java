@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.animation.Interpolator;
 
 import com.kaichunlin.transition.R;
-import com.kaichunlin.transition.util.TransitionStateHolder;
+import com.kaichunlin.transition.util.TransitionStateLogger;
 
 /**
  * Base implementation for ITransitionController
@@ -144,6 +144,11 @@ public abstract class BaseTransitionController implements ITransitionController 
         return mEnable;
     }
 
+    @Override
+    public TransitionStateLogger getTransitionStateHolder() {
+        return (TransitionStateLogger) getTarget().getTag(R.id.debug_id);
+    }
+
     @CheckResult
     @Override
     public BaseTransitionController clone() {
@@ -153,9 +158,5 @@ public abstract class BaseTransitionController implements ITransitionController 
             e.printStackTrace();
         }
         return null;
-    }
-
-    protected TransitionStateHolder getTransitionStateHolder() {
-        return (TransitionStateHolder) getTarget().getTag(R.id.debug_id);
     }
 }

@@ -7,7 +7,7 @@ import android.support.annotation.UiThread;
 
 import com.kaichunlin.transition.internal.ITransitionController;
 import com.kaichunlin.transition.internal.TransitionControllerManager;
-import com.kaichunlin.transition.util.TransitionStateHolder;
+import com.kaichunlin.transition.util.TransitionStateLogger;
 
 import java.util.Iterator;
 import java.util.WeakHashMap;
@@ -90,7 +90,7 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
                 transitionControllerManager.setInterpolator(mInterpolator);
             }
             if (TransitionConfig.isDebug()) {
-                mTarget.setTag(R.id.debug_id, new TransitionStateHolder(getId()));
+                mTarget.setTag(R.id.debug_id, new TransitionStateLogger(getId()));
             }
             transitionControllerManager.setTarget(mTarget);
             transitionControllerManager.setUpdateStateAfterUpdateProgress(mUpdateStateAfterUpdateProgress);

@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 import com.kaichunlin.transition.internal.ITransitionController;
 import com.kaichunlin.transition.internal.TransitionControllerManager;
-import com.kaichunlin.transition.util.TransitionStateHolder;
+import com.kaichunlin.transition.util.TransitionStateLogger;
 import com.kaichunlin.transition.util.TransitionUtil;
 
 import java.lang.ref.WeakReference;
@@ -92,7 +92,7 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
                     view = mTarget;
                 }
                 if (TransitionConfig.isDebug()) {
-                    view.setTag(R.id.debug_id, new TransitionStateHolder(getId()));
+                    view.setTag(R.id.debug_id, new TransitionStateLogger(getId()));
                 }
                 if (mReverse) {
                     transitionControllerManager.reverse();

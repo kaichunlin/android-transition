@@ -14,13 +14,13 @@ import java.util.Map;
  * <p>
  * Created by Kai-Chun Lin on 2015/5/3.
  */
-public class TransitionStateHolder {
+public class TransitionStateLogger {
     public final String mId;
     private Calendar mStartTime;
     private Calendar mEndTime;
     private Map<String, List<TransitionState>> tranStateMap = new HashMap<>();
 
-    public TransitionStateHolder(@NonNull String id) {
+    public TransitionStateLogger(@NonNull String id) {
         mId = id;
     }
 

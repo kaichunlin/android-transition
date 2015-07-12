@@ -8,7 +8,7 @@ import android.view.animation.Interpolator;
 
 import com.kaichunlin.transition.R;
 import com.kaichunlin.transition.TransitionConfig;
-import com.kaichunlin.transition.util.TransitionStateHolder;
+import com.kaichunlin.transition.util.TransitionStateLogger;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 
@@ -121,12 +121,12 @@ public class TransitionControllerManager implements Cloneable {
         }
     }
 
-    private TransitionStateHolder getTransitionStateHolder() {
-        return (TransitionStateHolder) getTarget().getTag(R.id.debug_id);
+    private TransitionStateLogger getTransitionStateHolder() {
+        return (TransitionStateLogger) getTarget().getTag(R.id.debug_id);
     }
 
     private String getTransitionStateHolderId() {
-        return ((TransitionStateHolder) getTarget().getTag(R.id.debug_id)).mId;
+        return ((TransitionStateLogger) getTarget().getTag(R.id.debug_id)).mId;
     }
 
     /**

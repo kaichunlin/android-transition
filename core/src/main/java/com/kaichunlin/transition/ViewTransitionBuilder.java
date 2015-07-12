@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.kaichunlin.transition.internal.CustomTransitionController;
 import com.kaichunlin.transition.internal.DefaultTransitionController;
 import com.kaichunlin.transition.internal.ITransitionController;
 import com.kaichunlin.transition.internal.TransitionControllerManager;
@@ -75,13 +76,13 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     }
 
     /**
-     * Adds a custom {@link ITransitionController}
+     * Adds a custom {@link ITransitionHandler}
      *
-     * @param setup
+     * @param transitionHandler
      * @return
      */
-    public ViewTransitionBuilder addTransitionController(@NonNull ITransitionController setup) {
-        mTransitionControllersList.add(setup);
+    public ViewTransitionBuilder addTransitionHandler(@NonNull ITransitionHandler transitionHandler) {
+        mTransitionControllersList.add(new CustomTransitionController(transitionHandler));
         return self();
     }
 
