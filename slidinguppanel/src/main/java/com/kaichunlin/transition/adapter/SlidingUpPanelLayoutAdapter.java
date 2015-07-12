@@ -1,6 +1,5 @@
 package com.kaichunlin.transition.adapter;
 
-import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.view.View;
 
@@ -13,7 +12,6 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
  * Created by Kai-Chun Lin on 2015/4/14.
  */
 public class SlidingUpPanelLayoutAdapter extends MenuBaseAdapter implements SlidingUpPanelLayout.PanelSlideListener {
-    private boolean mIsExpanded;
     private SlidingUpPanelLayout.PanelSlideListener mListener;
 
     /**
@@ -38,14 +36,9 @@ public class SlidingUpPanelLayoutAdapter extends MenuBaseAdapter implements Slid
     }
 
     @Override
-    public void stopTransition() {
-        super.stopTransition();
-    }
-
-    @Override
     public void onPanelCollapsed(View panel) {
+        getAdapterState().setState(AdapterState.CLOSE);
         stopTransition();
-        mIsExpanded = false;
 
         if (mListener != null) {
             mListener.onPanelCollapsed(panel);
@@ -54,8 +47,8 @@ public class SlidingUpPanelLayoutAdapter extends MenuBaseAdapter implements Slid
 
     @Override
     public void onPanelExpanded(View panel) {
+        getAdapterState().setState(AdapterState.OPEN);
         stopTransition();
-        mIsExpanded = true;
 
         if (mListener != null) {
             mListener.onPanelExpanded(panel);
@@ -82,11 +75,6 @@ public class SlidingUpPanelLayoutAdapter extends MenuBaseAdapter implements Slid
 
     @Override
     protected IMenuOptionHandler createMenuHandler() {
-        return new DefaultMenuOptionHandler(this, new IMenuOptionHandler.AdapterState() {
-            @Override
-            public boolean isOpened(Activity activity) {
-                return mIsExpanded;
-            }
-        });
+        return new DefaultMenuOptionHandler(this, getAdapterState());
     }
 }
