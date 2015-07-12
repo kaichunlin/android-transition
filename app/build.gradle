@@ -2,13 +2,18 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    buildToolsVersion '23.0.0 rc3'
+
+    lintOptions {
+        abortOnError false;
+    }
+
     defaultConfig {
         applicationId 'kaichunlin.transition.app'
         minSdkVersion 11
         targetSdkVersion 21
-        versionCode 3
-        versionName "1.0.1"
+        versionCode 5
+        versionName "1.0.3"
     }
 
     signingConfigs {
@@ -29,11 +34,13 @@ android {
     }
     productFlavors {
     }
+    dexOptions {
+        incremental false
+    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:22.2.0'
     compile project(':slidinguppanel')
     compile project(':observablescrollview')
 }
