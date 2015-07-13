@@ -5,6 +5,22 @@ differnt UI components like [Drawer](https://developer.android.com/reference/and
 
 ## Changelog
 
+**0.9.0-beta**
+
+**Please note that due to change in scope and direction, the code has been overhauled in 0.9.0 and is incompatible with 0.8.x.** A few changes are planned that, while not as expansive as those made in 0.9.0-beta, may still break some APIs.
+
+On the other hand now it only takes __8 lines of code__ to achieve the effect below that includes both non-interactive animation and interactive transition (drawer dragging):
+
+![](/github/animation_transition.gif)
+
+On Android Studio update Gradle dependency to:
+
+    compile 'com.github.kaichunlin.transition:core:0.9.0-beta'
+
+To add the corresponding slidinguppanel module:
+
+    compile 'com.github.kaichunlin.transition:slidinguppanel:0.9.0-beta'
+
 **0.8.3**
 
 [Android Support Annotations](http://tools.android.com/tech-docs/support-annotations) are applied across the codebase which should help catching incorrect usage early. On Android Studio update Gradle dependency to:
@@ -12,14 +28,6 @@ differnt UI components like [Drawer](https://developer.android.com/reference/and
     compile 'com.github.kaichunlin.transition:core:0.8.3'
 
 Note that while many annotations such as @NonNull and @Nullable work on [SDK Build Tools](https://developer.android.com/tools/revisions/build-tools.html) 22.0.x, some annotations like @IntRange and @FlatRange only work when preview version (23.0.0 rc2) is used. 
-
-**0.8.2**
-
-[AnimateMenuAdapter]
-(https://github.com/kaichunlin/android-transition/blob/d4bb037a6ffe2aa3f6f45a692f28b43d1a7fdcbd/core/src/main/java/com/kaichunlin/transition/adapter/AnimateMenuAdapter.java) is added that can animate MenuItems. Core and SlidingUpPanel module have been updated to 0.8.2 to support this addition. On Android Studio update Gradle dependency to:
-
-    compile 'com.github.kaichunlin.transition:core:0.8.2'
-    compile 'com.github.kaichunlin.transition:slidinguppanel:0.8.2'
 
 --------
 ### Download from Google Play
@@ -40,6 +48,9 @@ Features
 
   ![](/github/menu_shrink_and_fade.gif) 
 
++ **Integrated Transition & Animation**
+
+  See Changelog for 0.9.0-beta above for an exmaple, and the "Usage" section below for sample code.
 
 + **Interpolator**
 
@@ -62,14 +73,16 @@ Integration
 --------
 The simplest way to integrate Android-Transition is to grab them from Maven Central or jCenter. On Android Studio, add the code below to Gradle dependencies:
 
-    compile 'com.github.kaichunlin.transition:core:0.8.3'
+    compile 'com.github.kaichunlin.transition:core:0.9.0-beta'
 
 Adapters that adapts to UI components not found in Android framework or Android Support Library are provided as their own libraries, the table below is the list of libraries:
 
 | Library       | Function           | Description in build.gradle  |
 |:-------------|:-------------|:-----|
-| core | Provides core transition function and adapters | com.github.kaichunlin.transition:core:0.8.3 |
-| slidinguppanel | [AndroidSlidingUpPanel](https://github.com/umano/AndroidSlidingUpPanel) Adapter | com.github.kaichunlin.transition:slidinguppanel:0.8.3|
+| core | Provides core transition function and adapters (beta version) | com.github.kaichunlin.transition:core:0.9.0-beta |
+| slidinguppanel | [AndroidSlidingUpPanel](https://github.com/umano/AndroidSlidingUpPanel) Adapter (beta version) | com.github.kaichunlin.transition:slidinguppanel:0.9.0-beta|
+| core | Provides core transition function and adapters (stable version) | com.github.kaichunlin.transition:core:0.8.3 |
+| slidinguppanel | [AndroidSlidingUpPanel](https://github.com/umano/AndroidSlidingUpPanel) Adapter (stable version) | com.github.kaichunlin.transition:slidinguppanel:0.8.3|
 
 As an example, if an app requires both the core & slidinguppanel libraries, then build.gradle will look like below:
 
@@ -77,8 +90,8 @@ As an example, if an app requires both the core & slidinguppanel libraries, then
        //other dependencies
        ...
 
-       compile 'com.github.kaichunlin.transition:core:0.8.3'
-       compile 'com.github.kaichunlin.transition:slidinguppanel:0.8.3'
+       compile 'com.github.kaichunlin.transition:core:0.9.0-beta'
+       compile 'com.github.kaichunlin.transition:slidinguppanel:0.9.0-beta'
      }
 
 Usage
@@ -134,6 +147,32 @@ The app/ folder is a sample app containing dozens of examples.
     //tells adapter the transition and the menu options for both the opened and closed states
     mDrawerListenerAdapter.setupOptions(this, new MenuOptionConfiguration(mShrinkOpen, R.menu.drawer), new MenuOptionConfiguration(mShrinkClose, R.menu.main));
   ```
+
+---
+
+#### To apply both animation & transition:
+  
+  This can be achieved with the code:
+    
+  ```java
+
+        //Create an adapter that listens for ActionBarDrawerToggle state change and update transition states
+        DrawerListenerAdapter mDrawerListenerAdapter = new DrawerListenerAdapter(mDrawerToggle, R.id.drawerList);
+        mDrawerListenerAdapter.setDrawerLayout(mDrawerLayout);
+
+        //this builder is used to build both transition & animation effect
+        ViewTransitionBuilder mRotateEffectBuilder = ViewTransitionBuilder.transit(findViewById(R.id.big_icon)).rotation(0f, 360f).scaleX(1f, 0.2f).scaleY(1f, 0f).translationX(200f);
+        //build the desired transition and adds to the adapter
+        ViewTransition transition = mRotateEffectBuilder.build();
+        mDrawerListenerAdapter.addTransition(transition);
+
+        //since the start animation is the reverse of the transition, set the current view state to transition's final state
+        transition.setProgress(1f);
+        //init an animation and add a delay to prevent stutter, needs to be higher if animation is enabled
+        final IAnimation animation = mRotateEffectBuilder.reverse().buildAnimation();
+        animation.startAnimationDelayed(600, 32);
+  ```
+See source of [DrawerViewActivity.java](https://github.com/kaichunlin/android-transition/blob/827c6f0aa7782400c542c365ae9b9c0f1e172d9c/app/src/main/java/com/kaichunlin/transition/app/DrawerViewActivity.java#L50-L66) for example.
 
 ---
 
