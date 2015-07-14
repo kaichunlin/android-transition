@@ -183,7 +183,7 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
      */
     public interface Setup extends BaseTransition.Setup {
         /**
-         * Create one or more {@link ITransitionController} for each {@link android.view.MenuItem} and add them to transitionManager
+         * Create one or more {@link ITransitionController} for each {@link android.view.MenuItem} and add them to mTransitionManager
          *
          * @param mMenuItem
          * @param transitionControllerManager

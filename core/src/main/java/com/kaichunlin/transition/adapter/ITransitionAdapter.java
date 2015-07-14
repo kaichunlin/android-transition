@@ -1,65 +1,20 @@
 package com.kaichunlin.transition.adapter;
 
-import com.kaichunlin.transition.BaseTransitionBuilder;
-import com.kaichunlin.transition.ITransition;
-import com.kaichunlin.transition.IBaseTransition;
-
-import java.util.List;
+import com.kaichunlin.transition.ITransitionManager;
 
 /**
- * Allows the adaption of different UI interactive components (e.g. Drawer) to support transition effects
- * <p>
- * Created by Kai-Chun Lin on 2015/5/20.
+ * Created by Kai on 2015/7/14.
  */
-public interface ITransitionAdapter extends IBaseTransition {
+public interface ITransitionAdapter extends ITransitionManager {
     AdapterState getAdapterState();
 
     void addTransitionListener(TransitionListener transitionListener);
 
     void removeTransitionListener(TransitionListener transitionListener);
 
-    /**
-     * Same as calling addTransition(transitionBuilder.build())
-     *
-     * @param transitionBuilder
-     */
-    void addTransition(BaseTransitionBuilder transitionBuilder);
-
-    /**
-     * Adds a transition
-     *
-     * @param transition
-     */
-    void addTransition(ITransition transition);
-
-    void addAllTransitions(List<ITransition> transitionsList);
-
-    /**
-     * Removes a transition, should not be called while transition is in progress (isTransitioning() returns true)
-     *
-     * @param transition
-     * @return true if a transition is removed, false otherwise
-     */
-    boolean removeTransition(ITransition transition);
-
-    List<ITransition> getTransitions();
-
-    /**
-     * Starts the transition, {@link #getAdapterState()}.isTransitioning() will always returns true after this method is executed.
-     *
-     * @param progress the starting transition progress, the valid value range depends on the specific Adapter implementation
-     * @return true if the call caused the transition to be started, false if the transition is already in the started state
-     */
-    boolean startTransition(float progress);
-
-    /**
-     * Stops and clears all transitions
-     */
-    void removeAllTransitions();
-
     interface TransitionListener {
-        void onStartTransition(ITransitionAdapter adapter);
+        void onStartTransition(ITransitionManager adapter);
 
-        void onStopTransition(ITransitionAdapter adapter);
+        void onStopTransition(ITransitionManager adapter);
     }
 }

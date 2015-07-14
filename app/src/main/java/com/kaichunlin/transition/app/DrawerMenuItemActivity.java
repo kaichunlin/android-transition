@@ -12,6 +12,7 @@ import com.kaichunlin.transition.Animation.Animation;
 import com.kaichunlin.transition.MenuItemTransition;
 import com.kaichunlin.transition.MenuItemTransitionBuilder;
 import com.kaichunlin.transition.adapter.DrawerListenerAdapter;
+import com.kaichunlin.transition.ITransitionManager;
 import com.kaichunlin.transition.adapter.ITransitionAdapter;
 import com.kaichunlin.transition.adapter.MenuOptionConfiguration;
 
@@ -78,12 +79,12 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
         //TODO evaluate if it's possible to reconcile the two states automatically, maybe if they share the same ITransition instance?
         mDrawerListenerAdapter.addTransitionListener(new ITransitionAdapter.TransitionListener() {
             @Override
-            public void onStartTransition(ITransitionAdapter adapter) {
+            public void onStartTransition(ITransitionManager adapter) {
                 mStartAnimation.cancelAnimation();
             }
 
             @Override
-            public void onStopTransition(ITransitionAdapter adapter) {
+            public void onStopTransition(ITransitionManager adapter) {
             }
         });
 

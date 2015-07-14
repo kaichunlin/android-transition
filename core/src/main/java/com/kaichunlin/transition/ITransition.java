@@ -1,5 +1,6 @@
 package com.kaichunlin.transition;
 
+import android.support.annotation.UiThread;
 import android.view.View;
 import android.view.animation.Interpolator;
 
@@ -25,10 +26,11 @@ public interface ITransition<S extends BaseTransition.Setup> extends IBaseTransi
     String getId();
 
     /**
-     * Sets the transition range
+     * Sets the transition progress
      *
      * @param progress
      */
+    @UiThread
     void setProgress(float progress);
 
     /**

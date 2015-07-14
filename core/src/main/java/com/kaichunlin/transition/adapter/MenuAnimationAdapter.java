@@ -23,7 +23,7 @@ public class MenuAnimationAdapter extends AnimationAdapter implements IMenuOptio
      *
      * @param adapter
      */
-    public MenuAnimationAdapter(@Nullable MenuBaseAdapter adapter) {
+    public MenuAnimationAdapter(@Nullable ITransitionAdapter adapter) {
         super(adapter);
     }
 

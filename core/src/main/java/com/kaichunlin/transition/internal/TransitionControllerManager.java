@@ -8,6 +8,7 @@ import android.view.animation.Interpolator;
 
 import com.kaichunlin.transition.R;
 import com.kaichunlin.transition.TransitionConfig;
+import com.kaichunlin.transition.ITransitionManager;
 import com.kaichunlin.transition.util.TransitionStateLogger;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -147,7 +148,7 @@ public class TransitionControllerManager implements Cloneable {
     /**
      * Updates the transition progress
      *
-     * @param progress the possible range of values depends on the {@link com.kaichunlin.transition.adapter.ITransitionAdapter} being used
+     * @param progress the possible range of values depends on the {@link ITransitionManager} being used
      */
     public void updateProgress(float progress) {
         if (mLastProgress == progress) {
@@ -181,15 +182,6 @@ public class TransitionControllerManager implements Cloneable {
         }
     }
 
-//    @Override
-//    public void onTimeUpdate(TimeAnimator animation, long totalTime, long deltaTime) {
-//        for (IAnimationTransition ctrl : mTransitionControls) {
-//            if (ctrl.isEnable()) {
-//                ctrl.updateState();
-//            }
-//        }
-//    }
-
     /**
      * @param target the view that all {@link ITransitionController} managed by this object should work on
      */
@@ -203,6 +195,7 @@ public class TransitionControllerManager implements Cloneable {
     /**
      * @return
      */
+    @Nullable
     public View getTarget() {
         return mTarget;
     }

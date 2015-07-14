@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.kaichunlin.transition.Animation.Animation;
 import com.kaichunlin.transition.Animation.IAnimation;
+import com.kaichunlin.transition.ITransitionManager;
 
 /**
  * This adapter integrates traditional animations using the same methods and logic as the rest of the framework. It can be configured
@@ -18,7 +19,7 @@ import com.kaichunlin.transition.Animation.IAnimation;
  * Created by Kai on 2015/7/10.
  */
 public class AnimationAdapter extends BaseAdapter implements IAnimation, ITransitionAdapter.TransitionListener {
-    private final BaseAdapter mAdapter;
+    private final ITransitionAdapter mAdapter;
     private IAnimation mAnimation;
 
     public AnimationAdapter() {
@@ -30,7 +31,7 @@ public class AnimationAdapter extends BaseAdapter implements IAnimation, ITransi
      *
      * @param adapter
      */
-    public AnimationAdapter(@Nullable BaseAdapter adapter) {
+    public AnimationAdapter(@Nullable ITransitionAdapter adapter) {
         super(adapter == null ? new AdapterState() : adapter.getAdapterState());
         mAdapter = adapter;
         mAnimation = new Animation(mAdapter == null ? this : mAdapter);
@@ -55,12 +56,12 @@ public class AnimationAdapter extends BaseAdapter implements IAnimation, ITransi
     }
 
     @Override
-    public void onStartTransition(ITransitionAdapter adapter) {
+    public void onStartTransition(ITransitionManager adapter) {
         notifyStartTransition();
     }
 
     @Override
-    public void onStopTransition(ITransitionAdapter adapter) {
+    public void onStopTransition(ITransitionManager adapter) {
         notifyStopTransition();
     }
 
@@ -131,6 +132,7 @@ public class AnimationAdapter extends BaseAdapter implements IAnimation, ITransi
         }
     }
 
+    @Nullable
     protected ITransitionAdapter getAdapter() {
         return mAdapter;
     }

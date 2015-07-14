@@ -2,11 +2,13 @@ package com.kaichunlin.transition.adapter;
 
 import android.support.annotation.IntDef;
 
+import com.kaichunlin.transition.ITransitionManager;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Stores an {@link ITransitionAdapter}'s state
+ * Stores an {@link ITransitionManager}'s state
  * <p>
  * Created by Kai on 2015/7/11.
  */

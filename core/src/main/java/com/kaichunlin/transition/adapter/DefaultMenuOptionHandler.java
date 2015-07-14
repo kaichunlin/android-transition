@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Menu;
 
+import com.kaichunlin.transition.ITransitionManager;
 import com.kaichunlin.transition.MenuItemTransition;
 
 /**
@@ -13,12 +14,12 @@ import com.kaichunlin.transition.MenuItemTransition;
  * Created by Kai on 2015/5/10.
  */
 public class DefaultMenuOptionHandler implements IMenuOptionHandler {
-    private final ITransitionAdapter mAdapter;
+    private final ITransitionManager mAdapter;
     private final AdapterState mAdapterState;
     private MenuOptionConfiguration mOpenConfig;
     private MenuOptionConfiguration mCloseConfig;
 
-    public DefaultMenuOptionHandler(@NonNull ITransitionAdapter adapter, @NonNull AdapterState adapterState) {
+    public DefaultMenuOptionHandler(@NonNull ITransitionManager adapter, @NonNull AdapterState adapterState) {
         mAdapter = adapter;
         mAdapterState = adapterState;
     }
@@ -111,11 +112,13 @@ public class DefaultMenuOptionHandler implements IMenuOptionHandler {
         setupOptions(null, null, null);
     }
 
+    @Nullable
     @Override
     public MenuOptionConfiguration getOpenConfig() {
         return mOpenConfig;
     }
 
+    @Nullable
     @Override
     public MenuOptionConfiguration getCloseConfig() {
         return mCloseConfig;

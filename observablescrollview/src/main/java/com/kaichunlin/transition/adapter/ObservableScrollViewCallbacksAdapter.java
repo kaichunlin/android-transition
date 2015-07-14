@@ -102,13 +102,7 @@ public class ObservableScrollViewCallbacksAdapter extends BaseAdapter implements
             }
         }
 
-        int range;
-        for (ITransition trans : mTransitionList.values()) {
-//            range = mRanges.get(trans);
-//            trans.updateProgress(((float) (scrollY - mStartY)) / range);
-            trans.updateProgress(scrollY - mStartY);
-//            Log.e(getClass().getSimpleName(), "onScrollChanged: "+(((float) (scrollY - mStartY)) / range));
-        }
+        getTransitionManager().updateProgress(scrollY - mStartY);
 
         mLastScrollY = scrollY;
 

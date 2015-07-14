@@ -8,7 +8,6 @@ import android.view.animation.Interpolator;
 
 import com.kaichunlin.transition.Animation.Animation;
 import com.kaichunlin.transition.Animation.IAnimation;
-import com.kaichunlin.transition.adapter.ITransitionAdapter;
 import com.kaichunlin.transition.internal.ITransitionController;
 import com.nineoldandroids.animation.PropertyValuesHolder;
 
@@ -56,7 +55,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
 
     /**
      * Sets the start and end range of the transition, this affects where the end the transition is reached and no further modification will be performed on the target view
-     * For most {@link com.kaichunlin.transition.adapter.ITransitionAdapter} the range will be [0..1]
+     * For most {@link ITransitionManager} the range will be [0..1]
      *
      * @param start
      * @param end
@@ -70,7 +69,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
 
     /**
      * Sets the start range of the transition, this affects where the end the transition is reached and no further modification will be performed on the target view
-     * For most {@link com.kaichunlin.transition.adapter.ITransitionAdapter} the range will be [0..1]
+     * For most {@link ITransitionManager} the range will be [0..1]
      *
      * @param start
      * @return
@@ -82,7 +81,7 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
 
     /**
      * Sets the end range of the transition, this affects where the end the transition is reached and no further modification will be performed on the target view
-     * For most {@link com.kaichunlin.transition.adapter.ITransitionAdapter} the range will be [0..1]
+     * For most {@link ITransitionManager} the range will be [0..1]
      *
      * @param end
      * @return
@@ -570,13 +569,13 @@ public abstract class BaseTransitionBuilder<T extends BaseTransitionBuilder, U e
     }
 
     /**
-     * Sets the {@link ITransitionAdapter}, once set calling {@link build()} would automatically add
+     * Sets the {@link ITransitionManager}, once set calling {@link build()} would automatically add
      * the created {@link ViewTransition} to the adapter.
      *
      * @param adapter
      * @return
      */
-    public U buildFor(@NonNull ITransitionAdapter adapter) {
+    public U buildFor(@NonNull ITransitionManager adapter) {
         U transition = build();
         adapter.addTransition(transition);
         return transition;

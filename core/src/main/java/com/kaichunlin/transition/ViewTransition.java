@@ -33,11 +33,10 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
     }
 
     /**
-     *
-     * @param id unique ID that can identify the transition
+     * @param id    unique ID that can identify the transition
      * @param setup creates the {@link ITransitionController}'s when {@link #startTransition()} is called
      */
-    public ViewTransition (@Nullable String id, @Nullable Setup setup) {
+    public ViewTransition(@Nullable String id, @Nullable Setup setup) {
         this(id, HARD_REF, setup);
     }
 
@@ -64,12 +63,13 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
         mSetup.put(weakLink, setup);
     }
 
+    @Nullable
     private Setup getSetup() {
         Iterator<Setup> i = mSetup.values().iterator();
         if (i.hasNext()) {
             return i.next();
         }
-        throw new IllegalStateException("Setup has been GCed");
+        return null;
     }
 
     @Override

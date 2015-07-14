@@ -3,7 +3,6 @@ package com.kaichunlin.transition.adapter;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.kaichunlin.transition.ITransition;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
@@ -26,9 +25,7 @@ public class SlidingUpPanelLayoutAdapter extends MenuBaseAdapter implements Slid
     @Override
     public void onPanelSlide(View panel, float slideOffset) {
         startTransition();
-        for (ITransition trans : mTransitionList.values()) {
-            trans.updateProgress(slideOffset);
-        }
+        getTransitionManager().updateProgress(slideOffset);
 
         if (mListener != null) {
             mListener.onPanelSlide(panel, slideOffset);

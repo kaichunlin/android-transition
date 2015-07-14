@@ -1,16 +1,13 @@
 package com.kaichunlin.transition.adapter;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.kaichunlin.transition.BaseTransitionBuilder;
 import com.kaichunlin.transition.ITransition;
+import com.kaichunlin.transition.TransitionManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -20,7 +17,7 @@ import java.util.Set;
  */
 public abstract class BaseAdapter implements ITransitionAdapter {
     protected final Set<TransitionListener> transitionListenerList = new HashSet<>();
-    protected final Map<String, ITransition> mTransitionList = new HashMap<>();
+    private final TransitionManager mTransitionManager = new TransitionManager();
     private AdapterState mAdapterState;
 
     public BaseAdapter() {
@@ -29,6 +26,10 @@ public abstract class BaseAdapter implements ITransitionAdapter {
 
     public BaseAdapter(AdapterState adapterState) {
         mAdapterState = adapterState;
+    }
+
+    protected TransitionManager getTransitionManager() {
+        return mTransitionManager;
     }
 
     @Override
@@ -48,46 +49,33 @@ public abstract class BaseAdapter implements ITransitionAdapter {
 
     @Override
     public void addTransition(@NonNull BaseTransitionBuilder transitionBuilder) {
-        addTransition(transitionBuilder.build());
+        mTransitionManager.addTransition(transitionBuilder);
     }
 
     @Override
     public void addTransition(@NonNull ITransition transition) {
-        mTransitionList.put(transition.getId(), transition);
+        mTransitionManager.addTransition(transition);
     }
 
     @Override
     public void addAllTransitions(@NonNull List<ITransition> transitionsList) {
-        for (ITransition transition : transitionsList) {
-            mTransitionList.put(transition.getId(), transition);
-        }
+        mTransitionManager.addAllTransitions(transitionsList);
     }
 
     @Override
     public boolean removeTransition(@NonNull ITransition transition) {
-        if (mTransitionList.remove(transition.getId()) == null) {
-            //fallback check
-            for (Map.Entry<String, ITransition> entry : mTransitionList.entrySet()) {
-                if (entry.getValue() == transition) {
-                    Log.w(getClass().getSimpleName(), "removeTransition: transition has its ID changed after being added " + transition.getId());
-                    mTransitionList.remove(entry.getKey());
-                    return true;
-                }
-            }
-            return false;
-        }
-        return true;
+        return mTransitionManager.removeTransition(transition);
     }
 
     @Override
     public void removeAllTransitions() {
         stopTransition();
-        mTransitionList.clear();
+        mTransitionManager.removeAllTransitions();
     }
 
     @Override
     public List<ITransition> getTransitions() {
-        return new ArrayList<>(mTransitionList.values());
+        return mTransitionManager.getTransitions();
     }
 
     @Override
@@ -104,9 +92,7 @@ public abstract class BaseAdapter implements ITransitionAdapter {
         //call listeners so they can perform their actions first, like modifying this adapter's transitions
         notifyStartTransition();
 
-        for (ITransition trans : mTransitionList.values()) {
-            trans.startTransition(progress);
-        }
+        mTransitionManager.startTransition(progress);
         mAdapterState.setTransiting(true);
         return true;
     }
@@ -123,9 +109,7 @@ public abstract class BaseAdapter implements ITransitionAdapter {
      * @param value
      */
     public void updateProgress(float value) {
-        for (ITransition trans : mTransitionList.values()) {
-            trans.updateProgress(value);
-        }
+        mTransitionManager.updateProgress(value);
     }
 
     /**
@@ -138,10 +122,7 @@ public abstract class BaseAdapter implements ITransitionAdapter {
         }
 
         notifyStopTransition();
-
-        for (ITransition trans : mTransitionList.values()) {
-            trans.stopTransition();
-        }
+        mTransitionManager.stopTransition();
         mAdapterState.setTransiting(false);
     }
 

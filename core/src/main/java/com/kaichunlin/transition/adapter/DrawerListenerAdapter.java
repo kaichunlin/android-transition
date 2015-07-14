@@ -8,8 +8,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.View;
 
-import com.kaichunlin.transition.ITransition;
-
 /**
  * Adapter for DrawerListener, the transition range goes from 0.0f to 1.0f, where 0.0f is the closed state and 1.0f is the opened state.
  * <p>
@@ -85,9 +83,7 @@ public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayo
 
     @Override
     public void onDrawerSlide(View view, float slideOffset) {
-        for (ITransition trans : mTransitionList.values()) {
-            trans.updateProgress(slideOffset);
-        }
+        getTransitionManager().updateProgress(slideOffset);
 
         if (view == null) {
             return;

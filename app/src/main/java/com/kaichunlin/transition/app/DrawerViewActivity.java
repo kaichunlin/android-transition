@@ -14,6 +14,7 @@ import com.kaichunlin.transition.Animation.IAnimation;
 import com.kaichunlin.transition.ViewTransition;
 import com.kaichunlin.transition.ViewTransitionBuilder;
 import com.kaichunlin.transition.adapter.DrawerListenerAdapter;
+import com.kaichunlin.transition.ITransitionManager;
 import com.kaichunlin.transition.adapter.ITransitionAdapter;
 
 import kaichunlin.transition.app.R;
@@ -70,12 +71,12 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
         //TODO evaluate if it's possible to reconcile the two states automatically, maybe if they share the same ITransition instance?
         mDrawerListenerAdapter.addTransitionListener(new ITransitionAdapter.TransitionListener() {
             @Override
-            public void onStartTransition(ITransitionAdapter adapter) {
+            public void onStartTransition(ITransitionManager adapter) {
                 animation.cancelAnimation();
             }
 
             @Override
-            public void onStopTransition(ITransitionAdapter adapter) {
+            public void onStopTransition(ITransitionManager adapter) {
             }
         });
     }

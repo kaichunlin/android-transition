@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.kaichunlin.transition.BaseTransitionBuilder;
 import com.kaichunlin.transition.ITransition;
+import com.kaichunlin.transition.ITransitionManager;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class UnifiedAdapter extends AnimationAdapter {
     private boolean mUpdateProgressAdapter = true;
     private boolean mUpdateAnimationAdapter = true;
 
-    public UnifiedAdapter(@NonNull BaseAdapter progressAdapter) {
+    public UnifiedAdapter(@NonNull ITransitionAdapter progressAdapter) {
         this(progressAdapter, new AnimationAdapter());
     }
 
@@ -24,7 +25,7 @@ public class UnifiedAdapter extends AnimationAdapter {
      * @param progressAdapter its methods should not be called elsewhere
      * @param animationAdapter its methods should not be called elsewhere
      */
-    public UnifiedAdapter(@NonNull BaseAdapter progressAdapter, @NonNull AnimationAdapter animationAdapter) {
+    public UnifiedAdapter(@NonNull ITransitionAdapter progressAdapter, @NonNull AnimationAdapter animationAdapter) {
         super(progressAdapter);
         getAdapter().addTransitionListener(this);
         mAnimationAdapter = animationAdapter;
@@ -40,7 +41,7 @@ public class UnifiedAdapter extends AnimationAdapter {
     }
 
     @Override
-    public void onStartTransition(ITransitionAdapter adapter) {
+    public void onStartTransition(ITransitionManager adapter) {
         if (mUpdateProgressAdapter) {
             getAdapter().removeAllTransitions();
             getAdapter().addAllTransitions(getTransitions());

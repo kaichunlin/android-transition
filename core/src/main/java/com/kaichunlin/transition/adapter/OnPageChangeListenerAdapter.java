@@ -10,13 +10,12 @@ import com.kaichunlin.transition.ITransitionHandler;
 import com.kaichunlin.transition.ITransition;
 import com.kaichunlin.transition.R;
 import com.kaichunlin.transition.TransitionConfig;
+import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.ViewTransition;
 import com.kaichunlin.transition.ViewTransitionBuilder;
 import com.kaichunlin.transition.internal.ITransitionController;
 import com.kaichunlin.transition.util.TransitionStateLogger;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
@@ -132,7 +131,7 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
     }
 
     private final ViewPager mViewPager;
-    private final WeakHashMap<View, PageHolder> mAnimationListMap = new WeakHashMap<>();
+    private final WeakHashMap<View, PageHolder> mTransitionListMap = new WeakHashMap<>();
 
     public OnPageChangeListenerAdapter(ViewPager viewPager) {
         mViewPager = viewPager;
@@ -149,9 +148,9 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
 
     public OnPageChangeListenerAdapter addAndSetTransition(@NonNull ViewTransitionBuilder builder, float start, float end) {
         ViewTransition vt = builder.range(start, end).id("LEFT").build();
-        mTransitionList.put(vt.getId(), vt);
+        getTransitionManager().addTransition(vt);
         vt = builder.clone().range(-start, -end).id("RIGHT").build();
-        mTransitionList.put(vt.getId(), vt);
+        getTransitionManager().addTransition(vt);
         return this;
     }
 
@@ -171,12 +170,12 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
         getAdapterState().setTransiting(true);
         notifyStartTransition();
 
-        PageHolder holder = mAnimationListMap.get(page);
+        PageHolder holder = mTransitionListMap.get(page);
         if (holder == null) {
-            holder = new PageHolder(page, mTransitionList);
-            mAnimationListMap.put(page, holder);
+            holder = new PageHolder(page, getTransitionManager());
+            mTransitionListMap.put(page, holder);
 
-            for (ITransition trans : holder.mAnimationList.values()) {
+            for (ITransition trans : holder.mTransitionManager.getTransitions()) {
                 trans.setUpdateStateAfterUpdateProgress(true);
                 trans.setTarget(page);
                 trans.startTransition();
@@ -191,28 +190,24 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
     }
 
     protected void updateProgress(@NonNull View page, float value) {
-        PageHolder holder = mAnimationListMap.get(page);
+        PageHolder holder = mTransitionListMap.get(page);
         if (holder == null) {
             if(TransitionConfig.isDebug()) {
                 Log.e(getClass().getSimpleName(), "updateProgress: NULL");
             }
             return;
         }
-        for (ITransition trans : holder.mAnimationList.values()) {
-            trans.updateProgress(value);
-        }
+        getTransitionManager().updateProgress(value);
     }
 
     public void stopTransition() {
         getAdapterState().setTransiting(false);
         notifyStopTransition();
 
-        for (PageHolder holder : mAnimationListMap.values()) {
-            for (ITransition trans : holder.mAnimationList.values()) {
-                trans.stopTransition();
-            }
+        for (PageHolder holder : mTransitionListMap.values()) {
+            holder.mTransitionManager.stopTransition();
         }
-        mAnimationListMap.clear();
+        mTransitionListMap.clear();
     }
 
     @Override
@@ -245,14 +240,10 @@ public class OnPageChangeListenerAdapter extends BaseAdapter implements ViewPage
     }
 
     private static class PageHolder {
-        final Map<String, ITransition> mAnimationList = new HashMap<>();
+        final TransitionManager mTransitionManager=new TransitionManager();
 
-        public PageHolder(@NonNull View page, @NonNull Map<String, ITransition> animationList) {
-            for (ITransition trans : animationList.values()) {
-                trans = trans.clone();
-                trans.setTarget(page);
-                mAnimationList.put(trans.getId(), trans);
-            }
+        public PageHolder(@NonNull View page, @NonNull TransitionManager transitionManager) {
+            mTransitionManager.addAllTransitions(transitionManager.getTransitions());
         }
     }
 }
