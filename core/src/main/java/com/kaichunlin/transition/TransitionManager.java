@@ -1,99 +1,50 @@
 package com.kaichunlin.transition;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Manages a collection of {@link ITransition}
- *
- * Created by Kai on 2015/7/14.
+ * Allows the adaption of different UI interactive components (e.g. Drawer) to support transition effects
+ * <p>
+ * Created by Kai-Chun Lin on 2015/5/20.
  */
-public class TransitionManager implements ITransitionManager {
-    protected final Map<String, ITransition> mTransitionList = new HashMap<>();
-
-    @Override
-    public void addTransition(@NonNull BaseTransitionBuilder transitionBuilder) {
-        addTransition(transitionBuilder.build());
-    }
-
-    @Override
-    public void addTransition(@NonNull ITransition transition) {
-        mTransitionList.put(transition.getId(), transition);
-    }
-
-    @Override
-    public void addAllTransitions(@NonNull List<ITransition> transitionsList) {
-        for (ITransition transition : transitionsList) {
-            mTransitionList.put(transition.getId(), transition);
-        }
-    }
-
-    @Override
-    public boolean removeTransition(@NonNull ITransition transition) {
-        if (mTransitionList.remove(transition.getId()) == null) {
-            //fallback check
-            for (Map.Entry<String, ITransition> entry : mTransitionList.entrySet()) {
-                if (entry.getValue() == transition) {
-                    Log.w(getClass().getSimpleName(), "removeTransition: transition has its ID changed after being added " + transition.getId());
-                    mTransitionList.remove(entry.getKey());
-                    return true;
-                }
-            }
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void removeAllTransitions() {
-        mTransitionList.clear();
-    }
-
-    @Override
-    public List<ITransition> getTransitions() {
-        return new ArrayList<>(mTransitionList.values());
-    }
-
-    @Override
-    public boolean startTransition() {
-        for (ITransition trans : mTransitionList.values()) {
-            trans.startTransition();
-        }
-        return true;
-    }
-
-    @Override
-    public boolean startTransition(float progress) {
-        for (ITransition trans : mTransitionList.values()) {
-            trans.startTransition(progress);
-        }
-        return true;
-    }
+public interface TransitionManager extends TransitionOperation {
 
     /**
-     * Updates the transition progress
+     * Same as calling addTransition(transitionBuilder.build())
      *
-     * @param value
+     * @param transitionBuilder
      */
-    @Override
-    public void updateProgress(float value) {
-        for (ITransition trans : mTransitionList.values()) {
-            trans.updateProgress(value);
-        }
-    }
+    void addTransition(AbstractTransitionBuilder transitionBuilder);
 
     /**
-     * Stops all transitions
+     * Adds a transition
+     *
+     * @param transition
      */
-    @Override
-    public void stopTransition() {
-        for (ITransition trans : mTransitionList.values()) {
-            trans.stopTransition();
-        }
-    }
+    void addTransition(Transition transition);
+
+    void addAllTransitions(List<Transition> transitionsList);
+
+    /**
+     * Removes a transition, should not be called while transition is in progress (isTransitioning() returns true)
+     *
+     * @param transition
+     * @return true if a transition is removed, false otherwise
+     */
+    boolean removeTransition(Transition transition);
+
+    List<Transition> getTransitions();
+
+    /**
+     * Stops and clears all transitions
+     */
+    void removeAllTransitions();
+
+    void addTransitionListener(TransitionListener transitionListener);
+
+    void removeTransitionListener(TransitionListener transitionListener);
+
+    void notifyTransitionStart();
+
+    void notifyTransitionEnd();
 }

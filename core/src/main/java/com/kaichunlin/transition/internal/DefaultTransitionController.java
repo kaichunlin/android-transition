@@ -17,7 +17,7 @@ import com.nineoldandroids.animation.ValueAnimator;
  * <p>
  * Created by Kai-Chun Lin on 2015/4/16.
  */
-public class DefaultTransitionController extends BaseTransitionController implements Cloneable {
+public class DefaultTransitionController extends TransitionController<DefaultTransitionController> implements Cloneable {
     protected AnimatorSet mAnimSet;
 
 
@@ -39,7 +39,7 @@ public class DefaultTransitionController extends BaseTransitionController implem
      * @param animSet
      * @return
      */
-    public static ITransitionController wrapAnimatorSet(@NonNull AnimatorSet animSet) {
+    public static DefaultTransitionController wrapAnimatorSet(@NonNull AnimatorSet animSet) {
         return new DefaultTransitionController(animSet);
     }
 
@@ -177,12 +177,16 @@ public class DefaultTransitionController extends BaseTransitionController implem
     }
 
     private void appendLog(String msg) {
-        getTransitionStateHolder().append(getId(), this, msg);
+        getTransitionStateHolder().append(getId()+"->"+mTarget, this, msg);
     }
 
     @CheckResult
     @Override
     public DefaultTransitionController clone() {
         return (DefaultTransitionController) super.clone();
+    }
+
+    protected DefaultTransitionController self() {
+        return this;
     }
 }

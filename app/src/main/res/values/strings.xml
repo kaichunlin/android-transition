@@ -28,6 +28,8 @@
     <string name="drawer_slide_subviews">Sliding Subviews</string>
     <string name="drawer_slide_bg">Sliding Background</string>
     <string name="animate">Animate</string>
+    <string name="pause">Pause</string>
+    <string name="reverse">Resume</string>
     <string name="interpolator">Interpolator</string>
     <string name="interpolator_default">Default</string>
     <string name="interpolator_linear">Linear</string>

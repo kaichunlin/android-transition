@@ -19,7 +19,7 @@ import com.nineoldandroids.animation.PropertyValuesHolder;
  * <p>
  * Created by Kai-Chun Lin on 2015/4/23.
  */
-public class MenuItemTransitionBuilder extends BaseTransitionBuilder<MenuItemTransitionBuilder, MenuItemTransition> implements MenuItemTransition.Setup {
+public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuItemTransitionBuilder, MenuItemTransition> implements MenuItemTransition.Setup {
 
     /**
      *

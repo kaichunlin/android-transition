@@ -11,8 +11,8 @@ import android.view.Menu;
  * <p>
  * Created by Kai on 2015/6/22.
  */
-public class MenuAnimationAdapter extends AnimationAdapter implements IMenuOptionHandler {
-    private IMenuOptionHandler mMenuOptionHandler = new DefaultMenuOptionHandler(this, getAdapterState());
+public class MenuAnimationAdapter extends AnimationAdapter implements MenuOptionHandler {
+    private MenuOptionHandler mMenuOptionHandler = new DefaultMenuOptionHandler(this, getAdapterState());
 
     public MenuAnimationAdapter() {
         super();
@@ -23,7 +23,7 @@ public class MenuAnimationAdapter extends AnimationAdapter implements IMenuOptio
      *
      * @param adapter
      */
-    public MenuAnimationAdapter(@Nullable ITransitionAdapter adapter) {
+    public MenuAnimationAdapter(@Nullable TransitionAdapter adapter) {
         super(adapter);
     }
 
@@ -36,12 +36,12 @@ public class MenuAnimationAdapter extends AnimationAdapter implements IMenuOptio
         super.startAnimation(duration);
     }
 
-    public void setMenuOptionHandler(@NonNull IMenuOptionHandler menuOptionHandler) {
+    public void setMenuOptionHandler(@NonNull MenuOptionHandler menuOptionHandler) {
         mMenuOptionHandler = menuOptionHandler;
     }
 
-    private IMenuOptionHandler getHandler() {
-        return getAdapter() == null ? mMenuOptionHandler : (IMenuOptionHandler) getAdapter();
+    private MenuOptionHandler getHandler() {
+        return getAdapter() == null ? mMenuOptionHandler : (MenuOptionHandler) getAdapter();
     }
 
     public void onCreateOptionsMenu(@NonNull Activity activity, @NonNull Menu menu) {

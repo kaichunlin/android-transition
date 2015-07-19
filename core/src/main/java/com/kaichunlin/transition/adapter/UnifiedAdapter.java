@@ -2,77 +2,72 @@ package com.kaichunlin.transition.adapter;
 
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import com.kaichunlin.transition.BaseTransitionBuilder;
-import com.kaichunlin.transition.ITransition;
-import com.kaichunlin.transition.ITransitionManager;
+import com.kaichunlin.transition.AbstractTransitionBuilder;
+import com.kaichunlin.transition.Animation.Animation;
+import com.kaichunlin.transition.Animation.AnimationListener;
+import com.kaichunlin.transition.Animation.AnimationManager;
+import com.kaichunlin.transition.Transition;
+import com.kaichunlin.transition.TransitionListener;
+import com.kaichunlin.transition.TransitionManager;
 
 import java.util.List;
 
 /**
  * Created by Kai on 2015/7/10.
  */
-public class UnifiedAdapter extends AnimationAdapter {
-    private final AnimationAdapter mAnimationAdapter;
+public class UnifiedAdapter extends AbstractAdapter implements Animation, TransitionListener {
+    private final TransitionAdapter mAdapter;
+    private final AnimationManager mAnimationManager;
     private boolean mUpdateProgressAdapter = true;
     private boolean mUpdateAnimationAdapter = true;
 
-    public UnifiedAdapter(@NonNull ITransitionAdapter progressAdapter) {
-        this(progressAdapter, new AnimationAdapter());
+    public UnifiedAdapter(@Nullable TransitionAdapter adapter) {
+        this(adapter, new AnimationManager());
     }
 
     /**
-     * @param progressAdapter its methods should not be called elsewhere
-     * @param animationAdapter its methods should not be called elsewhere
+     * @param adapter          its methods should not be called elsewhere
+     * @param animationManager its methods should not be called elsewhere
      */
-    public UnifiedAdapter(@NonNull ITransitionAdapter progressAdapter, @NonNull AnimationAdapter animationAdapter) {
-        super(progressAdapter);
+    public UnifiedAdapter(@NonNull TransitionAdapter adapter, @NonNull AnimationManager animationManager) {
+        super(adapter == null ? new AdapterState() : adapter.getAdapterState());
+
+        mAdapter = adapter;
         getAdapter().addTransitionListener(this);
-        mAnimationAdapter = animationAdapter;
-        mAnimationAdapter.addTransitionListener(this);
+
+        mAnimationManager = animationManager;
     }
 
-    public void setReverseAnimation(boolean reverse) {
-        mAnimationAdapter.setReverseAnimation(reverse);
-    }
-
-    public boolean isReverseAnimation() {
-        return mAnimationAdapter.isReverseAnimation();
+    @Nullable
+    protected TransitionAdapter getAdapter() {
+        return mAdapter;
     }
 
     @Override
-    public void onStartTransition(ITransitionManager adapter) {
-        if (mUpdateProgressAdapter) {
-            getAdapter().removeAllTransitions();
-            getAdapter().addAllTransitions(getTransitions());
-            mUpdateProgressAdapter = false;
-        }
-        super.onStartTransition(adapter);
-    }
-
-    @Override
-    public void addTransition(@NonNull BaseTransitionBuilder transitionBuilder) {
+    public void addTransition(@NonNull AbstractTransitionBuilder transitionBuilder) {
         invalidateTransitions();
 
         super.addTransition(transitionBuilder);
     }
 
     @Override
-    public void addTransition(@NonNull ITransition transition) {
+    public void addTransition(@NonNull Transition transition) {
         invalidateTransitions();
 
         super.addTransition(transition);
     }
 
     @Override
-    public void addAllTransitions(@NonNull List<ITransition> transitionsList) {
+    public void addAllTransitions(@NonNull List<Transition> transitionsList) {
         invalidateTransitions();
 
         super.addAllTransitions(transitionsList);
     }
 
     @Override
-    public boolean removeTransition(@NonNull ITransition transition) {
+    public boolean removeTransition(@NonNull Transition transition) {
         invalidateTransitions();
 
         return super.removeTransition(transition);
@@ -92,6 +87,7 @@ public class UnifiedAdapter extends AnimationAdapter {
 
     @Override
     public boolean startTransition(float progress) {
+        cancelAnimation();
         if (mUpdateProgressAdapter) {
             getAdapter().removeAllTransitions();
             getAdapter().addAllTransitions(getTransitions());
@@ -106,22 +102,133 @@ public class UnifiedAdapter extends AnimationAdapter {
     }
 
     @Override
-    public void startAnimation() {
+    public void stopTransition() {
+        if (mAdapter == null) {
+            super.stopTransition();
+        } else {
+            mAdapter.stopTransition();
+        }
+    }
+
+    public void addTransitionListener(TransitionListener transitionListener) {
+        super.addTransitionListener(transitionListener);
+
+        if (mAdapter != null) {
+            mAdapter.addTransitionListener(this);
+        }
+    }
+
+    public void removeTransitionListener(TransitionListener transitionListener) {
+        super.removeTransitionListener(transitionListener);
+
+        if (mAdapter != null) {
+            mAdapter.removeTransitionListener(this);
+        }
+    }
+
+    @Override
+    public void onTransitionStart(TransitionManager transitionManager) {
+        if (mUpdateProgressAdapter) {
+            getAdapter().removeAllTransitions();
+            getAdapter().addAllTransitions(getTransitions());
+            mUpdateProgressAdapter = false;
+        }
+        notifyTransitionStart();
+    }
+
+    @Override
+    public void onTransitionEnd(TransitionManager transitionManager) {
+        notifyTransitionEnd();
+    }
+
+    @Override
+    public void addAnimationListener(AnimationListener animationListener) {
+        mAnimationManager.addAnimationListener(animationListener);
+    }
+
+    @Override
+    public void removeAnimationListener(AnimationListener animationListener) {
+        mAnimationManager.removeAnimationListener(animationListener);
+    }
+
+    @Override
+    public void setDuration(@IntRange(from = 0) int duration) {
+        mAnimationManager.setDuration(duration);
+    }
+
+    @Override
+    public int getDuration() {
+        return mAnimationManager.getDuration();
+    }
+
+    @Override
+    public void setReverseAnimation(boolean reverse) {
+        mAnimationManager.setReverseAnimation(reverse);
+    }
+
+    @Override
+    public boolean isReverseAnimation() {
+        return mAnimationManager.isReverseAnimation();
+    }
+
+    private void startAnimation(boolean setDuration, int duration) {
+        cancelAnimation();
         if (mUpdateAnimationAdapter) {
-            mAnimationAdapter.removeAllTransitions();
-            mAnimationAdapter.addAllTransitions(getTransitions());
+            mAnimationManager.removeAllAnimations();
+            mAnimationManager.addAllTransitions(getTransitions());
             mUpdateAnimationAdapter = false;
         }
-        mAnimationAdapter.startAnimation();
+        if(setDuration) {
+            mAnimationManager.startAnimation(duration);
+        } else {
+            mAnimationManager.startAnimation();
+        }
+    }
+
+    @Override
+    public void startAnimation() {
+        startAnimation(false, -1);
     }
 
     @Override
     public void startAnimation(@IntRange(from = 0) int duration) {
-        mAnimationAdapter.startAnimation(duration);
+        startAnimation(true, duration);
+    }
+
+    public void startAnimationDelayed(@IntRange(from = 0) int delay) {
+        mAnimationManager.startAnimationDelayed(delay);
+    }
+
+    public void startAnimationDelayed(@IntRange(from = 0) final int duration, @IntRange(from = 0) int delay) {
+        mAnimationManager.startAnimationDelayed(duration, delay);
+    }
+
+    public boolean isAnimating() {
+        return mAnimationManager.isAnimating();
+    }
+
+    @Override
+    public void cancelAnimation() {
+        mAnimationManager.cancelAnimation();
+    }
+
+    @Override
+    public void pauseAnimation() {
+        mAnimationManager.pauseAnimation();
+    }
+
+    @Override
+    public void resumeAnimation() {
+        mAnimationManager.resumeAnimation();
+    }
+
+    @Override
+    public void endAnimation() {
+        mAnimationManager.endAnimation();
     }
 
     @Override
     public void resetAnimation() {
-        mAnimationAdapter.resetAnimation();
+        mAnimationManager.resetAnimation();
     }
 }

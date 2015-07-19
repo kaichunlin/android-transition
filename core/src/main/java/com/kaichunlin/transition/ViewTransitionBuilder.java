@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 
 import com.kaichunlin.transition.internal.CustomTransitionController;
 import com.kaichunlin.transition.internal.DefaultTransitionController;
@@ -33,7 +35,7 @@ import java.util.Map;
  * <p>
  * Created by Kai-Chun Lin on 2015/4/23.
  */
-public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionBuilder, ViewTransition> implements ViewTransition.Setup {
+public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransitionBuilder, ViewTransition> implements ViewTransition.Setup {
 
     /**
      * Creates a {@link ViewTransitionBuilder} instance with no target view set
@@ -75,14 +77,14 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     }
 
     /**
-     * Adds a custom {@link ITransitionHandler}
+     * Adds a custom {@link TransitionHandler}
      *
      * @param transitionHandler
      * @return
      */
-    public ViewTransitionBuilder addTransitionHandler(@NonNull ITransitionHandler transitionHandler) {
-        if(mCustomTransitionController ==null) {
-            mCustomTransitionController =new CustomTransitionController();
+    public ViewTransitionBuilder addTransitionHandler(@NonNull TransitionHandler transitionHandler) {
+        if (mCustomTransitionController == null) {
+            mCustomTransitionController = new CustomTransitionController();
         }
         mCustomTransitionController.addTransitionHandler(transitionHandler);
         return self();
@@ -144,7 +146,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
         final View mView = this.mView;
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
-            public void evaluate(View view, BaseTransitionBuilder builder) {
+            public void evaluate(View view, AbstractTransitionBuilder builder) {
                 builder.translationX(mView.getWidth() * percent);
             }
         });
@@ -168,7 +170,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     public ViewTransitionBuilder delayTranslationXAsFractionOfWidth(@NonNull final View targetView, final float percent) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
-            public void evaluate(View view, BaseTransitionBuilder builder) {
+            public void evaluate(View view, AbstractTransitionBuilder builder) {
                 builder.translationX(targetView.getWidth() * percent);
             }
         });
@@ -196,7 +198,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
         final View mView = this.mView;
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
-            public void evaluate(View view, BaseTransitionBuilder builder) {
+            public void evaluate(View view, AbstractTransitionBuilder builder) {
                 builder.translationY(mView.getHeight() * percent);
             }
         });
@@ -220,7 +222,7 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
     public ViewTransitionBuilder delayTranslationYAsFractionOfHeight(@NonNull final View targetView, final float percent) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
-            public void evaluate(View view, BaseTransitionBuilder builder) {
+            public void evaluate(View view, AbstractTransitionBuilder builder) {
                 builder.translationY(targetView.getHeight() * percent);
             }
         });
@@ -398,6 +400,29 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
         return self();
     }
 
+    /**
+     * Similar to {@link #transitViewGroup(ViewGroupTransition)}, but with builder.range() auto filled for each child View, calculated in accordance to
+     *
+     * @param viewGroupTransition
+     * @param cascade
+     * @return
+     */
+    public ViewTransitionBuilder transitViewGroup(@NonNull final ViewGroupTransition viewGroupTransition, @NonNull final Cascade cascade) {
+        transitViewGroup(new ViewGroupTransition() {
+            @Override
+            public void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View childView, int index, int total) {
+                float fraction = (float) index / (total - 1);
+                if (cascade.reverse) {
+                    fraction = 1 - fraction;
+                }
+                float offset = cascade.interpolator.getInterpolation(fraction) * (cascade.cascadeEnd - cascade.cascadeStart);
+                builder.range(cascade.cascadeStart + offset, cascade.transitionEnd);
+                viewGroupTransition.transit(builder, viewGroup, childView, index, total);
+            }
+        });
+        return self();
+    }
+
     @CheckResult(suggest = "The created ViewTransition should be utilized")
     @Override
     public ViewTransition createTransition() {
@@ -456,5 +481,22 @@ public class ViewTransitionBuilder extends BaseTransitionBuilder<ViewTransitionB
          * @param total     total number of children
          */
         void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View childView, int index, int total);
+    }
+
+    public static class Cascade {
+        public Interpolator interpolator;
+        public float cascadeStart;
+        public float cascadeEnd;
+        public float transitionEnd = 1f;
+        public boolean reverse;
+
+        public Cascade(float cascadeEnd) {
+            this(cascadeEnd, new LinearInterpolator());
+        }
+
+        public Cascade(float cascadeEnd, Interpolator interpolator) {
+            this.cascadeEnd = cascadeEnd;
+            this.interpolator = interpolator;
+        }
     }
 }

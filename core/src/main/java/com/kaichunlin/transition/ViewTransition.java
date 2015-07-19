@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
-import com.kaichunlin.transition.internal.ITransitionController;
+import com.kaichunlin.transition.internal.TransitionController;
 import com.kaichunlin.transition.internal.TransitionControllerManager;
 import com.kaichunlin.transition.util.TransitionStateLogger;
 
@@ -18,7 +18,7 @@ import java.util.WeakHashMap;
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 @UiThread
-public class ViewTransition extends BaseTransition<ViewTransition, ViewTransition.Setup> {
+public class ViewTransition extends AbstractTransition<ViewTransition, ViewTransition.Setup> {
     private static final Object HARD_REF = new Object();
     private final WeakHashMap<Object, Setup> mSetup = new WeakHashMap<>();
     private SetupCreator mSetupCreator;
@@ -34,7 +34,7 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
 
     /**
      * @param id    unique ID that can identify the transition
-     * @param setup creates the {@link ITransitionController}'s when {@link #startTransition()} is called
+     * @param setup creates the {@link TransitionController}'s when {@link #startTransition()} is called
      */
     public ViewTransition(@Nullable String id, @Nullable Setup setup) {
         this(id, HARD_REF, setup);
@@ -167,11 +167,11 @@ public class ViewTransition extends BaseTransition<ViewTransition, ViewTransitio
     }
 
     /**
-     * Creates the {@link ITransitionController}'s when {@link #startTransition()} is called
+     * Creates the {@link TransitionController}'s when {@link #startTransition()} is called
      */
-    public interface Setup extends BaseTransition.Setup {
+    public interface Setup extends AbstractTransition.Setup {
         /**
-         * @param transitionControllerManager the {@link TransitionControllerManager} that the created {@link ITransitionController} should be added to
+         * @param transitionControllerManager the {@link TransitionControllerManager} that the created {@link TransitionController} should be added to
          */
         void setupAnimation(TransitionControllerManager transitionControllerManager);
     }

@@ -66,9 +66,15 @@ public class TransitionStateLogger {
 
     public void print() {
         Log.e(getClass().getSimpleName(), "------------- " + mId + " -------------");
+        boolean first;
+        long baseTime = 0;
         for (Map.Entry<String, List<TransitionState>> entry : tranStateMap.entrySet()) {
+            first = true;
             for (TransitionState ts : entry.getValue()) {
-                Log.e(getClass().getSimpleName(), ts.toString());
+                if (first) {
+                    baseTime = ts.time;
+                }
+                Log.e(getClass().getSimpleName(), ts.toString(baseTime));
             }
         }
         Log.i(getClass().getSimpleName(), "-----------------------------");
@@ -90,13 +96,16 @@ public class TransitionStateLogger {
             time = System.currentTimeMillis();
         }
 
-        @Override
-        public String toString() {
+        public String toString(long baseTime) {
             StringBuilder sb = new StringBuilder();
             sb.append("\t<");
-            sb.append(subId);
+            if(subId.contains("@")) {
+                sb.append(subId.substring(subId.indexOf("@")));
+            } else {
+                sb.append(subId);
+            }
             sb.append(">, t= ");
-            sb.append(time);
+            sb.append(time - baseTime);
             sb.append(", ");
             sb.append(mClass.getClass().getSimpleName());
 //            sb.append(" [");

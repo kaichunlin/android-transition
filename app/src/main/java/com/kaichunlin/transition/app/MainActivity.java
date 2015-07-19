@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.kaichunlin.transition.TransitionConfig;
 import com.kaichunlin.transition.ViewTransitionBuilder;
 
 import kaichunlin.transition.app.R;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         ViewTransitionBuilder.transit(findViewById(R.id.toolbar)).animator(this, R.anim.animator_set).buildAnimation().startAnimation(1200);
 
-//        TransitionConfig.setDebug(true);
+        TransitionConfig.setDebug(true);
     }
 
     @Override

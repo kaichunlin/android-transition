@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Menu;
 
-import com.kaichunlin.transition.ITransitionManager;
+import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.MenuItemTransition;
 
 /**
@@ -13,14 +13,14 @@ import com.kaichunlin.transition.MenuItemTransition;
  * <p>
  * Created by Kai on 2015/5/10.
  */
-public class DefaultMenuOptionHandler implements IMenuOptionHandler {
-    private final ITransitionManager mAdapter;
+public class DefaultMenuOptionHandler implements MenuOptionHandler {
+    private final TransitionManager mTransitionManager;
     private final AdapterState mAdapterState;
     private MenuOptionConfiguration mOpenConfig;
     private MenuOptionConfiguration mCloseConfig;
 
-    public DefaultMenuOptionHandler(@NonNull ITransitionManager adapter, @NonNull AdapterState adapterState) {
-        mAdapter = adapter;
+    public DefaultMenuOptionHandler(@NonNull TransitionManager transitionManager, @NonNull AdapterState adapterState) {
+        mTransitionManager = transitionManager;
         mAdapterState = adapterState;
     }
 
@@ -43,9 +43,9 @@ public class DefaultMenuOptionHandler implements IMenuOptionHandler {
             }
             if (mCloseConfig != null) {
                 if (hasOpen) {
-                    mAdapter.removeTransition(mOpenConfig.getTransition());
+                    mTransitionManager.removeTransition(mOpenConfig.getTransition());
                 }
-                mAdapter.addTransition(mCloseConfig.getTransition());
+                mTransitionManager.addTransition(mCloseConfig.getTransition());
             }
         } else {
             boolean hasClose = mCloseConfig != null;
@@ -54,9 +54,9 @@ public class DefaultMenuOptionHandler implements IMenuOptionHandler {
             }
             if (mOpenConfig != null) {
                 if (hasClose) {
-                    mAdapter.removeTransition(mCloseConfig.getTransition());
+                    mTransitionManager.removeTransition(mCloseConfig.getTransition());
                 }
-                mAdapter.addTransition(mOpenConfig.getTransition());
+                mTransitionManager.addTransition(mOpenConfig.getTransition());
             }
         }
     }
@@ -82,10 +82,10 @@ public class DefaultMenuOptionHandler implements IMenuOptionHandler {
     @Override
     public void setupOptions(@NonNull Activity activity, @Nullable MenuOptionConfiguration openConfig, @Nullable MenuOptionConfiguration closeConfig) {
         if (mOpenConfig != null) {
-            mAdapter.removeTransition(mOpenConfig.getTransition());
+            mTransitionManager.removeTransition(mOpenConfig.getTransition());
         }
         if (mCloseConfig != null) {
-            mAdapter.removeTransition(mCloseConfig.getTransition());
+            mTransitionManager.removeTransition(mCloseConfig.getTransition());
         }
         mOpenConfig = openConfig;
         mCloseConfig = closeConfig;
@@ -95,14 +95,14 @@ public class DefaultMenuOptionHandler implements IMenuOptionHandler {
                 if (mCloseConfig.getTransition().isInvalidateOptionOnStopTransition()) {
                     activity.invalidateOptionsMenu();
                 }
-                mAdapter.addTransition(mCloseConfig.getTransition());
+                mTransitionManager.addTransition(mCloseConfig.getTransition());
             }
         } else {
             if (mOpenConfig != null) {
                 if (mOpenConfig.getTransition().isInvalidateOptionOnStopTransition()) {
                     activity.invalidateOptionsMenu();
                 }
-                mAdapter.addTransition(mOpenConfig.getTransition());
+                mTransitionManager.addTransition(mOpenConfig.getTransition());
             }
         }
     }

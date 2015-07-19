@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.kaichunlin.transition.internal.ITransitionController;
+import com.kaichunlin.transition.internal.TransitionController;
 import com.kaichunlin.transition.internal.TransitionControllerManager;
 import com.kaichunlin.transition.util.TransitionStateLogger;
 import com.kaichunlin.transition.util.TransitionUtil;
@@ -24,7 +24,7 @@ import java.util.List;
  * <p>
  * Created by Kai-Chun Lin on 2015/4/18.
  */
-public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuItemTransition.Setup> {
+public class MenuItemTransition extends AbstractTransition<MenuItemTransition, MenuItemTransition.Setup> {
     private List<TransitionControllerManager> mTransittingMenuItems = new ArrayList<>();
     private final Toolbar mToolbar;
     private boolean mStarted;
@@ -179,11 +179,11 @@ public class MenuItemTransition extends BaseTransition<MenuItemTransition, MenuI
     }
 
     /**
-     * Represents an object that will create {@link ITransitionController} Objects to be added to a {@link TransitionControllerManager}
+     * Represents an object that will create {@link TransitionController} Objects to be added to a {@link TransitionControllerManager}
      */
-    public interface Setup extends BaseTransition.Setup {
+    public interface Setup extends AbstractTransition.Setup {
         /**
-         * Create one or more {@link ITransitionController} for each {@link android.view.MenuItem} and add them to mTransitionManager
+         * Create one or more {@link TransitionController} for each {@link android.view.MenuItem} and add them to mTransitionManager
          *
          * @param mMenuItem
          * @param transitionControllerManager

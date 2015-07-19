@@ -38,6 +38,9 @@
             android:name="com.kaichunlin.transition.app.ViewPagerActivity"
             android:label="@string/title_view_pager"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.kaichunlin.transition.app.ObservableScrollViewActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

@@ -7,15 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
-import com.kaichunlin.transition.Animation.IAnimation;
+import com.kaichunlin.transition.Animation.Animation;
+import com.kaichunlin.transition.TransitionListener;
+import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.ViewTransition;
 import com.kaichunlin.transition.ViewTransitionBuilder;
 import com.kaichunlin.transition.adapter.DrawerListenerAdapter;
-import com.kaichunlin.transition.ITransitionManager;
-import com.kaichunlin.transition.adapter.ITransitionAdapter;
+import com.kaichunlin.transition.internal.debug.TraceTransitionListener;
 
 import kaichunlin.transition.app.R;
 
@@ -63,22 +64,25 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
         //since the start animation is the reverse of the transition, set the current view state to transition's final state
         transition.setProgress(1f);
         //init an animation and add a delay to prevent stutter, needs to be higher if animation is enabled
-        final IAnimation animation = mRotateEffectBuilder.reverse().buildAnimation();
+        final Animation animation = mRotateEffectBuilder.reverse().buildAnimation();
         animation.startAnimationDelayed(600, 32);
 
         //this is to prevent conflict when the drawer is being opened while the above animation is still in progress
         //unfortunately there's no way to reconcile the two, so the transiting/animating View will "jump" to a new state
         //TODO evaluate if it's possible to reconcile the two states automatically, maybe if they share the same ITransition instance?
-        mDrawerListenerAdapter.addTransitionListener(new ITransitionAdapter.TransitionListener() {
+        mDrawerListenerAdapter.addTransitionListener(new TransitionListener() {
             @Override
-            public void onStartTransition(ITransitionManager adapter) {
+            public void onTransitionStart(TransitionManager transitionManager) {
                 animation.cancelAnimation();
             }
 
             @Override
-            public void onStopTransition(ITransitionManager adapter) {
+            public void onTransitionEnd(TransitionManager transitionManager) {
             }
         });
+
+        //debug
+        mDrawerListenerAdapter.addTransitionListener(new TraceTransitionListener());
     }
 
     @Override
@@ -103,12 +107,14 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
             case R.id.slide_subviews:
                 mDrawerListenerAdapter.removeAllTransitions();
 
-                ViewTransitionBuilder.transit(findViewById(R.id.lay_buttons)).interpolator(new AccelerateInterpolator()).transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
+                ViewTransitionBuilder.Cascade cascade = new ViewTransitionBuilder.Cascade(0.6f);
+                cascade.cascadeStart = 0.2f;
+                ViewTransitionBuilder.transit(findViewById(R.id.lay_buttons)).interpolator(new AccelerateDecelerateInterpolator()).transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
                     @Override
                     public void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View childView, int index, int total) {
-                        builder.range((total - 1 - index) * 0.2f, 1f).translationX(viewGroup.getRight()).buildFor(mDrawerListenerAdapter);
+                        builder.translationX(viewGroup.getRight()).buildFor(mDrawerListenerAdapter);
                     }
-                });
+                }, cascade);
                 break;
             case R.id.slide_bg:
                 mDrawerListenerAdapter.removeAllTransitions();

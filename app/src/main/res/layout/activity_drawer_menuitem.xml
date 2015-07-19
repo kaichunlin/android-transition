@@ -30,12 +30,12 @@
             android:orientation="vertical">
             <android.support.v7.widget.AppCompatButton
                 style="@style/Button"
-                android:id="@+id/flip_fade"
-                android:text="@string/drawer_menuitem_flipe_fade"/>
-            <android.support.v7.widget.AppCompatButton
-                style="@style/Button"
                 android:id="@+id/shrink_fade"
                 android:text="@string/drawer_menuitem_shrink_fade"/>
+            <android.support.v7.widget.AppCompatButton
+                style="@style/Button"
+                android:id="@+id/flip_fade"
+                android:text="@string/drawer_menuitem_flipe_fade"/>
             <android.support.v7.widget.AppCompatButton
                 style="@style/Button"
                 android:id="@+id/rotate"

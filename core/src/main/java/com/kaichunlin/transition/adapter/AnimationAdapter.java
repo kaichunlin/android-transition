@@ -3,38 +3,40 @@ package com.kaichunlin.transition.adapter;
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 
+import com.kaichunlin.transition.Animation.AnimationListener;
+import com.kaichunlin.transition.Animation.TransitionAnimation;
 import com.kaichunlin.transition.Animation.Animation;
-import com.kaichunlin.transition.Animation.IAnimation;
-import com.kaichunlin.transition.ITransitionManager;
+import com.kaichunlin.transition.TransitionManager;
+import com.kaichunlin.transition.TransitionListener;
 
 /**
  * This adapter integrates traditional animations using the same methods and logic as the rest of the framework. It can be configured
- * to reuse transitions configured for another {@link BaseAdapter} so transition effects can be easily shared between progress-based
+ * to reuse transitions configured for another {@link AbstractAdapter} so transition effects can be easily shared between progress-based
  * adapters and time-based adapters.
  * <br>
- * However it must be noted that when AnimationAdapter reuses transitions configured for another {@link BaseAdapter}, any changes made
- * to the other {@link BaseAdapter} may effect AnimationAdapter and cause strange errors. For more complex case, {@link UnifiedAdapter}
+ * However it must be noted that when AnimationAdapter reuses transitions configured for another {@link AbstractAdapter}, any changes made
+ * to the other {@link AbstractAdapter} may effect AnimationAdapter and cause strange errors. For more complex case, {@link UnifiedAdapter}
  * should be used instead.
  * <p>
  * Created by Kai on 2015/7/10.
  */
-public class AnimationAdapter extends BaseAdapter implements IAnimation, ITransitionAdapter.TransitionListener {
-    private final ITransitionAdapter mAdapter;
-    private IAnimation mAnimation;
+public class AnimationAdapter extends AbstractAdapter implements Animation, TransitionListener {
+    private final TransitionAdapter mAdapter;
+    private Animation mAnimation;
 
     public AnimationAdapter() {
         this(null);
     }
 
     /**
-     * Wraps an existing {@link BaseAdapter} to reuse its onCreateOptionsMenu(...) logic and its transition effects
+     * Wraps an existing {@link AbstractAdapter} to reuse its onCreateOptionsMenu(...) logic and its transition effects
      *
      * @param adapter
      */
-    public AnimationAdapter(@Nullable ITransitionAdapter adapter) {
+    public AnimationAdapter(@Nullable TransitionAdapter adapter) {
         super(adapter == null ? new AdapterState() : adapter.getAdapterState());
         mAdapter = adapter;
-        mAnimation = new Animation(mAdapter == null ? this : mAdapter);
+        mAnimation = new TransitionAnimation(mAdapter == null ? this : mAdapter);
     }
 
     @Override
@@ -56,23 +58,33 @@ public class AnimationAdapter extends BaseAdapter implements IAnimation, ITransi
     }
 
     @Override
-    public void onStartTransition(ITransitionManager adapter) {
-        notifyStartTransition();
+    public void addAnimationListener(AnimationListener animationListener) {
+
     }
 
     @Override
-    public void onStopTransition(ITransitionManager adapter) {
-        notifyStopTransition();
+    public void removeAnimationListener(AnimationListener animationListener) {
+
     }
 
     @Override
-    public void setAnimationDuration(@IntRange(from = 0) int duration) {
-        mAnimation.setAnimationDuration(duration);
+    public void onTransitionStart(TransitionManager transitionManager) {
+        notifyTransitionStart();
     }
 
     @Override
-    public int getAnimationDuration() {
-        return mAnimation.getAnimationDuration();
+    public void onTransitionEnd(TransitionManager transitionManager) {
+        notifyTransitionEnd();
+    }
+
+    @Override
+    public void setDuration(@IntRange(from = 0) int duration) {
+        mAnimation.setDuration(duration);
+    }
+
+    @Override
+    public int getDuration() {
+        return mAnimation.getDuration();
     }
 
     @Override
@@ -103,19 +115,28 @@ public class AnimationAdapter extends BaseAdapter implements IAnimation, ITransi
         mAnimation.startAnimationDelayed(duration, delay);
     }
 
+    public boolean isAnimating() {
+        return mAnimation.isAnimating();
+    }
+
     @Override
     public void cancelAnimation() {
         mAnimation.cancelAnimation();
     }
 
     @Override
-    public void endAnimation() {
-        mAnimation.endAnimation();
+    public void pauseAnimation() {
+        mAnimation.pauseAnimation();
     }
 
     @Override
-    public void stopAnimation() {
-        mAnimation.stopAnimation();
+    public void resumeAnimation() {
+        mAnimation.resumeAnimation();
+    }
+
+    @Override
+    public void endAnimation() {
+        mAnimation.endAnimation();
     }
 
     @Override
@@ -133,7 +154,7 @@ public class AnimationAdapter extends BaseAdapter implements IAnimation, ITransi
     }
 
     @Nullable
-    protected ITransitionAdapter getAdapter() {
+    protected TransitionAdapter getAdapter() {
         return mAdapter;
     }
 }

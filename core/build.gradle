@@ -26,10 +26,10 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.nineoldandroids:library:2.4.0'
 }
 
 // This is the library version used when deploying the artifact
-version = "0.9.0-beta"
+version = "0.9.0"
 apply from: '../upload.gradle';

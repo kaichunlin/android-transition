@@ -2,7 +2,7 @@ package com.kaichunlin.transition.internal;
 
 import android.support.annotation.CheckResult;
 
-import com.kaichunlin.transition.ITransitionHandler;
+import com.kaichunlin.transition.TransitionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,21 +12,21 @@ import java.util.List;
  * <p>
  * Created by Kai-Chun Lin on 2015/4/28.
  */
-public class CustomTransitionController extends BaseTransitionController implements Cloneable {
-    private List<ITransitionHandler> mTransitionHandlerList = new ArrayList<>();
+public class CustomTransitionController extends TransitionController<CustomTransitionController> implements Cloneable {
+    private List<TransitionHandler> mTransitionHandlerList = new ArrayList<>();
 
     public CustomTransitionController() {
         super(null);
         updateProgressWidth();
     }
 
-    public void addTransitionHandler(ITransitionHandler mTransitionHandler) {
+    public void addTransitionHandler(TransitionHandler mTransitionHandler) {
         mTransitionHandlerList.add(mTransitionHandler);
     }
 
     @Override
     public void updateProgress(float progress) {
-        for (ITransitionHandler handler : mTransitionHandlerList) {
+        for (TransitionHandler handler : mTransitionHandlerList) {
             handler.onUpdateProgress(this, getTarget(), progress);
         }
     }
@@ -38,5 +38,9 @@ public class CustomTransitionController extends BaseTransitionController impleme
         newCopy.mTransitionHandlerList = new ArrayList<>();
         newCopy.mTransitionHandlerList.addAll(mTransitionHandlerList);
         return newCopy;
+    }
+
+    protected CustomTransitionController self() {
+        return this;
     }
 }

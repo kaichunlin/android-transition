@@ -8,7 +8,7 @@ import android.view.animation.Interpolator;
 
 import com.kaichunlin.transition.R;
 import com.kaichunlin.transition.TransitionConfig;
-import com.kaichunlin.transition.ITransitionManager;
+import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.util.TransitionStateLogger;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -18,12 +18,12 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Manages the transition state of a set of {@link ITransitionController}
+ * Manages the transition state of a set of {@link TransitionController}
  * <p>
  * Created by Kai-Chun Lin on 2015/4/14.
  */
 public class TransitionControllerManager implements Cloneable {
-    private Set<ITransitionController> mTransitionControls = new HashSet<>();
+    private Set<TransitionController> mTransitionControls = new HashSet<>();
     //    private final TimeAnimator mTimeAnim;
 //    private final AnimatorSet mInternalAnimSet;
     private Interpolator mInterpolator;
@@ -41,60 +41,60 @@ public class TransitionControllerManager implements Cloneable {
     }
 
     /**
-     * Adds an Animator as {@link ITransitionController}
+     * Adds an Animator as {@link TransitionController}
      *
      * @param mAnim
      * @return
      */
-    public ITransitionController addAnimatorAsTransition(@NonNull Animator mAnim) {
+    public TransitionController addAnimatorAsTransition(@NonNull Animator mAnim) {
         AnimatorSet as = new AnimatorSet();
         as.play(mAnim);
         return addAnimatorSetAsTransition(null, as);
     }
 
     /**
-     * Adds an Animator as {@link ITransitionController}
+     * Adds an Animator as {@link TransitionController}
      *
      * @param target
      * @param animator
      * @return
      */
-    public ITransitionController addAnimatorAsTransition(@Nullable View target, @NonNull Animator animator) {
+    public TransitionController addAnimatorAsTransition(@Nullable View target, @NonNull Animator animator) {
         AnimatorSet as = new AnimatorSet();
         as.play(animator);
         return addAnimatorSetAsTransition(target, as);
     }
 
     /**
-     * Adds an AnimatorSet as {@link ITransitionController}
+     * Adds an AnimatorSet as {@link TransitionController}
      *
      * @param animatorSet
      * @return
      */
-    public ITransitionController addAnimatorSetAsTransition(@NonNull AnimatorSet animatorSet) {
+    public TransitionController addAnimatorSetAsTransition(@NonNull AnimatorSet animatorSet) {
         return addAnimatorSetAsTransition(null, animatorSet);
     }
 
     /**
-     * Adds an AnimatorSet as {@link ITransitionController}
+     * Adds an AnimatorSet as {@link TransitionController}
      *
      * @param target
      * @param animatorSet
      * @return
      */
-    public ITransitionController addAnimatorSetAsTransition(@Nullable View target, @NonNull AnimatorSet animatorSet) {
+    public TransitionController addAnimatorSetAsTransition(@Nullable View target, @NonNull AnimatorSet animatorSet) {
         return addTransitionController(new DefaultTransitionController(target, animatorSet));
     }
 
     /**
-     * @param transitionController the ITransitionController to be managed by this object
+     * @param transitionController the TransitionController to be managed by this object
      * @return
      */
-    public ITransitionController addTransitionController(@NonNull ITransitionController transitionController) {
+    public TransitionController addTransitionController(@NonNull TransitionController transitionController) {
         transitionController.setId(mId);
         boolean changed = mTransitionControls.add(transitionController);
         if (TransitionConfig.isDebug() && !changed) {
-            getTransitionStateHolder().append(mId, this, "Possible duplicate: " + transitionController.getId());
+            getTransitionStateHolder().append(mId+"->"+mTarget, this, "Possible duplicate: " + transitionController.getId());
         }
         return transitionController;
     }
@@ -109,7 +109,7 @@ public class TransitionControllerManager implements Cloneable {
 
         mLastProgress = Float.MIN_VALUE;
 
-        for (ITransitionController ctrl : mTransitionControls) {
+        for (TransitionController ctrl : mTransitionControls) {
             if (mInterpolator != null) {
                 ctrl.setInterpolator(mInterpolator);
             }
@@ -134,12 +134,12 @@ public class TransitionControllerManager implements Cloneable {
      * Ends the transition
      */
     public void end() {
-        if (TransitionConfig.isDebug()) {
+        if (TransitionConfig.isPrintDebug()) {
             getTransitionStateHolder().end();
             getTransitionStateHolder().print();
         }
 
-        for (ITransitionController ctrl : mTransitionControls) {
+        for (TransitionController ctrl : mTransitionControls) {
             ctrl.end();
         }
 //        mTimeAnim.end();
@@ -148,7 +148,7 @@ public class TransitionControllerManager implements Cloneable {
     /**
      * Updates the transition progress
      *
-     * @param progress the possible range of values depends on the {@link ITransitionManager} being used
+     * @param progress the possible range of values depends on the {@link TransitionManager} being used
      */
     public void updateProgress(float progress) {
         if (mLastProgress == progress) {
@@ -158,7 +158,7 @@ public class TransitionControllerManager implements Cloneable {
         //TODO this makes ViewPager work, but will probably break more complex transition setup, will think of a better solution
         if (mUpdateStateAfterUpdateProgress) {
             boolean positive = progress >= 0;
-            for (ITransitionController ctrl : mTransitionControls) {
+            for (TransitionController ctrl : mTransitionControls) {
                 if (positive) {
                     if (ctrl.getEnd() > 0) {
                         ctrl.setEnable(true);
@@ -175,7 +175,7 @@ public class TransitionControllerManager implements Cloneable {
             }
         }
 
-        for (ITransitionController ctrl : mTransitionControls) {
+        for (TransitionController ctrl : mTransitionControls) {
             if (ctrl.isEnable()) {
                 ctrl.updateProgress(progress);
             }
@@ -183,11 +183,11 @@ public class TransitionControllerManager implements Cloneable {
     }
 
     /**
-     * @param target the view that all {@link ITransitionController} managed by this object should work on
+     * @param target the view that all {@link TransitionController} managed by this object should work on
      */
     public void setTarget(@Nullable View target) {
         mTarget = target;
-        for (ITransitionController at : mTransitionControls) {
+        for (TransitionController at : mTransitionControls) {
             at.setTarget(target);
         }
     }
@@ -204,13 +204,13 @@ public class TransitionControllerManager implements Cloneable {
      * Reverses all the TransitionControllers managed by this TransitionManager
      */
     public void reverse() {
-        for (ITransitionController at : mTransitionControls) {
+        for (TransitionController at : mTransitionControls) {
             at.reverse();
         }
     }
 
     /**
-     * @param interpolator the Interpolator to be applied to all {@link ITransitionController} managed by this object
+     * @param interpolator the Interpolator to be applied to all {@link TransitionController} managed by this object
      */
     public void setInterpolator(@Nullable Interpolator interpolator) {
         mInterpolator = interpolator;
@@ -229,7 +229,7 @@ public class TransitionControllerManager implements Cloneable {
         TransitionControllerManager newClone = null;
         try {
             newClone = (TransitionControllerManager) super.clone();
-            Iterator<ITransitionController> at = mTransitionControls.iterator();
+            Iterator<TransitionController> at = mTransitionControls.iterator();
             newClone.mTransitionControls = new HashSet<>();
             while (at.hasNext()) {
                 newClone.mTransitionControls.add(at.next().clone());

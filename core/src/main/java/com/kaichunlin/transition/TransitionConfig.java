@@ -7,6 +7,7 @@ package com.kaichunlin.transition;
  */
 public class TransitionConfig {
     static boolean _debug;
+    static boolean _printDebug;
 
     /**
      * @param debug set debugging
@@ -20,5 +21,19 @@ public class TransitionConfig {
      */
     public static boolean isDebug() {
         return _debug;
+    }
+
+    /**
+     * @param printDebug set auto printing transition detail messages on transition/animation end
+     */
+    public static void setPrintDebug(boolean printDebug) {
+        _printDebug = printDebug;
+    }
+
+    /**
+     * @return is auto printing transition detail messages on transition/animation end enabled
+     */
+    public static boolean isPrintDebug() {
+        return _printDebug;
     }
 }

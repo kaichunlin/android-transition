@@ -1,156 +1,96 @@
 package com.kaichunlin.transition.Animation;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
-import android.os.Handler;
 import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
-import android.view.animation.LinearInterpolator;
-
-import com.kaichunlin.transition.IBaseTransition;
+import android.support.annotation.UiThread;
 
 /**
  * Created by Kai on 2015/7/12.
  */
-public class Animation implements IAnimation, ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
-    private final Runnable mStartAnimation = new Runnable() {
-        @Override
-        public void run() {
-            startAnimation();
-        }
-    };
-    private final IBaseTransition mTransition;
-    private ValueAnimator mValueAnimator;
-    private Handler mHandler;
-    private boolean mReverse;
-    private int mDuration = 300;
+public interface Animation {
 
-    public Animation(@NonNull IBaseTransition transition) {
-        mTransition = transition;
-    }
+    /**
+     *
+     * @param animationListener
+     */
+    void addAnimationListener(AnimationListener animationListener);
 
-    protected IBaseTransition getTransition() {
-        return mTransition;
-    }
+    /**
+     *
+     * @param animationListener
+     */
+    void removeAnimationListener(AnimationListener animationListener);
 
-    @Override
-    public void setAnimationDuration(@IntRange(from = 0) int duration) {
-        mDuration = duration;
-    }
+    void setDuration(@IntRange(from = 0) int duration);
+    int getDuration();
 
-    @Override
-    public int getAnimationDuration() {
-        return mDuration;
-    }
+     void setReverseAnimation(boolean reverse);
 
-    @Override
-    public void setReverseAnimation(boolean reverse) {
-        mReverse = reverse;
-    }
+    /**
+     *
+     * @return
+     */
+    boolean isReverseAnimation();
 
-    @Override
-    public boolean isReverseAnimation() {
-        return mReverse;
-    }
+    /**
+     * Starts the animation with the default duration (300 ms)
+     */
+    @UiThread
+    void startAnimation();
 
-    @Override
-    public void startAnimation() {
-        startAnimation(mDuration);
-    }
+    /**
+     * Starts the animation with the specified duration
+     *
+     * @param duration
+     */
+    @UiThread
+    void startAnimation(@IntRange(from = 0) int duration);
 
-    @Override
-    public void startAnimation(@IntRange(from = 0) int duration) {
-        stopAnimation();
+    /**
+     *
+     * @param delay
+     */
+    void startAnimationDelayed(@IntRange(from = 0) int delay);
 
-        getTransition().startTransition(mReverse ? 1 : 0);
+    /**
+     *
+     * @param duration
+     * @param delay
+     */
+    void startAnimationDelayed(@IntRange(from = 0) int duration, @IntRange(from = 0) int delay);
 
-        mValueAnimator = new ValueAnimator();
-        mValueAnimator.setDuration(duration);
-        mValueAnimator.setInterpolator(new LinearInterpolator());
-        if (mReverse) {
-            mValueAnimator.setFloatValues(1, 0);
-        } else {
-            mValueAnimator.setFloatValues(0, 1);
-        }
-        mValueAnimator.addUpdateListener(this);
-        mValueAnimator.addListener(this);
-        mValueAnimator.start();
-    }
+    boolean isAnimating();
 
-    public void startAnimationDelayed(@IntRange(from = 0) int delay) {
-        if (mHandler == null) {
-            mHandler = new Handler();
-        }
-        mHandler.postDelayed(mStartAnimation, delay);
-    }
+    /**
+     * Cancels the animation, i.e. the affected Views will retain their last states. A canceled animation cannot be resumed.
+     */
+    @UiThread
+    void cancelAnimation();
 
-    public void startAnimationDelayed(@IntRange(from = 0) final int duration, @IntRange(from = 0) int delay) {
-        if (mHandler == null) {
-            mHandler = new Handler();
-        }
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startAnimation(duration);
-            }
-        }, delay);
-    }
+    /**
+     * Pauses the animation, i.e. the affected Views will retain their last states. A canceled animation can be resumed.
+     * <p>
+     * Only works for API 19+
+     */
+    @UiThread
+    void pauseAnimation();
 
-    @Override
-    public void cancelAnimation() {
-        if (mValueAnimator != null) {
-            mValueAnimator.cancel();
-            mValueAnimator = null;
-        }
-    }
+    /**
+     * Resumes the animation, i.e. the affected Views will continue its animation
+     * <p>
+     * Only works for API 19+
+     */
+    @UiThread
+    void resumeAnimation();
 
-    @Override
-    public void endAnimation() {
-        if (mValueAnimator != null) {
-            mValueAnimator.end();
-            mValueAnimator = null;
-        }
-    }
+    /**
+     * Ends the animation, i.e. the affected Views will be assigned their final states
+     */
+    @UiThread
+    void endAnimation();
 
-    @Override
-    public void stopAnimation() {
-        if (mValueAnimator != null) {
-            mValueAnimator.cancel();
-            getTransition().stopTransition();
-            mValueAnimator = null;
-        }
-    }
-
-    @Override
-    public void resetAnimation() {
-        //TODO optimize
-        getTransition().startTransition();
-        getTransition().updateProgress(mReverse ? 1 : 0);
-        getTransition().stopTransition();
-    }
-
-    @Override
-    public void onAnimationUpdate(ValueAnimator animation) {
-        getTransition().updateProgress((Float) animation.getAnimatedValue());
-    }
-
-    @Override
-    public void onAnimationStart(Animator animation) {
-    }
-
-    @Override
-    public void onAnimationEnd(Animator animation) {
-        getTransition().stopTransition();
-        mValueAnimator = null;
-    }
-
-    @Override
-    public void onAnimationCancel(Animator animation) {
-        getTransition().stopTransition();
-        mValueAnimator = null;
-    }
-
-    @Override
-    public void onAnimationRepeat(Animator animation) {
-    }
+    /**
+     * Stops the animation, i.e. the affected Views will be reverted to their original states
+     */
+    @UiThread
+    void resetAnimation();
 }

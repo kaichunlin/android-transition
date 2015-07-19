@@ -71,7 +71,7 @@ public class SlidingUpPanelLayoutAdapter extends MenuBaseAdapter implements Slid
     }
 
     @Override
-    protected IMenuOptionHandler createMenuHandler() {
+    protected MenuOptionHandler createMenuHandler() {
         return new DefaultMenuOptionHandler(this, getAdapterState());
     }
 }

@@ -10,10 +10,10 @@ import android.view.Menu;
  * <p>
  * Created by Kai-Chun Lin on 2015/5/11.
  */
-public abstract class MenuBaseAdapter extends BaseAdapter implements IMenuOptionHandler {
-    IMenuOptionHandler mMenuHandler;
+public abstract class MenuBaseAdapter extends AbstractAdapter implements MenuOptionHandler {
+    MenuOptionHandler mMenuHandler;
 
-    protected abstract IMenuOptionHandler createMenuHandler();
+    protected abstract MenuOptionHandler createMenuHandler();
 
     @Override
     public void removeAllTransitions() {
@@ -22,7 +22,7 @@ public abstract class MenuBaseAdapter extends BaseAdapter implements IMenuOption
         mMenuHandler.clearOptions();
     }
 
-    protected IMenuOptionHandler getMenuOptionHandler() {
+    protected MenuOptionHandler getMenuOptionHandler() {
         return mMenuHandler;
     }
 

@@ -4,8 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
-import com.kaichunlin.transition.BaseTransitionBuilder;
-import com.kaichunlin.transition.ITransition;
+import com.kaichunlin.transition.AbstractTransitionBuilder;
+import com.kaichunlin.transition.Transition;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * Created by Kai-Chun Lin on 2015/5/7.
  */
-public class ObservableScrollViewCallbacksAdapter extends BaseAdapter implements ObservableScrollViewCallbacks {
+public class ObservableScrollViewCallbacksAdapter extends AbstractAdapter implements ObservableScrollViewCallbacks {
 
     private enum Direction {
         UNKOWN,
@@ -23,7 +23,7 @@ public class ObservableScrollViewCallbacksAdapter extends BaseAdapter implements
         DOWN
     }
 
-    private Map<ITransition, Integer> mRanges = new HashMap<>();
+    private Map<Transition, Integer> mRanges = new HashMap<>();
     private ObservableScrollViewCallbacks mCallback;
     private int mStartY;
     private int mLastScrollY;
@@ -32,7 +32,7 @@ public class ObservableScrollViewCallbacksAdapter extends BaseAdapter implements
     private OnChangeDirectionListener mOnChangeDirectionListener;
 
     @Override
-    public void addTransition(BaseTransitionBuilder transitionBuilder) {
+    public void addTransition(AbstractTransitionBuilder transitionBuilder) {
         //TODO guess/retrieve range
         throw new UnsupportedOperationException();
     }
@@ -42,12 +42,12 @@ public class ObservableScrollViewCallbacksAdapter extends BaseAdapter implements
      * @param transitionBuilder
      * @param range
      */
-    public void addTransition(@NonNull BaseTransitionBuilder transitionBuilder, int range) {
+    public void addTransition(@NonNull AbstractTransitionBuilder transitionBuilder, int range) {
         addTransition(transitionBuilder.build(), range);
     }
 
     @Override
-    public void addTransition(ITransition transition) {
+    public void addTransition(Transition transition) {
         //TODO guess/retrieve range
         throw new UnsupportedOperationException();
     }
@@ -57,13 +57,13 @@ public class ObservableScrollViewCallbacksAdapter extends BaseAdapter implements
      * @param transition
      * @param range
      */
-    public void addTransition(@NonNull ITransition transition, int range) {
+    public void addTransition(@NonNull Transition transition, int range) {
         super.addTransition(transition);
         mRanges.put(transition, range);
     }
 
     @Override
-    public boolean removeTransition(ITransition transition) {
+    public boolean removeTransition(Transition transition) {
         boolean result = super.removeTransition(transition);
         mRanges.remove(transition);
         return result;

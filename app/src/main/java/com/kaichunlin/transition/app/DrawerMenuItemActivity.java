@@ -8,13 +8,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 
-import com.kaichunlin.transition.Animation.Animation;
+import com.kaichunlin.transition.Animation.TransitionAnimation;
+import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.MenuItemTransition;
 import com.kaichunlin.transition.MenuItemTransitionBuilder;
+import com.kaichunlin.transition.TransitionListener;
 import com.kaichunlin.transition.adapter.DrawerListenerAdapter;
-import com.kaichunlin.transition.ITransitionManager;
-import com.kaichunlin.transition.adapter.ITransitionAdapter;
 import com.kaichunlin.transition.adapter.MenuOptionConfiguration;
+import com.kaichunlin.transition.internal.debug.TraceTransitionListener;
 
 import kaichunlin.transition.app.R;
 
@@ -29,7 +30,7 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
     private MenuItemTransition mShrinkClose;
     private MenuItemTransition mRotateOpen;
     private MenuItemTransition mRotateClose;
-    private Animation mStartAnimation;
+    private TransitionAnimation mStartAnimation;
     private boolean mFirstTimeAnimation = true;
 
     @Override
@@ -37,8 +38,8 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_drawer_menuitem);
-        findViewById(R.id.flip_fade).setOnClickListener(this);
         findViewById(R.id.shrink_fade).setOnClickListener(this);
+        findViewById(R.id.flip_fade).setOnClickListener(this);
         findViewById(R.id.rotate).setOnClickListener(this);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -72,19 +73,22 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
         mDrawerListenerAdapter.setDrawerLayout(mDrawerLayout);
         mDrawerListenerAdapter.setDrawerListener(new DialogDrawerListener(this));
 
-        mStartAnimation = new Animation(mFlipOpen.clone().reverse());
+        //debug
+        mDrawerListenerAdapter.addTransitionListener(new TraceTransitionListener());
+
+        mStartAnimation = new TransitionAnimation(mShrinkOpen.clone().reverse());
 
         //this is to prevent conflict when the drawer is being opened while the above mStartAnimation is still in progress
         //unfortunately there's no way to reconcile the two, so the transiting/animating View will "jump" to a new state
         //TODO evaluate if it's possible to reconcile the two states automatically, maybe if they share the same ITransition instance?
-        mDrawerListenerAdapter.addTransitionListener(new ITransitionAdapter.TransitionListener() {
+        mDrawerListenerAdapter.addTransitionListener(new TransitionListener() {
             @Override
-            public void onStartTransition(ITransitionManager adapter) {
+            public void onTransitionStart(TransitionManager transitionManager) {
                 mStartAnimation.cancelAnimation();
             }
 
             @Override
-            public void onStopTransition(ITransitionManager adapter) {
+            public void onTransitionEnd(TransitionManager transitionManager) {
             }
         });
 
@@ -117,11 +121,11 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.flip_fade:
-                mDrawerListenerAdapter.setupOptions(this, new MenuOptionConfiguration(mFlipOpen, R.menu.drawer), new MenuOptionConfiguration(mFlipClose, R.menu.main));
-                break;
             case R.id.shrink_fade:
                 mDrawerListenerAdapter.setupOptions(this, new MenuOptionConfiguration(mShrinkOpen, R.menu.drawer), new MenuOptionConfiguration(mShrinkClose, R.menu.main));
+                break;
+            case R.id.flip_fade:
+                mDrawerListenerAdapter.setupOptions(this, new MenuOptionConfiguration(mFlipOpen, R.menu.drawer), new MenuOptionConfiguration(mFlipClose, R.menu.main));
                 break;
             case R.id.rotate:
                 mDrawerListenerAdapter.setupCloseOption(this, new MenuOptionConfiguration(mRotateClose, R.menu.main));

@@ -22,11 +22,15 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
-import com.kaichunlin.transition.ITransitionHandler;
+import com.kaichunlin.transition.Animation.Animation;
+import com.kaichunlin.transition.Animation.AnimationListener;
+import com.kaichunlin.transition.TransitionHandler;
 import com.kaichunlin.transition.ViewTransitionBuilder;
 import com.kaichunlin.transition.adapter.SlidingUpPanelLayoutAdapter;
 import com.kaichunlin.transition.adapter.UnifiedAdapter;
-import com.kaichunlin.transition.internal.ITransitionController;
+import com.kaichunlin.transition.internal.TransitionController;
+import com.kaichunlin.transition.internal.debug.TraceAnimationListener;
+import com.kaichunlin.transition.internal.debug.TraceTransitionListener;
 import com.kaichunlin.transition.util.TransitionUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -65,6 +69,30 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
         mSlidingUpPanelLayoutAdapter.setPanelSlideListener(new DialogPanelSlideListener(this));
 
         mUnifiedAdapter = new UnifiedAdapter(mSlidingUpPanelLayoutAdapter);
+        mUnifiedAdapter.setDuration(1000);
+        mUnifiedAdapter.addAnimationListener(new AnimationListener(){
+            @Override
+            public void onAnimationStart(Animation animationManager) {}
+
+            @Override
+            public void onAnimationEnd(Animation animationManager) {
+                mUnifiedAdapter.setReverseAnimation(!mUnifiedAdapter.isReverseAnimation());
+            }
+
+            @Override
+            public void onAnimationCancel(Animation animationManager) {
+                mUnifiedAdapter.setReverseAnimation(!mUnifiedAdapter.isReverseAnimation());
+            }
+
+            @Override
+            public void onAnimationReset(Animation animationManager) {
+
+            }
+        });
+
+        //debug
+        mUnifiedAdapter.addTransitionListener(new TraceTransitionListener());
+        mUnifiedAdapter.addAnimationListener(new TraceAnimationListener());
 
         //this is required since some transition requires the width/height/position of a view, which is not yet properly initialized until layout is complete
         //in this example, another way of achieving correct behavior without using ViewUtil.executeOnGlobalLayout() would be to change all
@@ -112,8 +140,7 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.menu_animate:
                 changeInterpolator = false;
-
-                startAnimation();
+                mUnifiedAdapter.startAnimation(1000);
                 break;
         }
         if (changeInterpolator) {
@@ -123,19 +150,15 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
         return true;
     }
 
-    private void startAnimation() {
-        mUnifiedAdapter.startAnimation();
-        mUnifiedAdapter.setReverseAnimation(!mUnifiedAdapter.isReverseAnimation());
-    }
-
     @Override
     public void onClick(View v) {
-        updateTransition(v, mUnifiedAdapter.isReverseAnimation());
+        updateTransition(v, mUnifiedAdapter.isReverseAnimation() || mUnifiedAdapter.isAnimating());
     }
 
     public void updateTransition(View v, boolean animate) {
         if (animate) {
-            startAnimation();
+            mUnifiedAdapter.setReverseAnimation(true);
+            mUnifiedAdapter.startAnimation();
         }
 
         //TODO removeAllTransitions() has to be called *after* mAnimationAdapter.resetAnimation(), this subtle order of execution requirement should be removed
@@ -161,12 +184,14 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
                 builder.target(findViewById(R.id.content)).buildFor(mUnifiedAdapter);
 
                 builder = baseBuilder.clone().target(findViewById(R.id.content));
+                ViewTransitionBuilder.Cascade cascade = new ViewTransitionBuilder.Cascade(0.6f);
+                cascade.reverse = true;
                 builder.transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
                     @Override
                     public void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View childView, int index, int total) {
-                        builder.range((total - 1 - index) * 0.1f, 1f).translationYAsFractionOfHeight(viewGroup, 1f).buildFor(mUnifiedAdapter);
+                        builder.translationYAsFractionOfHeight(viewGroup, 1f).buildFor(mUnifiedAdapter);
                     }
-                });
+                }, cascade);
 
                 enableAnimationMenu = false;
                 break;
@@ -191,11 +216,11 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.grayscale_bg:
                 //Uses a CustomTransitionController that applies a ColorMatrixColorFilter to the background view
-                baseBuilder.clone().addTransitionHandler(new ITransitionHandler() {
+                baseBuilder.clone().addTransitionHandler(new TransitionHandler() {
                     ColorMatrix matrix = new ColorMatrix();
 
                     @Override
-                    public void onUpdateProgress(ITransitionController controller, View target, float progress) {
+                    public void onUpdateProgress(TransitionController controller, View target, float progress) {
                         matrix.setSaturation(1 - progress);
                         ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
                         ((ImageView) findViewById(R.id.content_bg)).setColorFilter(filter);
