@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '23.0.0 rc3'
+    buildToolsVersion '22.0.1'
 
     lintOptions {
         abortOnError false;
@@ -16,25 +16,23 @@ android {
         versionName "1.0.4"
     }
 
-    signingConfigs {
-        release {
-            keyAlias project.property('keyalias')
-            keyPassword project.property('keypassword')
-            storeFile file(project.property('storefile'))
-            storePassword project.property('storepassword')
-        }
-    }
-
-    buildTypes {
-        //enable to build release version
+    //enable to build release version
+//    signingConfigs {
+//        release {
+//            keyAlias project.property('keyalias')
+//            keyPassword project.property('keypassword')
+//            storeFile file(project.property('storefile'))
+//            storePassword project.property('storepassword')
+//        }
+//    }
+//    buildTypes {
 //        release {
 //            signingConfig signingConfigs.release
 //            minifyEnabled false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 //        }
-    }
-    productFlavors {
-    }
+//    }
+
     dexOptions {
         incremental false
     }
