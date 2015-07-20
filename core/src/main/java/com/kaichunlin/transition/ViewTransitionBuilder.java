@@ -425,7 +425,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
 
     @CheckResult(suggest = "The created ViewTransition should be utilized")
     @Override
-    public ViewTransition createTransition() {
+    protected ViewTransition createTransition() {
         ViewTransition vt = new ViewTransition();
 
         vt.setTarget(mView);

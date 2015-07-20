@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.animation.Interpolator;
 
-import com.kaichunlin.transition.Animation.TransitionAnimation;
-import com.kaichunlin.transition.Animation.Animation;
+import com.kaichunlin.transition.animation.TransitionAnimation;
+import com.kaichunlin.transition.animation.Animation;
 import com.kaichunlin.transition.internal.TransitionController;
 import com.nineoldandroids.animation.PropertyValuesHolder;
 
@@ -543,7 +543,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      *
      * @return ITransition that would perform the desired transition
      */
-    abstract S createTransition();
+    protected abstract S createTransition();
 
     /**
      * Builds a ITransition, the created object will not be modified when the builder's modifier methods are called.
@@ -564,7 +564,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     public Animation buildAnimation() {
-        TransitionAnimation animation=new TransitionAnimation(mStart < mEnd?build():build().reverse());
+        TransitionAnimation animation = new TransitionAnimation(mStart < mEnd ? build() : build().reverse());
         return animation;
     }
 

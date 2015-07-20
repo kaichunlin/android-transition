@@ -1,7 +1,7 @@
 package com.kaichunlin.transition.internal.debug;
 
-import com.kaichunlin.transition.Animation.Animation;
-import com.kaichunlin.transition.Animation.AnimationListener;
+import com.kaichunlin.transition.animation.Animation;
+import com.kaichunlin.transition.animation.AnimationListener;
 import com.kaichunlin.transition.TransitionConfig;
 
 /**

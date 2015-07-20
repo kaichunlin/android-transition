@@ -221,7 +221,7 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
 
     @CheckResult(suggest = "The created MenuItemTransition should be utilized")
     @Override
-    public MenuItemTransition createTransition() {
+    protected MenuItemTransition createTransition() {
         MenuItemTransition vt = new MenuItemTransition(mId, mToolbar);
         //TODO clone() is required since the class implements ViewTransition.Setup and passes itself to ViewTransition, without clone ViewTransitions made from the same Builder will have their states intertwined
         vt.setSetup(clone());

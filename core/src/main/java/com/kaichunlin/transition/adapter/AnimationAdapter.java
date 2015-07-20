@@ -3,9 +3,9 @@ package com.kaichunlin.transition.adapter;
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 
-import com.kaichunlin.transition.Animation.AnimationListener;
-import com.kaichunlin.transition.Animation.TransitionAnimation;
-import com.kaichunlin.transition.Animation.Animation;
+import com.kaichunlin.transition.animation.AnimationListener;
+import com.kaichunlin.transition.animation.TransitionAnimation;
+import com.kaichunlin.transition.animation.Animation;
 import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.TransitionListener;
 
