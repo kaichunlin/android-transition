@@ -1,4 +1,4 @@
-package com.kaichunlin.transition.anim;
+package com.kaichunlin.transition.animation;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;

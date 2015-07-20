@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 
-import com.kaichunlin.transition.anim.TransitionAnimation;
+import com.kaichunlin.transition.animation.TransitionAnimation;
 import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.MenuItemTransition;
 import com.kaichunlin.transition.MenuItemTransitionBuilder;

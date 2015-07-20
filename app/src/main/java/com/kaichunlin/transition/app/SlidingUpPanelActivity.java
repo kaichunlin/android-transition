@@ -22,8 +22,8 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
-import com.kaichunlin.transition.anim.Animation;
-import com.kaichunlin.transition.anim.AnimationListener;
+import com.kaichunlin.transition.animation.Animation;
+import com.kaichunlin.transition.animation.AnimationListener;
 import com.kaichunlin.transition.TransitionHandler;
 import com.kaichunlin.transition.ViewTransitionBuilder;
 import com.kaichunlin.transition.adapter.SlidingUpPanelLayoutAdapter;
