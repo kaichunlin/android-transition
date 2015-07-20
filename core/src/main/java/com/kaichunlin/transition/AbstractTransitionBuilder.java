@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.animation.Interpolator;
 
-import com.kaichunlin.transition.animation.TransitionAnimation;
-import com.kaichunlin.transition.animation.Animation;
+import com.kaichunlin.transition.anim.TransitionAnimation;
+import com.kaichunlin.transition.anim.Animation;
 import com.kaichunlin.transition.internal.TransitionController;
 import com.nineoldandroids.animation.PropertyValuesHolder;
 

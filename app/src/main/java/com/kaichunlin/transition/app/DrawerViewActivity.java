@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
-import com.kaichunlin.transition.animation.Animation;
+import com.kaichunlin.transition.anim.Animation;
 import com.kaichunlin.transition.TransitionListener;
 import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.ViewTransition;

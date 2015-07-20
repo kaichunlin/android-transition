@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.kaichunlin.transition.AbstractTransitionBuilder;
-import com.kaichunlin.transition.animation.Animation;
-import com.kaichunlin.transition.animation.AnimationListener;
-import com.kaichunlin.transition.animation.AnimationManager;
+import com.kaichunlin.transition.anim.Animation;
+import com.kaichunlin.transition.anim.AnimationListener;
+import com.kaichunlin.transition.anim.AnimationManager;
 import com.kaichunlin.transition.Transition;
 import com.kaichunlin.transition.TransitionListener;
 import com.kaichunlin.transition.TransitionManager;

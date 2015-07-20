@@ -1,4 +1,4 @@
-package com.kaichunlin.transition.animation;
+package com.kaichunlin.transition.anim;
 
 /**
  * Created by Kai on 2015/7/18.
