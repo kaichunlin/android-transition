@@ -49,7 +49,7 @@ public class OnPageChangeListenerAdapter extends AbstractAdapter implements View
                 target.setTranslationX(0);
             }
             if (TransitionConfig.isDebug()) {
-                controller.getTransitionStateHolder().append(controller.getId()+"->"+target, this, "CUSTOM updateProgress=" + progress + ": \t[" + controller.getStart() + ".." + controller.getEnd() + "], translationX=" + x);
+                controller.getTransitionStateHolder().append(controller.getId() + "->" + target, this, "CUSTOM updateProgress=" + progress + ": \t[" + controller.getStart() + ".." + controller.getEnd() + "], translationX=" + x);
             }
         }
     };
@@ -74,7 +74,7 @@ public class OnPageChangeListenerAdapter extends AbstractAdapter implements View
                 target.setTranslationX(0);
             }
             if (TransitionConfig.isDebug()) {
-                controller.getTransitionStateHolder().append(controller.getId()+"->"+target, this, "CUSTOM updateProgress=" + progress + ": \t[" + controller.getStart() + ".." + controller.getEnd() + "], translationX=" + x);
+                controller.getTransitionStateHolder().append(controller.getId() + "->" + target, this, "CUSTOM updateProgress=" + progress + ": \t[" + controller.getStart() + ".." + controller.getEnd() + "], translationX=" + x);
             }
         }
     };
@@ -164,7 +164,7 @@ public class OnPageChangeListenerAdapter extends AbstractAdapter implements View
     }
 
     private boolean startTransition(@NonNull View page) {
-        if(!getAdapterState().isTransiting()) {
+        if (!getAdapterState().isTransiting()) {
             notifyTransitionStart();
         }
 
@@ -173,10 +173,14 @@ public class OnPageChangeListenerAdapter extends AbstractAdapter implements View
             holder = new PageHolder(page, getTransitionManager().getTransitions());
             mTransitionListMap.put(page, holder);
 
-            for (Transition trans : holder.mTransitionManager.getTransitions()) {
-                trans.setUpdateStateAfterUpdateProgress(true);
-                trans.setTarget(page);
-                trans.startTransition();
+            List<Transition> transitionList = holder.mTransitionManager.getTransitions();
+            final int size = transitionList.size();
+            Transition transition;
+            for (int i = 0; i < size; i++) {
+                transition = transitionList.get(i);
+                transition.setUpdateStateAfterUpdateProgress(true);
+                transition.setTarget(page);
+                transition.startTransition();
             }
         }
 
@@ -210,7 +214,7 @@ public class OnPageChangeListenerAdapter extends AbstractAdapter implements View
 
     @Override
     public void transformPage(@NonNull View page, float position) {
-        if(getAdapterState().isTransiting()) {
+        if (getAdapterState().isTransiting()) {
             startTransition(page);
             updateProgress(page, position);
         }
@@ -241,8 +245,9 @@ public class OnPageChangeListenerAdapter extends AbstractAdapter implements View
         final TransitionManager mTransitionManager = new DefaultTransitionManager();
 
         public PageHolder(@NonNull View page, @NonNull List<Transition> transitionsList) {
-            for(Transition transition:transitionsList) {
-                mTransitionManager.addTransition(transition.clone());
+            final int size = transitionsList.size();
+            for (int i = 0; i < size; i++) {
+                mTransitionManager.addTransition(transitionsList.get(i).clone());
             }
         }
     }

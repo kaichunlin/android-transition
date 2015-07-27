@@ -1,10 +1,10 @@
 package com.kaichunlin.transition;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +16,8 @@ import java.util.Set;
  * Created by Kai on 2015/7/14.
  */
 public class DefaultTransitionManager implements TransitionManager {
-    protected Set<TransitionListener> transitionListenerList = new HashSet<>();
-    protected Map<String, Transition> mTransitionMap = new HashMap<>();
+    protected Set<TransitionListener> mTransitionListenerSet = new HashSet<>();
+    protected ArrayMap<String, Transition> mTransitionMap = new ArrayMap<>();
 
     @Override
     public void addTransition(@NonNull AbstractTransitionBuilder transitionBuilder) {
@@ -68,8 +68,9 @@ public class DefaultTransitionManager implements TransitionManager {
         notifyTransitionStart();
 
         boolean start = false;
-        for (Transition trans : mTransitionMap.values()) {
-            start |= trans.startTransition();
+        final int size = mTransitionMap.size();
+        for (int i = 0; i < size; i++) {
+            start |= mTransitionMap.valueAt(i).startTransition();
         }
         return start;
     }
@@ -80,8 +81,9 @@ public class DefaultTransitionManager implements TransitionManager {
         notifyTransitionStart();
 
         boolean start = false;
-        for (Transition trans : mTransitionMap.values()) {
-            start |= trans.startTransition(progress);
+        final int size = mTransitionMap.size();
+        for (int i = 0; i < size; i++) {
+            start |= mTransitionMap.valueAt(i).startTransition(progress);
         }
         return start;
     }
@@ -93,8 +95,9 @@ public class DefaultTransitionManager implements TransitionManager {
      */
     @Override
     public void updateProgress(float value) {
-        for (Transition trans : mTransitionMap.values()) {
-            trans.updateProgress(value);
+        final int size = mTransitionMap.size();
+        for (int i = 0; i < size; i++) {
+            mTransitionMap.valueAt(i).updateProgress(value);
         }
     }
 
@@ -104,35 +107,36 @@ public class DefaultTransitionManager implements TransitionManager {
     @Override
     public void stopTransition() {
         //call listeners so they can perform their actions first, like modifying this adapter's transitions
-        for (TransitionListener listener:transitionListenerList) {
+        for (TransitionListener listener : mTransitionListenerSet) {
             listener.onTransitionEnd(this);
         }
 
-        for (Transition trans : mTransitionMap.values()) {
-            trans.stopTransition();
+        final int size = mTransitionMap.size();
+        for (int i = 0; i < size; i++) {
+            mTransitionMap.valueAt(i).stopTransition();
         }
     }
 
     @Override
     public void addTransitionListener(TransitionListener transitionListener) {
-        transitionListenerList.add(transitionListener);
+        mTransitionListenerSet.add(transitionListener);
     }
 
     @Override
     public void removeTransitionListener(TransitionListener transitionListener) {
-        transitionListenerList.remove(transitionListener);
+        mTransitionListenerSet.remove(transitionListener);
     }
 
     @Override
     public void notifyTransitionStart() {
-        for (TransitionListener listener : transitionListenerList) {
+        for (TransitionListener listener : mTransitionListenerSet) {
             listener.onTransitionStart(this);
         }
     }
 
     @Override
     public void notifyTransitionEnd() {
-        for (TransitionListener listener : transitionListenerList) {
+        for (TransitionListener listener : mTransitionListenerSet) {
             listener.onTransitionEnd(this);
         }
     }

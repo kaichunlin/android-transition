@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         ViewTransitionBuilder.transit(findViewById(R.id.toolbar)).animator(this, R.anim.animator_set).buildAnimation().startAnimation(1200);
 
-        TransitionConfig.setDebug(true);
+        TransitionConfig.setDebug(false);
     }
 
     @Override

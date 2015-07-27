@@ -10,6 +10,8 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ValueAnimator;
 
+import java.util.ArrayList;
+
 /**
  * NineOldAndroids' ObjectAnimator is used to provide required transition behavior.
  * <p>
@@ -48,15 +50,19 @@ public class DefaultTransitionController extends TransitionController<DefaultTra
     }
 
     /**
-     *
-     * @param target the View that should be transitioned
+     * @param target   the View that should be transitioned
      * @param mAnimSet
      */
     public DefaultTransitionController(@Nullable View target, @NonNull AnimatorSet mAnimSet) {
         super(target);
         this.mAnimSet = mAnimSet;
         mStartDelay = mAnimSet.getStartDelay();
-        for (Animator animator : mAnimSet.getChildAnimations()) {
+
+        ArrayList<Animator> animators = mAnimSet.getChildAnimations();
+        final int size = animators.size();
+        Animator animator;
+        for (int i = 0; i < size; i++) {
+            animator = animators.get(i);
             if (!(animator instanceof ValueAnimator)) {
                 throw new UnsupportedOperationException("Only ValueAnimator and its subclasses are supported: " + animator);
             }
@@ -64,11 +70,12 @@ public class DefaultTransitionController extends TransitionController<DefaultTra
         mDuration = mAnimSet.getDuration();
         if (mAnimSet.getDuration() >= 0) {
             long duration = mAnimSet.getDuration();
-            for (Animator animator : mAnimSet.getChildAnimations()) {
-                animator.setDuration(duration);
+            for (int i = 0; i < size; i++) {
+                animators.get(i).setDuration(duration);
             }
         } else {
-            for (Animator animator : mAnimSet.getChildAnimations()) {
+            for (int i = 0; i < size; i++) {
+                animator = animators.get(i);
                 long endTime = animator.getStartDelay() + animator.getDuration();
                 if (mDuration < endTime) {
                     mDuration = endTime;
@@ -85,7 +92,11 @@ public class DefaultTransitionController extends TransitionController<DefaultTra
         if (mTarget == null && mInterpolator == null) {
             return;
         }
-        for (Animator animator : mAnimSet.getChildAnimations()) {
+        ArrayList<Animator> animators = mAnimSet.getChildAnimations();
+        final int size = animators.size();
+        Animator animator;
+        for (int i = 0; i < size; i++) {
+            animator = animators.get(i);
             if (mTarget != null) {
                 animator.setTarget(mTarget);
             }
@@ -99,7 +110,7 @@ public class DefaultTransitionController extends TransitionController<DefaultTra
     public void updateProgress(float progress) {
         String debug = "";
         final boolean DEBUG = TransitionConfig.isDebug();
-        long time=0;
+        long time = 0;
         if (mStart < mEnd && progress >= mStart && progress <= mEnd || mStart > mEnd && progress >= mEnd && progress <= mStart) {
             //forward progression
             if (mStart < mEnd) {
@@ -122,12 +133,12 @@ public class DefaultTransitionController extends TransitionController<DefaultTra
                 if (progress < mStart) {
                     time = 0;
                     if (DEBUG) {
-                        debug = "forward progression: [" + mStart + ".." + mEnd + "], before start, progress="+progress;
+                        debug = "forward progression: [" + mStart + ".." + mEnd + "], before start, progress=" + progress;
                     }
                 } else if (progress > mEnd) {
                     time = mTotalDuration;
                     if (DEBUG) {
-                        debug = "forward progression: [" + mStart + ".." + mEnd + "], after finish"+progress;
+                        debug = "forward progression: [" + mStart + ".." + mEnd + "], after finish" + progress;
                     }
                 }
                 //backward
@@ -135,12 +146,12 @@ public class DefaultTransitionController extends TransitionController<DefaultTra
                 if (progress > mStart) {
                     time = 0;
                     if (DEBUG) {
-                        debug = "forward progression: [" + mStart + ".." + mEnd + "], before start, progress="+progress;
+                        debug = "forward progression: [" + mStart + ".." + mEnd + "], before start, progress=" + progress;
                     }
                 } else if (progress < mEnd) {
                     time = mTotalDuration;
                     if (DEBUG) {
-                        debug = "forward progression: [" + mStart + ".." + mEnd + "], after finish"+progress;
+                        debug = "forward progression: [" + mStart + ".." + mEnd + "], after finish" + progress;
                     }
                 }
             }
@@ -167,8 +178,10 @@ public class DefaultTransitionController extends TransitionController<DefaultTra
 
         mSetup = false;
         mLastTime = time;
-        for (Animator animator : mAnimSet.getChildAnimations()) {
-            ValueAnimator va = (ValueAnimator) animator;
+        ArrayList<Animator> animators = mAnimSet.getChildAnimations();
+        final int size = animators.size();
+        for (int i = 0; i < size; i++) {
+            ValueAnimator va = (ValueAnimator) animators.get(i);
             long absTime = time - va.getStartDelay();
             if (absTime >= 0) {
                 va.setCurrentPlayTime(absTime);
@@ -177,7 +190,7 @@ public class DefaultTransitionController extends TransitionController<DefaultTra
     }
 
     private void appendLog(String msg) {
-        getTransitionStateHolder().append(getId()+"->"+mTarget, this, msg);
+        getTransitionStateHolder().append(getId() + "->" + mTarget, this, msg);
     }
 
     @CheckResult

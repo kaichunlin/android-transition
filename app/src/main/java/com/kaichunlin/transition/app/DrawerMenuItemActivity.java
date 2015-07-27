@@ -93,7 +93,7 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
         });
 
         //set the initial options
-        onClick(findViewById(R.id.flip_fade));
+        onClick(findViewById(R.id.shrink_fade));
     }
 
     @Override

@@ -3,18 +3,17 @@ package com.kaichunlin.transition;
 import android.support.annotation.CheckResult;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 import android.view.View;
 import android.view.animation.Interpolator;
 
-import com.kaichunlin.transition.animation.TransitionAnimation;
 import com.kaichunlin.transition.animation.Animation;
+import com.kaichunlin.transition.animation.TransitionAnimation;
 import com.kaichunlin.transition.internal.TransitionController;
 import com.nineoldandroids.animation.PropertyValuesHolder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Provides foundation to build classes that allows easy creation of ITransition
@@ -36,8 +35,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     public static final String X = "x";
     public static final String Y = "y";
 
-    Map<String, PropertyValuesHolder> mHolders = new HashMap<>();
-    Map<String, ShadowValuesHolder> mShadowHolders = new HashMap<>();
+    ArrayMap<String, PropertyValuesHolder> mHolders = new ArrayMap<>();
+    ArrayMap<String, ShadowValuesHolder> mShadowHolders = new ArrayMap<>();
     List<DelayedEvaluator> mDelayed = new ArrayList<>();
     float mStart = TransitionController.DEFAULT_START;
     float mEnd = TransitionController.DEFAULT_END;
@@ -600,13 +599,15 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
         AbstractTransitionBuilder newCopy = null;
         try {
             newCopy = (AbstractTransitionBuilder) super.clone();
-            newCopy.mHolders = new HashMap<>();
-            for (Map.Entry<String, PropertyValuesHolder> entry : mHolders.entrySet()) {
-                newCopy.mHolders.put(entry.getKey(), entry.getValue().clone());
+            newCopy.mHolders = new ArrayMap<>();
+            int size = mHolders.size();
+            for (int i = 0; i < size; i++) {
+                newCopy.mHolders.put(mHolders.keyAt(i), mHolders.valueAt(i).clone());
             }
-            newCopy.mShadowHolders = new HashMap<>();
-            for (Map.Entry<String, ShadowValuesHolder> entry : mShadowHolders.entrySet()) {
-                newCopy.mShadowHolders.put(entry.getKey(), entry.getValue().clone());
+            newCopy.mShadowHolders = new ArrayMap<>();
+            size = mShadowHolders.size();
+            for (int i = 0; i < size; i++) {
+                newCopy.mShadowHolders.put(mShadowHolders.keyAt(i), mShadowHolders.valueAt(i).clone());
             }
             newCopy.mDelayed = new ArrayList<>();
             newCopy.mDelayed.addAll(mDelayed);

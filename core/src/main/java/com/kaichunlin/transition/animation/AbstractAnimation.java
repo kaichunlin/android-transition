@@ -18,7 +18,7 @@ public abstract class AbstractAnimation implements Animation {
         }
     };
 
-    private final Set<AnimationListener> animationListenerList = new HashSet<>();
+    private final Set<AnimationListener> mAnimationListenerSet = new HashSet<>();
     protected Handler mHandler;
     private int mDuration = -1;
     private boolean mReverse;
@@ -28,14 +28,14 @@ public abstract class AbstractAnimation implements Animation {
      * @param animationListener
      */
     public void addAnimationListener(AnimationListener animationListener) {
-        animationListenerList.add(animationListener);
+        mAnimationListenerSet.add(animationListener);
     }
 
     /**
      * @param animationListener
      */
     public void removeAnimationListener(AnimationListener animationListener) {
-        animationListenerList.remove(animationListener);
+        mAnimationListenerSet.remove(animationListener);
     }
 
     public void setDuration(@IntRange(from = 0) int duration) {
@@ -96,25 +96,25 @@ public abstract class AbstractAnimation implements Animation {
     }
 
     protected void notifyAnimationStart() {
-        for (AnimationListener listener : animationListenerList) {
+        for (AnimationListener listener : mAnimationListenerSet) {
             listener.onAnimationStart(this);
         }
     }
 
     protected void notifyAnimationEnd() {
-        for (AnimationListener listener : animationListenerList) {
+        for (AnimationListener listener : mAnimationListenerSet) {
             listener.onAnimationEnd(this);
         }
     }
 
     protected void notifyAnimationCancel() {
-        for (AnimationListener listener : animationListenerList) {
+        for (AnimationListener listener : mAnimationListenerSet) {
             listener.onAnimationCancel(this);
         }
     }
 
     protected void notifyAnimationReset() {
-        for (AnimationListener listener : animationListenerList) {
+        for (AnimationListener listener : mAnimationListenerSet) {
             listener.onAnimationReset(this);
         }
     }

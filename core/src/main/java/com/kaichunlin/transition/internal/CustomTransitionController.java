@@ -26,8 +26,9 @@ public class CustomTransitionController extends TransitionController<CustomTrans
 
     @Override
     public void updateProgress(float progress) {
-        for (TransitionHandler handler : mTransitionHandlerList) {
-            handler.onUpdateProgress(this, getTarget(), progress);
+        final int count = mTransitionHandlerList.size();
+        for (int i = 0; i < count; ++i) {
+            mTransitionHandlerList.get(i).onUpdateProgress(this, getTarget(), progress);
         }
     }
 

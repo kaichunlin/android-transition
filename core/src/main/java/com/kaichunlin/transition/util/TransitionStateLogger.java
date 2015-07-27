@@ -1,13 +1,12 @@
 package com.kaichunlin.transition.util;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Used to help trace the state of transition for debugging purpose
@@ -18,7 +17,7 @@ public class TransitionStateLogger {
     public final String mId;
     private Calendar mStartTime;
     private Calendar mEndTime;
-    private Map<String, List<TransitionState>> tranStateMap = new HashMap<>();
+    private ArrayMap<String, List<TransitionState>> tranStateMap = new ArrayMap<>();
 
     public TransitionStateLogger(@NonNull String id) {
         mId = id;
@@ -54,9 +53,10 @@ public class TransitionStateLogger {
         sb.append(mStartTime);
         sb.append(" ----------");
 
-        for (Map.Entry<String, List<TransitionState>> entry : tranStateMap.entrySet()) {
+        int size = tranStateMap.size();
+        for (int i = 0; i < size; i++) {
             sb.append("\n");
-            sb.append(entry.getValue());
+            sb.append(tranStateMap.valueAt(i));
         }
         sb.append("\n--------------------------");
         sb.append(mEndTime);
@@ -68,13 +68,17 @@ public class TransitionStateLogger {
         Log.e(getClass().getSimpleName(), "------------- " + mId + " -------------");
         boolean first;
         long baseTime = 0;
-        for (Map.Entry<String, List<TransitionState>> entry : tranStateMap.entrySet()) {
+        final int size = tranStateMap.size();
+        List<TransitionState> stateList;
+        for (int i = 0; i < size; i++) {
             first = true;
-            for (TransitionState ts : entry.getValue()) {
+            stateList = tranStateMap.valueAt(i);
+            final int size2 = stateList.size();
+            for (int j = 0; j < size2; j++) {
                 if (first) {
-                    baseTime = ts.time;
+                    baseTime = stateList.get(j).time;
                 }
-                Log.e(getClass().getSimpleName(), ts.toString(baseTime));
+                Log.e(getClass().getSimpleName(), stateList.get(j).toString(baseTime));
             }
         }
         Log.i(getClass().getSimpleName(), "-----------------------------");
@@ -99,7 +103,7 @@ public class TransitionStateLogger {
         public String toString(long baseTime) {
             StringBuilder sb = new StringBuilder();
             sb.append("\t<");
-            if(subId.contains("@")) {
+            if (subId.contains("@")) {
                 sb.append(subId.substring(subId.indexOf("@")));
             } else {
                 sb.append(subId);

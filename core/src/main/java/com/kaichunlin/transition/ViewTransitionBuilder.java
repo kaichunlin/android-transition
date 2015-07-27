@@ -28,7 +28,6 @@ import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Allows the easy creation of {@link ViewTransition}
@@ -251,8 +250,9 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     @Override
     public ViewTransitionBuilder reverse() {
         mHolders.clear();
-        for (Map.Entry<String, ShadowValuesHolder> entry : mShadowHolders.entrySet()) {
-            mHolders.put(entry.getKey(), entry.getValue().createReverse());
+        final int size = mShadowHolders.size();
+        for (int i = 0; i < size; i++) {
+            mHolders.put(mShadowHolders.keyAt(i), mShadowHolders.valueAt(i).createReverse());
         }
         float oldStart = mStart;
         mStart = mEnd;
@@ -447,12 +447,14 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
             mView = transitionControllerManager.getTarget();
         }
 
-        for (DelayedEvaluator de : mDelayed) {
-            de.evaluate(transitionControllerManager.getTarget(), this);
+        int size = mDelayed.size();
+        for (int i = 0; i < size; i++) {
+            mDelayed.get(i).evaluate(transitionControllerManager.getTarget(), this);
         }
 
-        for (ViewTransition.Setup setup : mSetupList) {
-            setup.setupAnimation(transitionControllerManager);
+        size = mSetupList.size();
+        for (int i = 0; i < size; i++) {
+            mSetupList.get(i).setupAnimation(transitionControllerManager);
         }
 
         if (mCustomTransitionController != null) {

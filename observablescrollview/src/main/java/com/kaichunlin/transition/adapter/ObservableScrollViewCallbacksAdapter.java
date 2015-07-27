@@ -1,14 +1,12 @@
 package com.kaichunlin.transition.adapter;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.kaichunlin.transition.AbstractTransitionBuilder;
 import com.kaichunlin.transition.Transition;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * TODO work in progress
@@ -23,7 +21,7 @@ public class ObservableScrollViewCallbacksAdapter extends AbstractAdapter implem
         DOWN
     }
 
-    private Map<Transition, Integer> mRanges = new HashMap<>();
+    private ArrayMap<Transition, Integer> mRanges = new ArrayMap<>();
     private ObservableScrollViewCallbacks mCallback;
     private int mStartY;
     private int mLastScrollY;

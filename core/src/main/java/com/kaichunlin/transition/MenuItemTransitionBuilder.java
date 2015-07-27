@@ -22,7 +22,6 @@ import com.nineoldandroids.animation.PropertyValuesHolder;
 public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuItemTransitionBuilder, MenuItemTransition> implements MenuItemTransition.Setup {
 
     /**
-     *
      * @param toolbar
      * @return
      */
@@ -31,7 +30,6 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     }
 
     /**
-     *
      * @param id
      * @param toolbar
      * @return
@@ -56,13 +54,13 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     }
 
     @Override
-    public MenuItemTransitionBuilder alpha(@FloatRange(from = 0.0, to=1.0) float start, @FloatRange(from = 0.0, to=1.0) float end) {
+    public MenuItemTransitionBuilder alpha(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
         transitFloat(ALPHA, start, end);
         return self();
     }
 
     @Override
-    public MenuItemTransitionBuilder alpha(@FloatRange(from = 0.0, to=1.0) float end) {
+    public MenuItemTransitionBuilder alpha(@FloatRange(from = 0.0, to = 1.0) float end) {
         return alpha(1f, end);
     }
 
@@ -100,36 +98,36 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     }
 
     @Override
-    public MenuItemTransitionBuilder scaleX(@FloatRange(from = 0.0, to=1.0) float start,@FloatRange(from = 0.0, to=1.0)  float end) {
+    public MenuItemTransitionBuilder scaleX(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
         transitFloat(SCALE_X, start, end);
         return self();
     }
 
     @Override
-    public MenuItemTransitionBuilder scaleX(@FloatRange(from = 0.0, to=1.0) float end) {
+    public MenuItemTransitionBuilder scaleX(@FloatRange(from = 0.0, to = 1.0) float end) {
         return scaleX(0f, end);
     }
 
     @Override
-    public MenuItemTransitionBuilder scaleY(@FloatRange(from = 0.0, to=1.0) float start, @FloatRange(from = 0.0, to=1.0) float end) {
+    public MenuItemTransitionBuilder scaleY(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
         transitFloat(SCALE_Y, start, end);
         return self();
     }
 
     @Override
-    public MenuItemTransitionBuilder scaleY(@FloatRange(from = 0.0, to=1.0) float end) {
+    public MenuItemTransitionBuilder scaleY(@FloatRange(from = 0.0, to = 1.0) float end) {
         return scaleY(0f, end);
     }
 
     @Override
-    public MenuItemTransitionBuilder scale(@FloatRange(from = 0.0, to=1.0) float start, @FloatRange(from = 0.0, to=1.0) float end) {
+    public MenuItemTransitionBuilder scale(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
         transitFloat(SCALE_X, start, end);
         transitFloat(SCALE_Y, start, end);
         return self();
     }
 
     @Override
-    public MenuItemTransitionBuilder scale(@FloatRange(from = 0.0, to=1.0) float end) {
+    public MenuItemTransitionBuilder scale(@FloatRange(from = 0.0, to = 1.0) float end) {
         return scale(0f, end);
     }
 
@@ -183,7 +181,7 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
      * @param cascade
      * @return
      */
-    public MenuItemTransitionBuilder cascade(@FloatRange(from=0.0) float cascade) {
+    public MenuItemTransitionBuilder cascade(@FloatRange(from = 0.0) float cascade) {
         mCascade = cascade;
         return self();
     }
@@ -202,7 +200,7 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     /**
      * See {@link MenuItemTransition#setInterpolator(Interpolator)}
      *
-     * @param activity Activity that should have its invalidateOptionsMenu() method called, or null if invalidateOptionOnStopAnimation parameter is false
+     * @param activity                        Activity that should have its invalidateOptionsMenu() method called, or null if invalidateOptionOnStopAnimation parameter is false
      * @param invalidateOptionOnStopAnimation
      * @return
      */
@@ -238,9 +236,10 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     }
 
     @Override
-    public void setupAnimation(@NonNull MenuItem mMenuItem, @NonNull TransitionControllerManager transitionControllerManager, @IntRange(from=0) int itemIndex, @IntRange(from=0) int menuCount) {
-        for (DelayedEvaluator de : mDelayed) {
-            de.evaluate(transitionControllerManager.getTarget(), this);
+    public void setupAnimation(@NonNull MenuItem mMenuItem, @NonNull TransitionControllerManager transitionControllerManager, @IntRange(from = 0) int itemIndex, @IntRange(from = 0) int menuCount) {
+        final int size = mDelayed.size();
+        for (int i = 0; i < size; i++) {
+            mDelayed.get(i).evaluate(transitionControllerManager.getTarget(), this);
         }
 
         ObjectAnimator anim = new ObjectAnimator();

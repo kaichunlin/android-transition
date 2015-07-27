@@ -72,8 +72,9 @@ public class AnimationManager extends AbstractAnimation {
      * @param transitionList
      */
     public void addAllTransitions(List<Transition> transitionList) {
-        for (Transition transition : transitionList) {
-            mAnimationList.add(new TransitionAnimation(transition));
+        final int size = transitionList.size();
+        for (int i = 0; i < size; i++) {
+            mAnimationList.add(new TransitionAnimation(transitionList.get(i)));
         }
     }
 
@@ -95,8 +96,9 @@ public class AnimationManager extends AbstractAnimation {
      * Stops and clears all transitions
      */
     public void removeAllAnimations() {
-        for (Animation animation : mAnimationList) {
-            animation.removeAnimationListener(mAnimationListener);
+        final int size = mAnimationList.size();
+        for (int i = 0; i < size; i++) {
+            mAnimationList.get(i).removeAnimationListener(mAnimationListener);
         }
         mAnimationList.clear();
     }
@@ -119,8 +121,9 @@ public class AnimationManager extends AbstractAnimation {
         if (super.getDuration() == -1) {
             int maxDuration = 0;
             int duration;
-            for (Animation trans : mAnimationList) {
-                duration = trans.getDuration();
+            final int size = mAnimationList.size();
+            for (int i = 0; i < size; i++) {
+                duration = mAnimationList.get(i).getDuration();
                 if (maxDuration < duration) {
                     maxDuration = duration;
                 }
@@ -137,8 +140,11 @@ public class AnimationManager extends AbstractAnimation {
             return;
         }
         super.setReverseAnimation(reverse);
-        for (Animation trans : mAnimationList) {
-            trans.setReverseAnimation(!trans.isReverseAnimation());
+        final int size = mAnimationList.size();
+        Animation animation;
+        for (int i = 0; i < size; i++) {
+            animation = mAnimationList.get(i);
+            animation.setReverseAnimation(!animation.isReverseAnimation());
         }
     }
 
@@ -158,17 +164,19 @@ public class AnimationManager extends AbstractAnimation {
         //call listeners so they can perform their actions first, like modifying this adapter's transitions
         notifyAnimationStart();
 
-        for (Animation trans : mAnimationList) {
-            trans.startAnimation(duration);
+        final int size = mAnimationList.size();
+        for (int i = 0; i < size; i++) {
+            mAnimationList.get(i).startAnimation(duration);
         }
     }
 
     @UiThread
     @Override
     public void cancelAnimation() {
-        if(isAnimating()) {
-            for (Animation trans : mAnimationList) {
-                trans.cancelAnimation();
+        if (isAnimating()) {
+            final int size = mAnimationList.size();
+            for (int i = 0; i < size; i++) {
+                mAnimationList.get(i).cancelAnimation();
             }
         }
     }
@@ -176,32 +184,36 @@ public class AnimationManager extends AbstractAnimation {
     @UiThread
     @Override
     public void pauseAnimation() {
-        for (Animation trans : mAnimationList) {
-            trans.pauseAnimation();
+        final int size = mAnimationList.size();
+        for (int i = 0; i < size; i++) {
+            mAnimationList.get(i).pauseAnimation();
         }
     }
 
     @UiThread
     @Override
     public void resumeAnimation() {
-        for (Animation trans : mAnimationList) {
-            trans.resumeAnimation();
+        final int size = mAnimationList.size();
+        for (int i = 0; i < size; i++) {
+            mAnimationList.get(i).resumeAnimation();
         }
     }
 
     @UiThread
     @Override
     public void endAnimation() {
-        for (Animation trans : mAnimationList) {
-            trans.endAnimation();
+        final int size = mAnimationList.size();
+        for (int i = 0; i < size; i++) {
+            mAnimationList.get(i).endAnimation();
         }
     }
 
     @UiThread
     @Override
     public void resetAnimation() {
-        for (Animation trans : mAnimationList) {
-            trans.resetAnimation();
+        final int size = mAnimationList.size();
+        for (int i = 0; i < size; i++) {
+            mAnimationList.get(i).resetAnimation();
         }
     }
 }
