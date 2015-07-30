@@ -3,10 +3,10 @@ package com.kaichunlin.transition.adapter;
 import android.support.annotation.NonNull;
 
 import com.kaichunlin.transition.AbstractTransitionBuilder;
-import com.kaichunlin.transition.Transition;
-import com.kaichunlin.transition.TransitionManager;
-import com.kaichunlin.transition.TransitionListener;
 import com.kaichunlin.transition.DefaultTransitionManager;
+import com.kaichunlin.transition.Transition;
+import com.kaichunlin.transition.TransitionListener;
+import com.kaichunlin.transition.TransitionManager;
 
 import java.util.List;
 
@@ -73,7 +73,7 @@ public abstract class AbstractAdapter implements TransitionAdapter {
 
     @Override
     public boolean startTransition() {
-        return startTransition(0);
+        return startTransition(getAdapterState().isOpen()?1:0);
     }
 
     @Override

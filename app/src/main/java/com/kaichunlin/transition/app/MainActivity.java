@@ -24,11 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
 
         findViewById(R.id.slideup_actionbar).setOnClickListener(this);
-
-        //TODO currently broken
         findViewById(R.id.slideup_rotate_image).setOnClickListener(this);
-        findViewById(R.id.slideup_rotate_image).setVisibility(View.GONE);
-
         findViewById(R.id.gradient_actionbar).setOnClickListener(this);
         findViewById(R.id.menuitem).setOnClickListener(this);
         findViewById(R.id.drawer).setOnClickListener(this);

@@ -77,11 +77,6 @@ public class DrawerListenerAdapter extends MenuBaseAdapter implements DrawerLayo
     }
 
     @Override
-    public boolean startTransition() {
-        return startTransition(getAdapterState().isOpen() ? 1f : 0f);
-    }
-
-    @Override
     public void onDrawerSlide(View view, float slideOffset) {
         getTransitionManager().updateProgress(slideOffset);
 

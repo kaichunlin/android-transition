@@ -44,6 +44,10 @@ public class TransitionStateLogger {
         list.add(transitionState);
     }
 
+    public void clear() {
+        tranStateMap.clear();
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

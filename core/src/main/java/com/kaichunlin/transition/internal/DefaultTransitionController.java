@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 public class DefaultTransitionController extends TransitionController<DefaultTransitionController> implements Cloneable {
     protected AnimatorSet mAnimSet;
-
+    private int mUpdateCount;
 
     /**
      * Wraps an Animator as a DefaultTransitionController
@@ -89,6 +89,9 @@ public class DefaultTransitionController extends TransitionController<DefaultTra
     @Override
     public void start() {
         super.start();
+        if (TransitionConfig.isDebug()) {
+            getTransitionStateHolder().clear();
+        }
         if (mTarget == null && mInterpolator == null) {
             return;
         }
@@ -110,6 +113,7 @@ public class DefaultTransitionController extends TransitionController<DefaultTra
     public void updateProgress(float progress) {
         String debug = "";
         final boolean DEBUG = TransitionConfig.isDebug();
+
         long time = 0;
         if (mStart < mEnd && progress >= mStart && progress <= mEnd || mStart > mEnd && progress >= mEnd && progress <= mStart) {
             //forward progression
@@ -127,18 +131,22 @@ public class DefaultTransitionController extends TransitionController<DefaultTra
             if (DEBUG) {
                 debug = "forward progression: [" + mStart + ".." + mEnd + "], mStarted=" + mStarted;
             }
+            mUpdateCount++;
         } else {
             //forward
             if (mStart < mEnd) {
                 if (progress < mStart) {
                     time = 0;
                     if (DEBUG) {
-                        debug = "forward progression: [" + mStart + ".." + mEnd + "], before start, progress=" + progress;
+                        debug = "forward progression: [" + mStart + ".." + mEnd + "], pre-start, progress=" + progress;
                     }
                 } else if (progress > mEnd) {
                     time = mTotalDuration;
+                    if (mUpdateCount == 1) {
+                        mUpdateCount = -1;
+                    }
                     if (DEBUG) {
-                        debug = "forward progression: [" + mStart + ".." + mEnd + "], after finish" + progress;
+                        debug = "forward progression: [" + mStart + ".." + mEnd + "], post-finish, progress=" + progress;
                     }
                 }
                 //backward
@@ -146,12 +154,15 @@ public class DefaultTransitionController extends TransitionController<DefaultTra
                 if (progress > mStart) {
                     time = 0;
                     if (DEBUG) {
-                        debug = "forward progression: [" + mStart + ".." + mEnd + "], before start, progress=" + progress;
+                        debug = "forward progression: [" + mStart + ".." + mEnd + "], pre-start, progress=" + progress;
                     }
                 } else if (progress < mEnd) {
                     time = mTotalDuration;
+                    if (mUpdateCount == 1) {
+                        mUpdateCount = -1;
+                    }
                     if (DEBUG) {
-                        debug = "forward progression: [" + mStart + ".." + mEnd + "], after finish" + progress;
+                        debug = "forward progression: [" + mStart + ".." + mEnd + "], post-finish, progress=" + progress;
                     }
                 }
             }
@@ -168,7 +179,7 @@ public class DefaultTransitionController extends TransitionController<DefaultTra
     }
 
     private void updateState(long time) {
-        if (time == mLastTime || (!mStarted && !mSetup)) {
+        if ((time == mLastTime || (!mStarted && !mSetup)) && mUpdateCount != -1) {
             return;
         }
 
@@ -190,7 +201,7 @@ public class DefaultTransitionController extends TransitionController<DefaultTra
     }
 
     private void appendLog(String msg) {
-        getTransitionStateHolder().append(getId() + "->" + mTarget, this, msg);
+        getTransitionStateHolder().append(getId() + "->View" + mTarget.hashCode(), this, msg);
     }
 
     @CheckResult
