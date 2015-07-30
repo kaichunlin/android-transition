@@ -1,5 +1,6 @@
 package com.kaichunlin.transition.animation;
 
+import android.animation.ValueAnimator;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
@@ -42,6 +43,8 @@ public class AnimationManager extends AbstractAnimation {
         }
     };
     private final List<Animation> mAnimationList = new ArrayList<>();
+    private boolean mCheckAnimationType;
+    private boolean mPassAnimationTypeCheck;
 
     /**
      * Same as calling addAnimation(transitionBuilder.buildAnimation())
@@ -59,6 +62,7 @@ public class AnimationManager extends AbstractAnimation {
      */
     public void addAnimation(@NonNull Animation animation) {
         mAnimationList.add(animation);
+        mCheckAnimationType = true;
     }
 
     /**
@@ -66,6 +70,7 @@ public class AnimationManager extends AbstractAnimation {
      */
     public void addAllAnimations(@NonNull List<Animation> animationsList) {
         mAnimationList.addAll(animationsList);
+        mCheckAnimationType = true;
     }
 
     /**
@@ -76,6 +81,7 @@ public class AnimationManager extends AbstractAnimation {
         for (int i = 0; i < size; i++) {
             mAnimationList.add(new TransitionAnimation(transitionList.get(i)));
         }
+        mCheckAnimationType = true;
     }
 
     /**
@@ -157,16 +163,35 @@ public class AnimationManager extends AbstractAnimation {
     @UiThread
     @Override
     public void startAnimation(@IntRange(from = 0) int duration) {
-        if (mAnimationList.size() == 0) {
+        final int size = mAnimationList.size();
+        if (size == 0) {
             return;
         }
         mAnimationList.get(0).addAnimationListener(mAnimationListener);
         //call listeners so they can perform their actions first, like modifying this adapter's transitions
         notifyAnimationStart();
 
-        final int size = mAnimationList.size();
-        for (int i = 0; i < size; i++) {
-            mAnimationList.get(i).startAnimation(duration);
+        if (mCheckAnimationType) {
+            mPassAnimationTypeCheck = true;
+            for (int i = 0; i < size; i++) {
+                if (!(mAnimationList.get(i) instanceof TransitionAnimation)) {
+                    mPassAnimationTypeCheck = false;
+                    break;
+                }
+            }
+            mCheckAnimationType = false;
+        }
+
+        if (mPassAnimationTypeCheck) {
+            ValueAnimator sharedAnimator = new ValueAnimator();
+            for (int i = 0; i < size; i++) {
+                ((TransitionAnimation) mAnimationList.get(i)).startAnimation(sharedAnimator, duration);
+            }
+            sharedAnimator.start();
+        } else {
+            for (int i = 0; i < size; i++) {
+                mAnimationList.get(i).startAnimation(duration);
+            }
         }
     }
 

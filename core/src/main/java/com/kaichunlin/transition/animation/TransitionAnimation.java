@@ -14,7 +14,8 @@ import com.kaichunlin.transition.TransitionOperation;
 /**
  * Created by Kai on 2015/7/12.
  */
-public class TransitionAnimation extends AbstractAnimation implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
+public class TransitionAnimation extends AbstractAnimation {
+    private final AnimatorStateListener mAnimatorStateListener = new AnimatorStateListener();
     private final TransitionOperation mTransition;
     private ValueAnimator mValueAnimator;
     private boolean mReverse;
@@ -51,28 +52,39 @@ public class TransitionAnimation extends AbstractAnimation implements ValueAnima
 
     @Override
     public void startAnimation() {
-        startAnimation(mDuration);
+        startAnimation(new ValueAnimator(), mDuration);
+        mValueAnimator.start();
+    }
+
+    protected void startAnimation(@NonNull ValueAnimator sharedAnimator) {
+        startAnimation(sharedAnimator, -1);
     }
 
     @Override
     public void startAnimation(@IntRange(from = 0) int duration) {
-        if(isAnimating()) {
+        startAnimation(new ValueAnimator(), duration);
+        mValueAnimator.start();
+    }
+
+    protected void startAnimation(@NonNull ValueAnimator sharedAnimator, @IntRange(from = 0) int duration) {
+        if (isAnimating()) {
             return;
         }
         setAnimating(true);
         getTransition().startTransition(mReverse ? 1 : 0);
 
-        mValueAnimator = new ValueAnimator();
-        mValueAnimator.setDuration(duration);
+        mValueAnimator = sharedAnimator;
+        if(duration!=-1) {
+            mValueAnimator.setDuration(duration);
+        }
         mValueAnimator.setInterpolator(new LinearInterpolator());
         if (mReverse) {
             mValueAnimator.setFloatValues(1, 0);
         } else {
             mValueAnimator.setFloatValues(0, 1);
         }
-        mValueAnimator.addUpdateListener(this);
-        mValueAnimator.addListener(this);
-        mValueAnimator.start();
+        mValueAnimator.addUpdateListener(mAnimatorStateListener);
+        mValueAnimator.addListener(mAnimatorStateListener);
 
         mReset = false;
     }
@@ -107,7 +119,7 @@ public class TransitionAnimation extends AbstractAnimation implements ValueAnima
     @TargetApi(19)
     @Override
     public void pauseAnimation() {
-        if(Build.VERSION.SDK_INT<19) {
+        if (Build.VERSION.SDK_INT < 19) {
             return;
         }
         if (mValueAnimator != null) {
@@ -118,7 +130,7 @@ public class TransitionAnimation extends AbstractAnimation implements ValueAnima
     @TargetApi(19)
     @Override
     public void resumeAnimation() {
-        if(Build.VERSION.SDK_INT<19) {
+        if (Build.VERSION.SDK_INT < 19) {
             return;
         }
         if (mValueAnimator != null) {
@@ -148,40 +160,42 @@ public class TransitionAnimation extends AbstractAnimation implements ValueAnima
         getTransition().stopTransition();
     }
 
-    @Override
-    public void onAnimationUpdate(ValueAnimator animation) {
-        getTransition().updateProgress((Float) animation.getAnimatedValue());
-    }
-
-    @Override
-    public void onAnimationStart(Animator animation) {
-        notifyAnimationStart();
-    }
-
-    @Override
-    public void onAnimationEnd(Animator animation) {
-        if (mReset) {
-            return;
+    private class AnimatorStateListener implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            getTransition().updateProgress((Float) animation.getAnimatedValue());
         }
-        setAnimating(false);
-        notifyAnimationEnd();
-        getTransition().stopTransition();
-        mValueAnimator = null;
-    }
 
-    @Override
-    public void onAnimationCancel(Animator animation) {
-        if (mReset) {
-            notifyAnimationReset();
-        } else {
-            notifyAnimationCancel();
+        @Override
+        public void onAnimationStart(Animator animation) {
+            notifyAnimationStart();
         }
-        setAnimating(false);
-        getTransition().stopTransition();
-        mValueAnimator = null;
-    }
 
-    @Override
-    public void onAnimationRepeat(Animator animation) {
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            if (mReset) {
+                return;
+            }
+            setAnimating(false);
+            notifyAnimationEnd();
+            getTransition().stopTransition();
+            mValueAnimator = null;
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+            if (mReset) {
+                notifyAnimationReset();
+            } else {
+                notifyAnimationCancel();
+            }
+            setAnimating(false);
+            getTransition().stopTransition();
+            mValueAnimator = null;
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+        }
     }
 }

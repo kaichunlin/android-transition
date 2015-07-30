@@ -79,12 +79,16 @@ public abstract class AbstractAnimation implements Animation {
         mHandler.postDelayed(mStartAnimation, delay);
     }
 
-    @Override
-    public void startAnimationDelayed(@IntRange(from = 0) int duration, @IntRange(from = 0) int delay) {
+    public void startAnimationDelayed(@IntRange(from = 0) final int duration, @IntRange(from = 0) int delay) {
         if (mHandler == null) {
             mHandler = new Handler();
         }
-        mHandler.postDelayed(mStartAnimation, delay);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startAnimation(duration);
+            }
+        }, delay);
     }
 
     protected void setAnimating(boolean animating) {

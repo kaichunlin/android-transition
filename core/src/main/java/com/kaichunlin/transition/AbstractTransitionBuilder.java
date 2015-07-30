@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.animation.Interpolator;
 
 import com.kaichunlin.transition.animation.Animation;
+import com.kaichunlin.transition.animation.AnimationManager;
 import com.kaichunlin.transition.animation.TransitionAnimation;
 import com.kaichunlin.transition.internal.TransitionController;
 import com.nineoldandroids.animation.PropertyValuesHolder;
@@ -564,6 +565,12 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
 
     public Animation buildAnimation() {
         TransitionAnimation animation = new TransitionAnimation(mStart < mEnd ? build() : build().reverse());
+        return animation;
+    }
+
+    public Animation buildAnimationFor(AnimationManager animationManager) {
+        Animation animation = buildAnimation();
+        animationManager.addAnimation(animation);
         return animation;
     }
 
