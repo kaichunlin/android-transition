@@ -11,7 +11,7 @@ import android.view.animation.Interpolator;
  * <p>
  * Created by Kai-Chun Lin on 2015/4/18.
  */
-abstract class AbstractTransition<T extends AbstractTransition, S extends AbstractTransition.Setup> implements Transition<S> {
+public abstract class AbstractTransition<T extends AbstractTransition, S extends AbstractTransition.Setup> implements Transition<S> {
     private String mId;
     boolean mReverse;
     S mSetup;

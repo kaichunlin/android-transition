@@ -1,12 +1,14 @@
 package com.kaichunlin.transition.animation;
 
-import android.animation.ValueAnimator;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
+import android.view.View;
 
+import com.kaichunlin.transition.AbstractTransition;
 import com.kaichunlin.transition.AbstractTransitionBuilder;
 import com.kaichunlin.transition.Transition;
+import com.kaichunlin.transition.TransitionOperation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +47,7 @@ public class AnimationManager extends AbstractAnimation {
     private final List<Animation> mAnimationList = new ArrayList<>();
     private boolean mCheckAnimationType;
     private boolean mPassAnimationTypeCheck;
+    private StateController mSharedController;
 
     /**
      * Same as calling addAnimation(transitionBuilder.buildAnimation())
@@ -116,12 +119,6 @@ public class AnimationManager extends AbstractAnimation {
         return new ArrayList<>(mAnimationList);
     }
 
-
-    @Override
-    public void setDuration(@IntRange(from = 0) int duration) {
-        super.setDuration(duration);
-    }
-
     @Override
     public int getDuration() {
         if (super.getDuration() == -1) {
@@ -163,6 +160,9 @@ public class AnimationManager extends AbstractAnimation {
     @UiThread
     @Override
     public void startAnimation(@IntRange(from = 0) int duration) {
+        if (isAnimating()) {
+            cancelAnimation();
+        }
         final int size = mAnimationList.size();
         if (size == 0) {
             return;
@@ -183,11 +183,23 @@ public class AnimationManager extends AbstractAnimation {
         }
 
         if (mPassAnimationTypeCheck) {
-            ValueAnimator sharedAnimator = new ValueAnimator();
+            List<TransitionOperation> transitionList = new ArrayList<>();
             for (int i = 0; i < size; i++) {
-                ((TransitionAnimation) mAnimationList.get(i)).startAnimation(sharedAnimator, duration);
+                transitionList.add(((AbstractAnimation) mAnimationList.get(i)).getTransition());
             }
-            sharedAnimator.start();
+            //TODO fugly
+            if(getStateControllerType() == CONTROLLER_ANIMATION) {
+                View view = ((AbstractTransition) (((AbstractAnimation) mAnimationList.get(0)).getTransition())).getTarget();
+                mSharedController = new AnimationController(view, isReverseAnimation(), transitionList);
+            } else if (getStateControllerType() == CONTROLLER_ANIMATOR) {
+                mSharedController = new AnimatorController(isReverseAnimation());
+            }
+
+            mSharedController.setAnimationDuration(duration);
+            for (int i = 0; i < size; i++) {
+                ((TransitionAnimation) mAnimationList.get(i)).prepareAnimation(mSharedController, -1);
+            }
+            mSharedController.startController();
         } else {
             for (int i = 0; i < size; i++) {
                 mAnimationList.get(i).startAnimation(duration);
@@ -199,9 +211,13 @@ public class AnimationManager extends AbstractAnimation {
     @Override
     public void cancelAnimation() {
         if (isAnimating()) {
-            final int size = mAnimationList.size();
-            for (int i = 0; i < size; i++) {
-                mAnimationList.get(i).cancelAnimation();
+            if (mSharedController == null) {
+                final int size = mAnimationList.size();
+                for (int i = 0; i < size; i++) {
+                    mAnimationList.get(i).cancelAnimation();
+                }
+            } else {
+                mSharedController.cancelController();
             }
         }
     }
@@ -209,36 +225,52 @@ public class AnimationManager extends AbstractAnimation {
     @UiThread
     @Override
     public void pauseAnimation() {
-        final int size = mAnimationList.size();
-        for (int i = 0; i < size; i++) {
-            mAnimationList.get(i).pauseAnimation();
+        if (mSharedController == null) {
+            final int size = mAnimationList.size();
+            for (int i = 0; i < size; i++) {
+                mAnimationList.get(i).pauseAnimation();
+            }
+        } else {
+            mSharedController.pauseController();
         }
     }
 
     @UiThread
     @Override
     public void resumeAnimation() {
-        final int size = mAnimationList.size();
-        for (int i = 0; i < size; i++) {
-            mAnimationList.get(i).resumeAnimation();
+        if (mSharedController == null) {
+            final int size = mAnimationList.size();
+            for (int i = 0; i < size; i++) {
+                mAnimationList.get(i).resumeAnimation();
+            }
+        } else {
+            mSharedController.resumeController();
         }
     }
 
     @UiThread
     @Override
     public void endAnimation() {
-        final int size = mAnimationList.size();
-        for (int i = 0; i < size; i++) {
-            mAnimationList.get(i).endAnimation();
+        if (mSharedController == null) {
+            final int size = mAnimationList.size();
+            for (int i = 0; i < size; i++) {
+                mAnimationList.get(i).endAnimation();
+            }
+        } else {
+            mSharedController.endController();
         }
     }
 
     @UiThread
     @Override
     public void resetAnimation() {
-        final int size = mAnimationList.size();
-        for (int i = 0; i < size; i++) {
-            mAnimationList.get(i).resetAnimation();
+        if (mSharedController == null) {
+            final int size = mAnimationList.size();
+            for (int i = 0; i < size; i++) {
+                mAnimationList.get(i).resetAnimation();
+            }
+        } else {
+            mSharedController.resetController();
         }
     }
 }

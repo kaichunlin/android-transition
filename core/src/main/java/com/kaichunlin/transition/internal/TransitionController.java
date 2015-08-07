@@ -30,6 +30,7 @@ public abstract class TransitionController<T extends TransitionController> {
     Interpolator mInterpolator;
     boolean mUpdateStateAfterUpdateProgress;
     boolean mEnable = true;
+    boolean mReverse;
 
     /**
      * @param target the view this object should manipulate
@@ -133,7 +134,12 @@ public abstract class TransitionController<T extends TransitionController> {
         float end = mEnd;
         mStart = end;
         mEnd = start;
+        mReverse = !mReverse;
         return self();
+    }
+
+    public boolean isReverse() {
+        return mReverse;
     }
 
     /**

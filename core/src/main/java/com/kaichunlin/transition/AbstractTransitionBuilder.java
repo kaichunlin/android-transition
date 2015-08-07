@@ -2,6 +2,7 @@ package com.kaichunlin.transition;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.FloatRange;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 import android.view.View;
@@ -38,12 +39,13 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
 
     ArrayMap<String, PropertyValuesHolder> mHolders = new ArrayMap<>();
     ArrayMap<String, ShadowValuesHolder> mShadowHolders = new ArrayMap<>();
-    List<DelayedEvaluator> mDelayed = new ArrayList<>();
+    List<DelayedEvaluator<T>> mDelayed = new ArrayList<>();
     float mStart = TransitionController.DEFAULT_START;
     float mEnd = TransitionController.DEFAULT_END;
     String mId;
     boolean mReverse;
     Interpolator mInterpolator;
+    int mDuration;
 
     AbstractTransitionBuilder() {
     }
@@ -495,6 +497,17 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
+     * Only applies when building {@link Animation}
+     *
+     * @param duration
+     * @return
+     */
+    public T duration(@IntRange(from = 0) int duration) {
+        mDuration = duration;
+        return self();
+    }
+
+    /**
      * Transits a float property from the start value to the end value
      *
      * @param property
@@ -563,13 +576,16 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
         return vt;
     }
 
-    public Animation buildAnimation() {
+    public TransitionAnimation buildAnimation() {
         TransitionAnimation animation = new TransitionAnimation(mStart < mEnd ? build() : build().reverse());
+        if (mDuration != 0) {
+            animation.setDuration(mDuration);
+        }
         return animation;
     }
 
-    public Animation buildAnimationFor(AnimationManager animationManager) {
-        Animation animation = buildAnimation();
+    public TransitionAnimation buildAnimationFor(AnimationManager animationManager) {
+        TransitionAnimation animation = buildAnimation();
         animationManager.addAnimation(animation);
         return animation;
     }
@@ -678,7 +694,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     /**
      * This delays the evaluation to the time when transition is about to start, so the current state of the target view can be used in the evaluation
      */
-    public interface DelayedEvaluator {
-        void evaluate(View view, AbstractTransitionBuilder builder);
+    public interface DelayedEvaluator<T extends AbstractTransitionBuilder> {
+        void evaluate(View view, T builder);
     }
 }
