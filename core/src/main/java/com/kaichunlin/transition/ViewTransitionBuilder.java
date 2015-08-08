@@ -112,17 +112,17 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     @Override
-    public ViewTransitionBuilder scaleX(@FloatRange(from = 0.0, to = 1.0) float end) {
+    public ViewTransitionBuilder scaleX(@FloatRange(from = 0.0) float end) {
         return scaleX(ViewHelper.getScaleX(mView), end);
     }
 
     @Override
-    public ViewTransitionBuilder scaleY(@FloatRange(from = 0.0, to = 1.0) float end) {
+    public ViewTransitionBuilder scaleY(@FloatRange(from = 0.0) float end) {
         return scaleY(ViewHelper.getScaleY(mView), end);
     }
 
     @Override
-    public ViewTransitionBuilder scale(@FloatRange(from = 0.0, to = 1.0) float end) {
+    public ViewTransitionBuilder scale(@FloatRange(from = 0.0) float end) {
         return scaleX(ViewHelper.getScaleX(mView), end).scaleY(ViewHelper.getScaleY(mView), end);
     }
 

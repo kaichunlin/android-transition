@@ -3,6 +3,7 @@ package com.kaichunlin.transition;
 import android.app.Activity;
 import android.support.annotation.CheckResult;
 import android.support.annotation.FloatRange;
+import android.support.annotation.IdRes;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
@@ -38,7 +39,16 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
         return new MenuItemTransitionBuilder(id, toolbar);
     }
 
+    public static MenuItemTransitionBuilder transit(@IdRes int menuId, @NonNull Toolbar toolbar) {
+        return new MenuItemTransitionBuilder(menuId, toolbar);
+    }
+
+    public static MenuItemTransitionBuilder transit(String id, @IdRes int menuId, @NonNull Toolbar toolbar) {
+        return new MenuItemTransitionBuilder(id, menuId, toolbar);
+    }
+
     private Toolbar mToolbar;
+    private int mMenuId;
     private float mCascade;
     private boolean mVisibleOnStartTransition;
     private Activity mActivity;
@@ -50,6 +60,17 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
 
     private MenuItemTransitionBuilder(String id, @NonNull Toolbar toolbar) {
         mId = id;
+        mToolbar = toolbar;
+    }
+
+    private MenuItemTransitionBuilder(int menuId, @NonNull Toolbar toolbar) {
+        mMenuId = menuId;
+        mToolbar = toolbar;
+    }
+
+    private MenuItemTransitionBuilder(String id, int menuId, @NonNull Toolbar toolbar) {
+        mId = id;
+        mMenuId = menuId;
         mToolbar = toolbar;
     }
 
@@ -98,36 +119,36 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     }
 
     @Override
-    public MenuItemTransitionBuilder scaleX(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
+    public MenuItemTransitionBuilder scaleX(@FloatRange(from = 0.0) float start, @FloatRange(from = 0.0) float end) {
         transitFloat(SCALE_X, start, end);
         return self();
     }
 
     @Override
-    public MenuItemTransitionBuilder scaleX(@FloatRange(from = 0.0, to = 1.0) float end) {
+    public MenuItemTransitionBuilder scaleX(@FloatRange(from = 0.0) float end) {
         return scaleX(0f, end);
     }
 
     @Override
-    public MenuItemTransitionBuilder scaleY(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
+    public MenuItemTransitionBuilder scaleY(@FloatRange(from = 0.0) float start, @FloatRange(from = 0.0) float end) {
         transitFloat(SCALE_Y, start, end);
         return self();
     }
 
     @Override
-    public MenuItemTransitionBuilder scaleY(@FloatRange(from = 0.0, to = 1.0) float end) {
+    public MenuItemTransitionBuilder scaleY(@FloatRange(from = 0.0) float end) {
         return scaleY(0f, end);
     }
 
     @Override
-    public MenuItemTransitionBuilder scale(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
+    public MenuItemTransitionBuilder scale(@FloatRange(from = 0.0) float start, @FloatRange(from = 0.0) float end) {
         transitFloat(SCALE_X, start, end);
         transitFloat(SCALE_Y, start, end);
         return self();
     }
 
     @Override
-    public MenuItemTransitionBuilder scale(@FloatRange(from = 0.0, to = 1.0) float end) {
+    public MenuItemTransitionBuilder scale(@FloatRange(from = 0.0) float end) {
         return scale(0f, end);
     }
 
@@ -221,6 +242,9 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     @Override
     protected MenuItemTransition createTransition() {
         MenuItemTransition vt = new MenuItemTransition(mId, mToolbar);
+        if (mMenuId != 0) {
+            vt.setMenuId(mMenuId);
+        }
         //TODO clone() is required since the class implements ViewTransition.Setup and passes itself to ViewTransition, without clone ViewTransitions made from the same Builder will have their states intertwined
         vt.setSetup(clone());
         vt.setVisibleOnStartAnimation(mVisibleOnStartTransition);

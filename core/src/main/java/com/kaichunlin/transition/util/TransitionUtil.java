@@ -1,6 +1,7 @@
 package com.kaichunlin.transition.util;
 
 import android.os.Build;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v7.internal.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionMenuView;
@@ -39,6 +40,36 @@ public class TransitionUtil {
             }
         }
         return list;
+    }
+
+    /**
+     * Search for a particular menu
+     *
+     * @param toolbar
+     * @param menuId
+     * @return the corresponding MenuItem, or null if not found
+     */
+    public static MenuItem getMenuItem(@NonNull Toolbar toolbar, @IdRes int menuId) {
+        View v;
+        int childCount;
+        View innerView;
+        MenuItem menuItem;
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
+            v = toolbar.getChildAt(i);
+            if (v instanceof ActionMenuView) {
+                childCount = ((ActionMenuView) v).getChildCount();
+                for (int j = 0; j < childCount; j++) {
+                    innerView = ((ActionMenuView) v).getChildAt(j);
+                    if (innerView instanceof ActionMenuItemView) {
+                        menuItem=((ActionMenuItemView) innerView).getItemData();
+                        if(menuItem.getItemId() == menuId) {
+                            return menuItem;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /**

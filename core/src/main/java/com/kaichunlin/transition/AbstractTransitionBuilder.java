@@ -250,7 +250,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T scaleX(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
+    public T scaleX(@FloatRange(from = 0.0) float start, @FloatRange(from = 0.0) float end) {
         transitFloat(SCALE_X, start, end);
         return self();
     }
@@ -261,7 +261,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public abstract T scaleX(@FloatRange(from = 0.0, to = 1.0) float end);
+    public abstract T scaleX(@FloatRange(from = 0.0) float end);
 
     /**
      * Similar to scaleX(float), but wait until the transition is about to start to perform the evaluation
@@ -269,7 +269,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T delayScaleX(@FloatRange(from = 0.0, to = 1.0) final float end) {
+    public T delayScaleX(@FloatRange(from = 0.0) final float end) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
             public void evaluate(View view, AbstractTransitionBuilder builder) {
@@ -286,7 +286,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T scaleY(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
+    public T scaleY(@FloatRange(from = 0.0) float start, @FloatRange(from = 0.0) float end) {
         transitFloat(SCALE_Y, start, end);
         return self();
     }
@@ -297,7 +297,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public abstract T scaleY(@FloatRange(from = 0.0, to = 1.0) float end);
+    public abstract T scaleY(@FloatRange(from = 0.0) float end);
 
     /**
      * Similar to scaleX(float), but wait until the transition is about to start to perform the evaluation
@@ -305,7 +305,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T delayScaleY(@FloatRange(from = 0.0, to = 1.0) final float end) {
+    public T delayScaleY(@FloatRange(from = 0.0) final float end) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
             public void evaluate(View view, AbstractTransitionBuilder builder) {
@@ -322,7 +322,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T scale(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
+    public T scale(@FloatRange(from = 0.0) float start, @FloatRange(from = 0.0) float end) {
         transitFloat(SCALE_X, start, end);
         transitFloat(SCALE_Y, start, end);
         return self();
@@ -334,7 +334,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public abstract T scale(@FloatRange(from = 0.0, to = 1.0) float end);
+    public abstract T scale(@FloatRange(from = 0.0) float end);
 
     /**
      * Similar to scale(float), but wait until the transition is about to start to perform the evaluation
@@ -342,7 +342,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T delayScale(@FloatRange(from = 0.0, to = 1.0) final float end) {
+    public T delayScale(@FloatRange(from = 0.0) final float end) {
         addDelayedEvaluator(new DelayedEvaluator() {
             @Override
             public void evaluate(View view, AbstractTransitionBuilder builder) {

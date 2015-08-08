@@ -13,9 +13,8 @@ import com.kaichunlin.transition.util.TransitionStateLogger;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Manages the transition state of a set of {@link TransitionController}
@@ -23,9 +22,7 @@ import java.util.Set;
  * Created by Kai-Chun Lin on 2015/4/14.
  */
 public class TransitionControllerManager implements Cloneable {
-    private Set<TransitionController> mTransitionControls = new HashSet<>();
-    //    private final TimeAnimator mTimeAnim;
-//    private final AnimatorSet mInternalAnimSet;
+    private List<TransitionController> mTransitionControls = new ArrayList<>();
     private Interpolator mInterpolator;
     private String mId;
     private View mTarget;
@@ -34,10 +31,6 @@ public class TransitionControllerManager implements Cloneable {
 
     public TransitionControllerManager(String id) {
         mId = id;
-
-//        this.mInternalAnimSet = new AnimatorSet();
-//        mTimeAnim = new TimeAnimator();
-//        mTimeAnim.setTimeListener(this);
     }
 
     /**
@@ -92,9 +85,14 @@ public class TransitionControllerManager implements Cloneable {
      */
     public TransitionController addTransitionController(@NonNull TransitionController transitionController) {
         transitionController.setId(mId);
-        boolean changed = mTransitionControls.add(transitionController);
-        if (TransitionConfig.isDebug() && !changed) {
-            getTransitionStateHolder().append(mId+"->"+mTarget, this, "Possible duplicate: " + transitionController.getId());
+        boolean changed = false;
+        if (!mTransitionControls.contains(transitionController)) {
+            mTransitionControls.add(transitionController);
+            changed = true;
+        }
+        if (changed) {
+        } else if (TransitionConfig.isDebug()) {
+            getTransitionStateHolder().append(mId + "->" + mTarget, this, "Possible duplicate: " + transitionController.getId());
         }
         return transitionController;
     }
@@ -109,16 +107,19 @@ public class TransitionControllerManager implements Cloneable {
 
         mLastProgress = Float.MIN_VALUE;
 
-        for (TransitionController ctrl : mTransitionControls) {
+        final int size = mTransitionControls.size();
+        TransitionController transitionController;
+        for (int i = 0; i < size; i++) {
+            transitionController = mTransitionControls.get(i);
             if (mInterpolator != null) {
-                ctrl.setInterpolator(mInterpolator);
+                transitionController.setInterpolator(mInterpolator);
             }
             //required for ViewPager transitions to work
             if (mTarget != null) {
-                ctrl.setTarget(mTarget);
+                transitionController.setTarget(mTarget);
             }
-            ctrl.setUpdateStateAfterUpdateProgress(mUpdateStateAfterUpdateProgress);
-            ctrl.start();
+            transitionController.setUpdateStateAfterUpdateProgress(mUpdateStateAfterUpdateProgress);
+            transitionController.start();
         }
     }
 
@@ -139,10 +140,10 @@ public class TransitionControllerManager implements Cloneable {
             getTransitionStateHolder().print();
         }
 
-        for (TransitionController ctrl : mTransitionControls) {
-            ctrl.end();
+        final int size = mTransitionControls.size();
+        for (int i = 0; i < size; i++) {
+            mTransitionControls.get(i).end();
         }
-//        mTimeAnim.end();
     }
 
     /**
@@ -158,26 +159,32 @@ public class TransitionControllerManager implements Cloneable {
         //TODO this makes ViewPager work, but will probably break more complex transition setup, will think of a better solution
         if (mUpdateStateAfterUpdateProgress) {
             boolean positive = progress >= 0;
-            for (TransitionController ctrl : mTransitionControls) {
+            final int size = mTransitionControls.size();
+            TransitionController transitionController;
+            for (int i = 0; i < size; i++) {
+                transitionController = mTransitionControls.get(i);
                 if (positive) {
-                    if (ctrl.getEnd() > 0) {
-                        ctrl.setEnable(true);
+                    if (transitionController.getEnd() > 0) {
+                        transitionController.setEnable(true);
                     } else {
-                        ctrl.setEnable(false);
+                        transitionController.setEnable(false);
                     }
                 } else {
-                    if (ctrl.getEnd() < 0) {
-                        ctrl.setEnable(true);
+                    if (transitionController.getEnd() < 0) {
+                        transitionController.setEnable(true);
                     } else {
-                        ctrl.setEnable(false);
+                        transitionController.setEnable(false);
                     }
                 }
             }
         }
 
-        for (TransitionController ctrl : mTransitionControls) {
-            if (ctrl.isEnable()) {
-                ctrl.updateProgress(progress);
+        final int size = mTransitionControls.size();
+        TransitionController transitionController;
+        for (int i = 0; i < size; i++) {
+            transitionController = mTransitionControls.get(i);
+            if (transitionController.isEnable()) {
+                transitionController.updateProgress(progress);
             }
         }
     }
@@ -187,8 +194,9 @@ public class TransitionControllerManager implements Cloneable {
      */
     public void setTarget(@Nullable View target) {
         mTarget = target;
-        for (TransitionController at : mTransitionControls) {
-            at.setTarget(target);
+        final int size = mTransitionControls.size();
+        for (int i = 0; i < size; i++) {
+            mTransitionControls.get(i).setTarget(target);
         }
     }
 
@@ -204,8 +212,9 @@ public class TransitionControllerManager implements Cloneable {
      * Reverses all the TransitionControllers managed by this TransitionManager
      */
     public void reverse() {
-        for (TransitionController at : mTransitionControls) {
-            at.reverse();
+        final int size = mTransitionControls.size();
+        for (int i = 0; i < size; i++) {
+            mTransitionControls.get(i).reverse();
         }
     }
 
@@ -229,10 +238,10 @@ public class TransitionControllerManager implements Cloneable {
         TransitionControllerManager newClone = null;
         try {
             newClone = (TransitionControllerManager) super.clone();
-            Iterator<TransitionController> at = mTransitionControls.iterator();
-            newClone.mTransitionControls = new HashSet<>();
-            while (at.hasNext()) {
-                newClone.mTransitionControls.add(at.next().clone());
+            newClone.mTransitionControls = new ArrayList<>();
+            final int size = mTransitionControls.size();
+            for (int i = 0; i < size; i++) {
+                newClone.mTransitionControls.add(mTransitionControls.get(i).clone());
             }
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();

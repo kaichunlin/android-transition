@@ -2,6 +2,7 @@ package com.kaichunlin.transition;
 
 import android.app.Activity;
 import android.support.annotation.CheckResult;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -31,6 +32,7 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
     private boolean mSetVisibleOnStartTransition;
     private boolean mInvalidateOptionOnStopTransition;
     private WeakReference<Activity> mActivityRef;
+    private int mMenuId;
 
     public MenuItemTransition(@NonNull Toolbar toolbar) {
         this(null, toolbar, null);
@@ -48,6 +50,15 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
         super(id);
         this.mToolbar = toolbar;
         this.mTarget = view;
+    }
+
+    public MenuItemTransition setMenuId(@IdRes int menuId) {
+        mMenuId = menuId;
+        return self();
+    }
+
+    public int getMenuId() {
+        return mMenuId;
     }
 
     /**
@@ -75,8 +86,18 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
             mToolbar.getMenu().setGroupVisible(0, true);
         }
         if (mTransittingMenuItems.size() == 0) {
-            mTransittingMenuItems.clear();
-            List<MenuItem> list = TransitionUtil.getVisibleMenuItemList(mToolbar);
+            List<MenuItem> list;
+            if (mMenuId == 0) {
+                list = TransitionUtil.getVisibleMenuItemList(mToolbar);
+            } else { //only apply to a specific MenuItem
+                list = new ArrayList<>();
+                MenuItem menuItem = TransitionUtil.getMenuItem(mToolbar, mMenuId);
+                if (menuItem == null) {
+                    return false;
+                }
+                list.add(menuItem);
+            }
+            LayoutInflater layoutInflater = LayoutInflater.from(mToolbar.getContext());
             for (int i = 0; i < list.size(); i++) {
                 MenuItem menuItem = list.get(i);
                 TransitionControllerManager transitionControllerManager = new TransitionControllerManager(getId());
@@ -86,7 +107,7 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
                 mSetup.setupAnimation(menuItem, transitionControllerManager, i, list.size());
                 View view;
                 if (mTarget == null) {
-                    view = LayoutInflater.from(mToolbar.getContext()).inflate(R.layout.menu_animation, null).findViewById(R.id.menu_animation);
+                    view = layoutInflater.inflate(R.layout.menu_animation, null).findViewById(R.id.menu_animation);
                     ((ImageView) view).setImageDrawable(menuItem.getIcon());
                 } else {
                     view = mTarget;

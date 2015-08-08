@@ -184,15 +184,25 @@ public class AnimationManager extends AbstractAnimation {
 
         if (mPassAnimationTypeCheck) {
             List<TransitionOperation> transitionList = new ArrayList<>();
+            TransitionOperation transitionOperation;
             for (int i = 0; i < size; i++) {
-                transitionList.add(((AbstractAnimation) mAnimationList.get(i)).getTransition());
+                transitionOperation=((AbstractAnimation) mAnimationList.get(i)).getTransition();
+                transitionList.add(transitionOperation);
             }
+
             //TODO fugly
-            if(getStateControllerType() == CONTROLLER_ANIMATION) {
-                View view = ((AbstractTransition) (((AbstractAnimation) mAnimationList.get(0)).getTransition())).getTarget();
-                mSharedController = new AnimationController(view, isReverseAnimation(), transitionList);
-            } else if (getStateControllerType() == CONTROLLER_ANIMATOR) {
+            boolean forceAnimator = false;
+            View view=null;
+            for (int i = 0; i < size; i++) {
+                view = ((AbstractTransition) (((AbstractAnimation) mAnimationList.get(i)).getTransition())).getTarget();
+                if(view==null) {
+                    forceAnimator = true;
+                }
+            }
+            if (getStateControllerType() == CONTROLLER_ANIMATOR || forceAnimator) {
                 mSharedController = new AnimatorController(isReverseAnimation());
+            } else if (getStateControllerType() == CONTROLLER_ANIMATION) {
+               mSharedController = new AnimationController(view, isReverseAnimation(), transitionList);
             }
 
             mSharedController.setAnimationDuration(duration);
