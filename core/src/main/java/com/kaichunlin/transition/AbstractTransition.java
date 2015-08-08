@@ -6,15 +6,23 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.animation.Interpolator;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Provides common implementations for all transitions.
  * <p>
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 public abstract class AbstractTransition<T extends AbstractTransition, S extends AbstractTransition.Setup> implements Transition<S> {
-    private String mId;
+    final List<S> mSetupList = new ArrayList<>();
+    final Map<AbstractTransition, S> mMergedMap =new HashMap<>();
+    String mId;
     boolean mReverse;
-    S mSetup;
     Interpolator mInterpolator;
     View mTarget;
     boolean mUpdateStateAfterUpdateProgress;
@@ -36,7 +44,7 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
 
     @Override
     public boolean startTransition(float progress) {
-        if(startTransition()) {
+        if (startTransition()) {
             updateProgress(progress);
             return true;
         }
@@ -67,7 +75,10 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
 
     @Override
     public T setSetup(@NonNull S setup) {
-        mSetup = setup;
+        if (setup != null) {
+            mSetupList.add(setup);
+            mMergedMap.put(this, setup);
+        }
         return self();
     }
 
@@ -111,6 +122,45 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
             e.printStackTrace();
         }
         return newClone;
+    }
+
+    public boolean compatible(AbstractTransition another) {
+        if (getClass().equals(another.getClass()) && mTarget == another.mTarget && mReverse == another.mReverse && ((mInterpolator == null && another.mInterpolator == null) ||
+                mInterpolator.getClass().equals(another.mInterpolator.getClass()))) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean merge(AbstractTransition another) {
+        if (!compatible(another)) {
+            return false;
+        }
+        if (another.mId != null) {
+            if (mId == null) {
+                mId = another.mId;
+            } else {
+                mId += "_MERGED_" + another.mId;
+            }
+        }
+        mUpdateStateAfterUpdateProgress |= another.mUpdateStateAfterUpdateProgress;
+        mSetupList.addAll(another.mSetupList);
+        Collections.sort(mSetupList, new Comparator<S>() {
+            @Override
+            public int compare(S lhs, S rhs) {
+                if (lhs instanceof AbstractTransitionBuilder && rhs instanceof AbstractTransitionBuilder) {
+                    AbstractTransitionBuilder left = (AbstractTransitionBuilder) lhs;
+                    AbstractTransitionBuilder right = (AbstractTransitionBuilder) rhs;
+                    float startLeft = left.mReverse ? left.mEnd : left.mStart;
+                    float startRight = right.mReverse ? right.mEnd : right.mStart;
+                    return (int) ((startRight - startLeft) * 1000);
+                }
+                return 0;
+            }
+        });
+        mMergedMap.putAll(another.mMergedMap);
+
+        return true;
     }
 
     /**

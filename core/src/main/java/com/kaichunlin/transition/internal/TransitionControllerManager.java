@@ -90,8 +90,7 @@ public class TransitionControllerManager implements Cloneable {
             mTransitionControls.add(transitionController);
             changed = true;
         }
-        if (changed) {
-        } else if (TransitionConfig.isDebug()) {
+        if (!changed && TransitionConfig.isDebug()) {
             getTransitionStateHolder().append(mId + "->" + mTarget, this, "Possible duplicate: " + transitionController.getId());
         }
         return transitionController;

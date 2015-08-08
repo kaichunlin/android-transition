@@ -33,6 +33,7 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
     private boolean mInvalidateOptionOnStopTransition;
     private WeakReference<Activity> mActivityRef;
     private int mMenuId;
+    private List<MenuItem> menuItemList;
 
     public MenuItemTransition(@NonNull Toolbar toolbar) {
         this(null, toolbar, null);
@@ -86,25 +87,27 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
             mToolbar.getMenu().setGroupVisible(0, true);
         }
         if (mTransittingMenuItems.size() == 0) {
-            List<MenuItem> list;
             if (mMenuId == 0) {
-                list = TransitionUtil.getVisibleMenuItemList(mToolbar);
+                menuItemList = TransitionUtil.getVisibleMenuItemList(mToolbar);
             } else { //only apply to a specific MenuItem
-                list = new ArrayList<>();
+                menuItemList = new ArrayList<>();
                 MenuItem menuItem = TransitionUtil.getMenuItem(mToolbar, mMenuId);
                 if (menuItem == null) {
                     return false;
                 }
-                list.add(menuItem);
+                menuItemList.add(menuItem);
             }
             LayoutInflater layoutInflater = LayoutInflater.from(mToolbar.getContext());
-            for (int i = 0; i < list.size(); i++) {
-                MenuItem menuItem = list.get(i);
+            int j;
+            for (int i = 0; i < menuItemList.size(); i++) {
+                MenuItem menuItem = menuItemList.get(i);
                 TransitionControllerManager transitionControllerManager = new TransitionControllerManager(getId());
                 if (mInterpolator != null) {
                     transitionControllerManager.setInterpolator(mInterpolator);
                 }
-                mSetup.setupAnimation(menuItem, transitionControllerManager, i, list.size());
+                for (j = 0; j < mSetupList.size(); j++) {
+                    mSetupList.get(j).setupAnimation(menuItem, transitionControllerManager, i, menuItemList.size());
+                }
                 View view;
                 if (mTarget == null) {
                     view = layoutInflater.inflate(R.layout.menu_animation, null).findViewById(R.id.menu_animation);
@@ -142,10 +145,12 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
         for (int i = 0; i < size; i++) {
             mTransittingMenuItems.get(i).end();
         }
-        List<MenuItem> list = TransitionUtil.getVisibleMenuItemList(mToolbar);
-        size = list.size();
+        if (menuItemList == null) {
+            return;
+        }
+        size = menuItemList.size();
         for (int i = 0; i < size; i++) {
-            list.get(i).setActionView(null);
+            menuItemList.get(i).setActionView(null);
         }
         mTransittingMenuItems.clear();
         if (mInvalidateOptionOnStopTransition) {
@@ -195,7 +200,25 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
 
     @Override
     protected void invalidate() {
+    }
 
+    @Override
+    public boolean compatible(AbstractTransition another) {
+        if (super.compatible(another) && mMenuId == ((MenuItemTransition) another).mMenuId) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean merge(AbstractTransition another) {
+        if (super.merge(another)) {
+            MenuItemTransition mit = (MenuItemTransition) another;
+            mSetVisibleOnStartTransition |= mit.mSetVisibleOnStartTransition;
+            mInvalidateOptionOnStopTransition |= mit.mInvalidateOptionOnStopTransition;
+            return true;
+        }
+        return false;
     }
 
     @Override

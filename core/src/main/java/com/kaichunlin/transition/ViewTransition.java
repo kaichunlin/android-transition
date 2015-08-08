@@ -1,16 +1,12 @@
 package com.kaichunlin.transition;
 
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
 import com.kaichunlin.transition.internal.TransitionController;
 import com.kaichunlin.transition.internal.TransitionControllerManager;
 import com.kaichunlin.transition.util.TransitionStateLogger;
-
-import java.util.Iterator;
-import java.util.WeakHashMap;
 
 /**
  * Provides transitions effects to all views other than one controlled by {@link android.view.MenuItem}
@@ -19,9 +15,6 @@ import java.util.WeakHashMap;
  */
 @UiThread
 public class ViewTransition extends AbstractTransition<ViewTransition, ViewTransition.Setup> {
-    private static final Object HARD_REF = new Object();
-    private final WeakHashMap<Object, Setup> mSetup = new WeakHashMap<>();
-    private SetupCreator mSetupCreator;
     private TransitionControllerManager transitionControllerManager;
 
     public ViewTransition() {
@@ -37,39 +30,8 @@ public class ViewTransition extends AbstractTransition<ViewTransition, ViewTrans
      * @param setup creates the {@link TransitionController}'s when {@link #startTransition()} is called
      */
     public ViewTransition(@Nullable String id, @Nullable Setup setup) {
-        this(id, HARD_REF, setup);
-    }
-
-    public ViewTransition(@Nullable String id, @Nullable Object weakLink, @Nullable Setup setup) {
         super(id);
-        if (setup != null) {
-            mSetup.put(weakLink, setup);
-        }
-    }
-
-    @Override
-    public ViewTransition setSetup(@Nullable Setup setup) {
-        mSetup.put(HARD_REF, setup);
-        return self();
-    }
-
-    /**
-     * May be removed in the future!
-     *
-     * @param weakLink
-     * @param setup
-     */
-    public void setSetup(@NonNull Object weakLink, @NonNull Setup setup) {
-        mSetup.put(weakLink, setup);
-    }
-
-    @Nullable
-    private Setup getSetup() {
-        Iterator<Setup> i = mSetup.values().iterator();
-        if (i.hasNext()) {
-            return i.next();
-        }
-        return null;
+        setSetup(setup);
     }
 
     @Override
@@ -94,16 +56,11 @@ public class ViewTransition extends AbstractTransition<ViewTransition, ViewTrans
             }
             transitionControllerManager.setTarget(mTarget);
             transitionControllerManager.setUpdateStateAfterUpdateProgress(mUpdateStateAfterUpdateProgress);
-            Setup s = getSetup();
-            if (s == null) {
-                if (mSetupCreator == null) {
-                    return false;
-                }
-                SetupCombo sc = mSetupCreator.create();
-                mSetup.put(sc.keyRef, sc.setup);
-                s = sc.setup;
+
+            final int size = mSetupList.size();
+            for (int i = 0; i < size; i++) {
+                mSetupList.get(i).setupAnimation(transitionControllerManager);
             }
-            s.setupAnimation(transitionControllerManager);
             if (mReverse) {
                 transitionControllerManager.reverse();
             }
@@ -142,28 +99,6 @@ public class ViewTransition extends AbstractTransition<ViewTransition, ViewTrans
     @Override
     protected ViewTransition self() {
         return this;
-    }
-
-    @Nullable
-    public void setSetupCreator(SetupCreator setupCreator) {
-        this.mSetupCreator = setupCreator;
-    }
-
-    /**
-     * Recreates Setup as necessary, so that Setup objects will not become a source of memory leak
-     * TODO is this still needed now?
-     */
-    public interface SetupCreator {
-        SetupCombo create();
-    }
-
-    /**
-     * A keyRef/setup pair
-     * TODO is this still needed now?
-     */
-    public static class SetupCombo {
-        Object keyRef;
-        Setup setup;
     }
 
     /**

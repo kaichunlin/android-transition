@@ -44,7 +44,7 @@ public class AnimationManager extends AbstractAnimation {
             notifyAnimationReset();
         }
     };
-    private final List<Animation> mAnimationList = new ArrayList<>();
+    private final List<AbstractAnimation> mAnimationList = new ArrayList<>();
     private boolean mCheckAnimationType;
     private boolean mPassAnimationTypeCheck;
     private StateController mSharedController;
@@ -58,22 +58,46 @@ public class AnimationManager extends AbstractAnimation {
         addAnimation(transitionBuilder.buildAnimation());
     }
 
+    private void processAnimation(AbstractAnimation animation) {
+        //attempt to merge an animation
+        boolean merged = false;
+        //no optimization is taken if the TransitionOption is not an AbstractTransition subclass
+        if (animation.getTransition() instanceof AbstractTransition) {
+            final int size = mAnimationList.size();
+            TransitionOperation to;
+            for (int i = 0; i < size; i++) {
+                to = mAnimationList.get(i).getTransition();
+                if (to instanceof AbstractTransition) {
+                    merged = ((AbstractTransition) to).merge((AbstractTransition) animation.getTransition());
+                    if(merged) {
+                        break;
+                    }
+                }
+            }
+        }
+        if (!merged) {
+            mAnimationList.add(animation);
+        }
+        mCheckAnimationType = true;
+    }
+
     /**
      * Adds an animation
      *
      * @param animation
      */
     public void addAnimation(@NonNull Animation animation) {
-        mAnimationList.add(animation);
-        mCheckAnimationType = true;
+        processAnimation((AbstractAnimation) animation);
     }
 
     /**
      * @param animationsList
      */
     public void addAllAnimations(@NonNull List<Animation> animationsList) {
-        mAnimationList.addAll(animationsList);
-        mCheckAnimationType = true;
+        final int size = animationsList.size();
+        for (int i = 0; i < size; i++) {
+            processAnimation((AbstractAnimation) animationsList.get(i));
+        }
     }
 
     /**
@@ -82,23 +106,8 @@ public class AnimationManager extends AbstractAnimation {
     public void addAllTransitions(List<Transition> transitionList) {
         final int size = transitionList.size();
         for (int i = 0; i < size; i++) {
-            mAnimationList.add(new TransitionAnimation(transitionList.get(i)));
+            processAnimation(new TransitionAnimation(transitionList.get(i)));
         }
-        mCheckAnimationType = true;
-    }
-
-    /**
-     * Removes an animation, should not be called while animation is in progress
-     *
-     * @param animation
-     * @return true if an animation is removed, false otherwise
-     */
-    public boolean removeAnimation(@NonNull Animation animation) {
-        if (mAnimationList.remove(animation)) {
-            animation.removeAnimationListener(mAnimationListener);
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -116,7 +125,9 @@ public class AnimationManager extends AbstractAnimation {
      * @return
      */
     public List<Animation> getAnimations() {
-        return new ArrayList<>(mAnimationList);
+        List<Animation> list = new ArrayList<>();
+        list.addAll(mAnimationList);
+        return list;
     }
 
     @Override
@@ -186,23 +197,23 @@ public class AnimationManager extends AbstractAnimation {
             List<TransitionOperation> transitionList = new ArrayList<>();
             TransitionOperation transitionOperation;
             for (int i = 0; i < size; i++) {
-                transitionOperation=((AbstractAnimation) mAnimationList.get(i)).getTransition();
+                transitionOperation = mAnimationList.get(i).getTransition();
                 transitionList.add(transitionOperation);
             }
 
             //TODO fugly
             boolean forceAnimator = false;
-            View view=null;
+            View view = null;
             for (int i = 0; i < size; i++) {
-                view = ((AbstractTransition) (((AbstractAnimation) mAnimationList.get(i)).getTransition())).getTarget();
-                if(view==null) {
+                view = ((AbstractTransition) (mAnimationList.get(i).getTransition())).getTarget();
+                if (view == null) {
                     forceAnimator = true;
                 }
             }
             if (getStateControllerType() == CONTROLLER_ANIMATOR || forceAnimator) {
                 mSharedController = new AnimatorController(isReverseAnimation());
             } else if (getStateControllerType() == CONTROLLER_ANIMATION) {
-               mSharedController = new AnimationController(view, isReverseAnimation(), transitionList);
+                mSharedController = new AnimationController(view, isReverseAnimation(), transitionList);
             }
 
             mSharedController.setAnimationDuration(duration);

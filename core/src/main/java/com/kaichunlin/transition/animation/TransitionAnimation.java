@@ -20,6 +20,28 @@ public class TransitionAnimation extends AbstractAnimation {
 
     public TransitionAnimation(@NonNull TransitionOperation transition) {
         super(transition);
+
+        addAnimationListener(new AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animationManager) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animationManager) {
+                getTransition().stopTransition();
+            }
+
+            @Override
+            public void onAnimationCancel(Animation animationManager) {
+                getTransition().stopTransition();
+            }
+
+            @Override
+            public void onAnimationReset(Animation animationManager) {
+                getTransition().stopTransition();
+            }
+        });
     }
 
     @Override
