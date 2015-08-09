@@ -9,9 +9,7 @@ import android.view.animation.Interpolator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Provides common implementations for all transitions.
@@ -19,8 +17,7 @@ import java.util.Map;
  * Created by Kai-Chun Lin on 2015/4/18.
  */
 public abstract class AbstractTransition<T extends AbstractTransition, S extends AbstractTransition.Setup> implements Transition<S> {
-    final List<S> mSetupList = new ArrayList<>();
-    final Map<AbstractTransition, S> mMergedMap =new HashMap<>();
+    List<S> mSetupList = new ArrayList<>();
     String mId;
     boolean mReverse;
     Interpolator mInterpolator;
@@ -77,9 +74,17 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
     public T setSetup(@NonNull S setup) {
         if (setup != null) {
             mSetupList.add(setup);
-            mMergedMap.put(this, setup);
         }
         return self();
+    }
+
+    /**
+     * Only true if it has merged another Transition
+     *
+     * @return
+     */
+    boolean hasMultipleSetup() {
+       return mSetupList.size() > 1;
     }
 
     @Override
@@ -118,6 +123,8 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
         try {
             newClone = (AbstractTransition) super.clone();
             newClone.setId(newClone.getId() + "_CLONE");
+            newClone.mSetupList=new ArrayList<>();
+            newClone.mSetupList.addAll(mSetupList);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
@@ -158,7 +165,6 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
                 return 0;
             }
         });
-        mMergedMap.putAll(another.mMergedMap);
 
         return true;
     }

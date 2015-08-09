@@ -3,7 +3,9 @@ package com.kaichunlin.transition;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Manages a collection of {@link Transition}
@@ -11,8 +13,9 @@ import java.util.List;
  * Created by Kai on 2015/7/14.
  */
 public class DefaultTransitionManager implements TransitionManager {
-    protected ArrayList<TransitionListener> mTransitionListenerList = new ArrayList<>();
-    protected ArrayList<Transition> mTransitionList = new ArrayList<>();
+    private ArrayList<TransitionListener> mTransitionListenerList = new ArrayList<>();
+    private ArrayList<Transition> mTransitionList = new ArrayList<>();
+    private Set<Transition> mBackupTransitionList = new HashSet<>();
 
     @Override
     public void addTransition(@NonNull AbstractTransitionBuilder transitionBuilder) {
@@ -42,8 +45,18 @@ public class DefaultTransitionManager implements TransitionManager {
             for (int i = 0; i < size; i++) {
                 to = mTransitionList.get(i);
                 if (to instanceof AbstractTransition) {
-                    merged = ((AbstractTransition) to).merge((AbstractTransition) transition);
-                    if(merged) {
+                    AbstractTransition atTo=(AbstractTransition) to;
+                    AbstractTransition atTransition=(AbstractTransition) transition;
+                    if(atTo.compatible(atTransition)) {
+                        //the Transition has already merged another Transition previously
+                        if(atTo.hasMultipleSetup()) {
+                            atTo.merge(atTransition);
+                        } else { //the Transition has not merged another Transition
+                            mTransitionList.remove(atTo);
+                            atTo = atTo.clone();
+                            atTo.merge(atTransition);
+                            mTransitionList.add(atTo);
+                        }
                         break;
                     }
                 }
@@ -52,11 +65,26 @@ public class DefaultTransitionManager implements TransitionManager {
         if (!merged) {
             mTransitionList.add(transition);
         }
+        mBackupTransitionList.add(transition);
     }
 
     @Override
     public boolean removeTransition(@NonNull Transition transition) {
-        return mTransitionList.remove(transition);
+        //rebuilding mTransitionList
+        if(mBackupTransitionList.remove(transition)) {
+            List<Transition> temp = new ArrayList<>();
+            temp.addAll(mBackupTransitionList);
+            mTransitionList.clear();
+            mBackupTransitionList.clear();
+
+            final int size=temp.size();
+            for (int i = 0; i < size; i++) {
+                processAnimation(temp.get(i));
+            }
+
+            return true;
+        }
+        return false;
     }
 
     @Override

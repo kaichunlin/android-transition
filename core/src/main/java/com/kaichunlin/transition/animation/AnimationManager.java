@@ -101,6 +101,15 @@ public class AnimationManager extends AbstractAnimation {
     }
 
     /**
+     * Adds an transition
+     *
+     * @param transition
+     */
+    public void addTransition(@NonNull Transition transition) {
+        processAnimation(new TransitionAnimation(transition));
+    }
+
+    /**
      * @param transitionList
      */
     public void addAllTransitions(List<Transition> transitionList) {
