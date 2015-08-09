@@ -93,6 +93,18 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
         return self();
     }
 
+    public float getStartRange() {
+        return mStart;
+    }
+
+    public float getEndRange() {
+        return mEnd;
+    }
+
+    public float getRange() {
+        return mEnd - mStart;
+    }
+
     //TODO this applies the range value to all the values set before this call and after the last withRange call
     private T withRange(float start, float end) {
         return self();

@@ -6,21 +6,24 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
-import com.kaichunlin.transition.animation.TransitionAnimation;
-import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.MenuItemTransition;
 import com.kaichunlin.transition.MenuItemTransitionBuilder;
 import com.kaichunlin.transition.TransitionListener;
+import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.adapter.DrawerListenerAdapter;
 import com.kaichunlin.transition.adapter.MenuOptionConfiguration;
+import com.kaichunlin.transition.animation.AnimationManager;
+import com.kaichunlin.transition.animation.TransitionAnimation;
 import com.kaichunlin.transition.internal.debug.TraceTransitionListener;
 
 import kaichunlin.transition.app.R;
 
 
 public class DrawerMenuItemActivity extends AppCompatActivity implements View.OnClickListener {
+    private Toolbar mToolbar;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private DrawerListenerAdapter mDrawerListenerAdapter;
@@ -42,14 +45,14 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
         findViewById(R.id.flip_fade).setOnClickListener(this);
         findViewById(R.id.rotate).setOnClickListener(this);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,              /* host Activity */
                 mDrawerLayout,    /* DrawerLayout object */
-                toolbar,
+                mToolbar,
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         );
@@ -58,7 +61,7 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
         //Creates a shared configuration that: applies alpha, the transition effect is applied in a cascading manner
         // (v.s. simultaneously), MenuItem will reset to enabled when transiting, and invalidates menu on transition
         // completion
-        MenuItemTransitionBuilder sharedBuilder = MenuItemTransitionBuilder.transit(toolbar).visibleOnStartAnimation(true).invalidateOptionOnStopTransition(this, true);
+        MenuItemTransitionBuilder sharedBuilder = MenuItemTransitionBuilder.transit(mToolbar).visibleOnStartAnimation(true).invalidateOptionOnStopTransition(this, true);
         MenuItemTransitionBuilder builder = sharedBuilder.clone().id("Flip").alpha(1f, 0.5f).translationX(0, 30).cascade(0.3f);
         mFlipOpen = builder.scaleX(1f, 0f).build();
         mFlipClose = builder.reverse().translationX(0, -30).build();
@@ -101,6 +104,31 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
         super.onPostCreate(savedInstanceState);
 
         mDrawerToggle.syncState();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menu) {
+        super.onOptionsItemSelected(menu);
+
+        AnimationManager am = new AnimationManager();
+        MenuItemTransitionBuilder builder=MenuItemTransitionBuilder.transit(menu.getItemId(), mToolbar);
+        switch (menu.getItemId()) {
+            case R.id.action_favorite:
+                builder.scale(1f, 1.5f).range(0f, 0.5f).buildAnimationFor(am);
+                builder.scale(1.5f, 1f).range(0.5f, 1f).buildAnimationFor(am);
+                break;
+            case R.id.action_new:
+                builder.alpha(1f, 0.2f).range(0f, 0.5f).buildAnimationFor(am);
+                builder.alpha(0.2f, 1f).range(0.5f, 1f).buildAnimationFor(am);
+                break;
+            case R.id.action_search:
+                builder.rotationX(180f).range(0f, 0.5f).buildAnimationFor(am);
+                builder.rotationX(180f, 360f).range(0.5f, 1f).buildAnimationFor(am);
+                break;
+        }
+        am.startAnimation();
+
+        return true;
     }
 
     @Override

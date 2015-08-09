@@ -22,12 +22,12 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
-import com.kaichunlin.transition.animation.Animation;
-import com.kaichunlin.transition.animation.AnimationListener;
-import com.kaichunlin.transition.TransitionHandler;
 import com.kaichunlin.transition.ViewTransitionBuilder;
 import com.kaichunlin.transition.adapter.SlidingUpPanelLayoutAdapter;
 import com.kaichunlin.transition.adapter.UnifiedAdapter;
+import com.kaichunlin.transition.animation.Animation;
+import com.kaichunlin.transition.animation.AnimationListener;
+import com.kaichunlin.transition.internal.ScaledTransitionHandler;
 import com.kaichunlin.transition.internal.TransitionController;
 import com.kaichunlin.transition.internal.debug.TraceAnimationListener;
 import com.kaichunlin.transition.internal.debug.TraceTransitionListener;
@@ -70,9 +70,10 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
 
         mUnifiedAdapter = new UnifiedAdapter(mSlidingUpPanelLayoutAdapter);
         mUnifiedAdapter.setDuration(1000);
-        mUnifiedAdapter.addAnimationListener(new AnimationListener(){
+        mUnifiedAdapter.addAnimationListener(new AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animationManager) {}
+            public void onAnimationStart(Animation animationManager) {
+            }
 
             @Override
             public void onAnimationEnd(Animation animationManager) {
@@ -188,8 +189,8 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
                 cascade.reverse = true;
                 builder.transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
                     @Override
-                    public void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View childView, int index, int total) {
-                        builder.translationYAsFractionOfHeight(viewGroup, 1f).buildFor(mUnifiedAdapter);
+                    public void transit(ViewTransitionBuilder builder, ViewTransitionBuilder.ViewGroupTransitionConfig config) {
+                        builder.translationYAsFractionOfHeight(config.parentViewGroup, 1f).buildFor(mUnifiedAdapter);
                     }
                 }, cascade);
 
@@ -216,16 +217,16 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.grayscale_bg:
                 //Uses a CustomTransitionController that applies a ColorMatrixColorFilter to the background view
-                baseBuilder.clone().addTransitionHandler(new TransitionHandler() {
+                baseBuilder.clone().addTransitionHandler(new ScaledTransitionHandler() {
                     ColorMatrix matrix = new ColorMatrix();
 
                     @Override
-                    public void onUpdateProgress(TransitionController controller, View target, float progress) {
+                    public void onUpdateScaledProgress(TransitionController controller, View target, float progress) {
                         matrix.setSaturation(1 - progress);
                         ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
                         ((ImageView) findViewById(R.id.content_bg)).setColorFilter(filter);
                     }
-                }).buildFor(mUnifiedAdapter);
+                }).range(0f, 1f).buildFor(mUnifiedAdapter);
                 setHalfHeight = true;
                 break;
         }

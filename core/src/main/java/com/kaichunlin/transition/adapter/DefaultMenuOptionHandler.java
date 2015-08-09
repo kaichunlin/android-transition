@@ -43,6 +43,7 @@ public class DefaultMenuOptionHandler implements MenuOptionHandler {
             }
             if (mCloseConfig != null) {
                 if (hasOpen) {
+                    // TODO may cause issues when mOpenConfig.getTransition() has been merged
                     mTransitionManager.removeTransition(mOpenConfig.getTransition());
                 }
                 mTransitionManager.addTransition(mCloseConfig.getTransition());

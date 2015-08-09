@@ -3,14 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
     <item android:id="@+id/action_favorite" android:title="Favorite"
         app:showAsAction="always"
-        android:enabled="false"
         android:icon="@drawable/ic_action_favorite"/>
     <item android:id="@+id/action_new" android:title="New"
         app:showAsAction="always"
-        android:enabled="false"
         android:icon="@drawable/ic_action_new"/>
     <item android:id="@+id/action_search" android:title="Search"
         app:showAsAction="always"
-        android:enabled="false"
         android:icon="@drawable/ic_action_search"/>
 </menu>

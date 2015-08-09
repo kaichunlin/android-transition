@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.kaichunlin.transition.TransitionConfig;
 import com.kaichunlin.transition.ViewTransitionBuilder;
+import com.kaichunlin.transition.animation.AnimationManager;
 
 import kaichunlin.transition.app.R;
 
@@ -42,11 +43,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         Intent i = null;
-        boolean overridePendingTransition=false;
+        boolean overridePendingTransition = false;
         switch (v.getId()) {
             case R.id.slideup_actionbar:
                 i = new Intent(this, SlidingUpPanelActivity.class);
-//                overridePendingTransition=true;
                 break;
             case R.id.slideup_rotate_image:
                 i = new Intent(this, SlidingUpPanelRotateActivity.class);
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.drawer:
                 i = new Intent(this, DrawerViewActivity.class);
-                overridePendingTransition=true;
+                overridePendingTransition = true;
                 break;
             case R.id.view_pager:
                 i = new Intent(this, ViewPagerActivity.class);
@@ -68,9 +68,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //incomplete
                 break;
         }
-        startActivity(i);
-        if(overridePendingTransition) {
-            overridePendingTransition(0, 0);
-        }
+        AnimationManager am = new AnimationManager();
+        ViewTransitionBuilder.transit(v).scale(1f, 1.2f).range(0f, 0.5f).buildAnimationFor(am);
+        ViewTransitionBuilder.transit(v).scale(1.2f, 1f).range(0.5f, 1f).buildAnimationFor(am);
+        am.startAnimation(300);
+
+        final Intent i2 = i;
+        final boolean overridePendingTransition2 = overridePendingTransition;
+        v.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(i2);
+                if (overridePendingTransition2) {
+                    overridePendingTransition(0, 0);
+                }
+            }
+        }, 300);
     }
 }

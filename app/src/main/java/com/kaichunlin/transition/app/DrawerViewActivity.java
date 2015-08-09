@@ -6,7 +6,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
@@ -63,6 +62,7 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
         final ViewTransition transition = mRotateEffectBuilder.build();
         mDrawerListenerAdapter.addTransition(transition);
 
+        //configure the transition after the layout is complete
         TransitionUtil.executeOnGlobalLayout(findViewById(R.id.toolbar), new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -76,11 +76,11 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
                 cascade.cascadeStart = 0.2f;
                 ViewTransitionBuilder.transit(findViewById(R.id.lay_buttons)).interpolator(new AccelerateDecelerateInterpolator()).transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
                     @Override
-                    public void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View childView, int index, int total) {
-                        builder.translationX(viewGroup.getRight(), 0).buildAnimationFor(animationManager);
+                    public void transit(ViewTransitionBuilder builder, ViewTransitionBuilder.ViewGroupTransitionConfig config) {
+                        builder.translationX(config.parentViewGroup.getRight(), 0).buildAnimationFor(animationManager);
                     }
                 }, cascade);
-                animationManager.startAnimationDelayed(600, 32);
+                animationManager.startAnimation(600);
 
                 //this is to prevent conflict when the drawer is being opened while the above animation is still in progress
                 //unfortunately there's no way to reconcile the two, so the transiting/animating View will "jump" to a new state
@@ -128,8 +128,8 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
                 cascade.cascadeStart = 0.2f;
                 ViewTransitionBuilder.transit(findViewById(R.id.lay_buttons)).interpolator(new AccelerateDecelerateInterpolator()).transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
                     @Override
-                    public void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View childView, int index, int total) {
-                        builder.translationX(viewGroup.getRight()).buildFor(mDrawerListenerAdapter);
+                    public void transit(ViewTransitionBuilder builder, ViewTransitionBuilder.ViewGroupTransitionConfig config) {
+                        builder.translationX(config.parentViewGroup.getRight()).buildFor(mDrawerListenerAdapter);
                     }
                 }, cascade);
                 break;

@@ -21,9 +21,7 @@ public class DefaultTransitionManager implements TransitionManager {
 
     @Override
     public void addTransition(@NonNull Transition transition) {
-        if (!mTransitionList.contains(transition)) {
-            mTransitionList.add(transition);
-        }
+        processAnimation(transition);
     }
 
     @Override
@@ -31,6 +29,28 @@ public class DefaultTransitionManager implements TransitionManager {
         final int size = transitionsList.size();
         for (int i = 0; i < size; i++) {
             addTransition(transitionsList.get(i));
+        }
+    }
+
+    private void processAnimation(Transition transition) {
+        //attempt to merge an animation
+        boolean merged = false;
+        //no optimization is taken if the TransitionOption is not an AbstractTransition subclass
+        if (transition instanceof AbstractTransition) {
+            final int size = mTransitionList.size();
+            TransitionOperation to;
+            for (int i = 0; i < size; i++) {
+                to = mTransitionList.get(i);
+                if (to instanceof AbstractTransition) {
+                    merged = ((AbstractTransition) to).merge((AbstractTransition) transition);
+                    if(merged) {
+                        break;
+                    }
+                }
+            }
+        }
+        if (!merged) {
+            mTransitionList.add(transition);
         }
     }
 

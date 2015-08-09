@@ -383,9 +383,12 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
         ViewGroup vg = (ViewGroup) mView;
         int total = vg.getChildCount();
         View view;
+        ViewGroupTransitionConfig config = new ViewGroupTransitionConfig(vg, total);
         for (int i = 0; i < total; i++) {
             view = vg.getChildAt(i);
-            viewGroupTransition.transit(target(view), vg, view, i, total);
+            config.childView = view;
+            config.index = i;
+            viewGroupTransition.transit(target(view), config);
         }
         return self();
     }
@@ -400,14 +403,14 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     public ViewTransitionBuilder transitViewGroup(@NonNull final ViewGroupTransition viewGroupTransition, @NonNull final Cascade cascade) {
         transitViewGroup(new ViewGroupTransition() {
             @Override
-            public void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View childView, int index, int total) {
-                float fraction = (float) index / (total - 1);
+            public void transit(ViewTransitionBuilder builder, ViewGroupTransitionConfig config) {
+                float fraction = (float) config.index / (config.total + 1);
                 if (cascade.reverse) {
                     fraction = 1 - fraction;
                 }
                 float offset = cascade.interpolator.getInterpolation(fraction) * (cascade.cascadeEnd - cascade.cascadeStart);
                 builder.range(cascade.cascadeStart + offset, cascade.transitionEnd);
-                viewGroupTransition.transit(builder, viewGroup, childView, index, total);
+                viewGroupTransition.transit(builder, config);
             }
         });
         return self();
@@ -468,14 +471,49 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     public interface ViewGroupTransition {
         /**
          * @param builder
-         * @param viewGroup the parent ViewGroup this view belongs to
-         * @param childView the child view to be transitioned
-         * @param index     curr
-         * @param total     total number of children
          */
-        void transit(ViewTransitionBuilder builder, ViewGroup viewGroup, View childView, int index, int total);
+        void transit(ViewTransitionBuilder builder, ViewGroupTransitionConfig config);
     }
 
+    /**
+     * Encapsulates relevant data when transiting a ViewGroup
+     */
+    public class ViewGroupTransitionConfig {
+        public final ViewGroup parentViewGroup;
+        public final int total;
+        // the child view to be transitioned
+        private View childView;
+        private int index;
+
+        /**
+         * @param viewGroup the parent ViewGroup this view belongs to
+         * @param total     total number of children
+         */
+        public ViewGroupTransitionConfig(ViewGroup viewGroup, int total) {
+            this.parentViewGroup = viewGroup;
+            this.total = total;
+        }
+
+        public ViewGroup getParentViewGroup() {
+            return parentViewGroup;
+        }
+
+        public View getChildView() {
+            return childView;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public int getChildrenCount() {
+            return total;
+        }
+    }
+
+    /**
+     * Controls how cascading effect should be applied
+     */
     public static class Cascade {
         public Interpolator interpolator;
         public float cascadeStart;
@@ -483,10 +521,17 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
         public float transitionEnd = 1f;
         public boolean reverse;
 
+        /**
+         * @param cascadeEnd this value should never be 1
+         */
         public Cascade(float cascadeEnd) {
             this(cascadeEnd, new LinearInterpolator());
         }
 
+        /**
+         * @param cascadeEnd   this value should never be 1
+         * @param interpolator
+         */
         public Cascade(float cascadeEnd, Interpolator interpolator) {
             this.cascadeEnd = cascadeEnd;
             this.interpolator = interpolator;
