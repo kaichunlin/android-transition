@@ -63,7 +63,7 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
         mDrawerListenerAdapter.addTransition(transition);
 
         //configure the transition after the layout is complete
-        TransitionUtil.executeOnGlobalLayout(findViewById(R.id.toolbar), new ViewTreeObserver.OnGlobalLayoutListener() {
+        TransitionUtil.executeOnGlobalLayout(this, new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 //since the start animation is the reverse of the transition, set the current view state to transition's final state

@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.kaichunlin.transition.TransitionConfig;
 import com.kaichunlin.transition.ViewTransitionBuilder;
 import com.kaichunlin.transition.animation.AnimationManager;
+import com.kaichunlin.transition.util.TransitionUtil;
 
 import kaichunlin.transition.app.R;
 
@@ -35,7 +37,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.observable).setOnClickListener(this);
         findViewById(R.id.observable).setVisibility(View.GONE);
 
-        ViewTransitionBuilder.transit(findViewById(R.id.toolbar)).animator(this, R.anim.animator_set).buildAnimation().startAnimation(1200);
+        ViewTransitionBuilder.transit(findViewById(R.id.toolbar)).animator(this, R.anim.animator_set).buildAnimation().startAnimation(1000);
+
+        TransitionUtil.executeOnGlobalLayout(this, new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                final AnimationManager am = new AnimationManager();
+                ViewTransitionBuilder builder = ViewTransitionBuilder.transit(findViewById(R.id.main_btns));
+                ViewTransitionBuilder.Cascade cascade = new ViewTransitionBuilder.Cascade(0.6f);
+                builder.transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
+                    @Override
+                    public void transit(ViewTransitionBuilder builder, ViewTransitionBuilder.ViewGroupTransitionConfig config) {
+                        float start = builder.getStartRange();
+                        float end = builder.getEndRange();
+                        float middleRange = start + builder.getRange() / 2;
+                        builder.scale(1f, 1.15f).range(start, middleRange).buildAnimationFor(am);
+                        builder.scale(1.15f, 1f).range(middleRange, end).buildAnimationFor(am);
+                    }
+                }, cascade);
+                am.startAnimation(1000);
+            }
+        });
 
         TransitionConfig.setDebug(false);
     }

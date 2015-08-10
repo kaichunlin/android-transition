@@ -98,7 +98,7 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
         //this is required since some transition requires the width/height/position of a view, which is not yet properly initialized until layout is complete
         //in this example, another way of achieving correct behavior without using ViewUtil.executeOnGlobalLayout() would be to change all
         // translationYAsFractionOfHeight() calls to delayTranslationYAsFractionOfHeight() which would defer the calculation until the transition is just about to start
-        TransitionUtil.executeOnGlobalLayout(findViewById(R.id.rotate_slide), new ViewTreeObserver.OnGlobalLayoutListener() {
+        TransitionUtil.executeOnGlobalLayout(this, new ViewTreeObserver.OnGlobalLayoutListener() {
             public void onGlobalLayout() {
                 updateTransition(findViewById(R.id.rotate_slide), false);
             }

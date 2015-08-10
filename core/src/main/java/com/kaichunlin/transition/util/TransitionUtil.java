@@ -1,5 +1,6 @@
 package com.kaichunlin.transition.util;
 
+import android.app.Activity;
 import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -94,5 +95,15 @@ public class TransitionUtil {
                 listener.onGlobalLayout();
             }
         });
+    }
+
+    /**
+     * Helper that removes the drudgery of using ViewTreeObserver
+     *
+     * @param activity used to retrieve a View that can be
+     * @param listener
+     */
+    public static void executeOnGlobalLayout(@NonNull final Activity activity, @NonNull final ViewTreeObserver.OnGlobalLayoutListener listener) {
+        executeOnGlobalLayout(activity.getWindow().getDecorView().findViewById(android.R.id.content), listener);
     }
 }
