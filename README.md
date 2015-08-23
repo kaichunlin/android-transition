@@ -8,6 +8,16 @@ differnt UI components like [Drawer](https://developer.android.com/reference/and
 
 ## Changelog
 
+**0.9.2**
+
+ - Allow the transition/animation of a single MenuItem
+ - Add ViewTransitionBuilder.height(int) / ViewTransitionBuilder.delayHeight(int)
+ - AnimationManager/TransitionAnimation can specify either [AnimationController](https://github.com/kaichunlin/android-transition/blob/951d424e5a1db23f35eca472a2dd769a331a2a28/core/src/main/java/com/kaichunlin/transition/animation/AnimationController.java) or [AnimatorController](https://github.com/kaichunlin/android-transition/blob/951d424e5a1db23f35eca472a2dd769a331a2a28/core/src/main/java/com/kaichunlin/transition/animation/AnimatorController.java) (Animator is needed to animate MenuItems but is, for some reason, slow for certain animations like View height manipulation)
+ - Reduce garbage generation and other optimizations
+ - Fix memory leak with MenuItem transition
+ - Fix incorrect state when reverse transiting a View with a range not between 0f and 1f
+ - Remove AnimationManager.removeAnimation(Animation) to support optimization, may add it back in the future
+
 **0.9.1**
 
 Fixed an embarrassing mistakenly-capitalized package name.
@@ -22,7 +32,7 @@ On the other hand now it only takes __8 lines of code__ to achieve the effect be
 
 On Android Studio update Gradle dependency to:
 
-    compile 'com.github.kaichunlin.transition:core:0.9.1'
+    compile 'com.github.kaichunlin.transition:core:0.9.2'
 
 To add the corresponding slidinguppanel module:
 
@@ -80,13 +90,13 @@ Integration
 --------
 The simplest way to integrate Android-Transition is to grab them from Maven Central or jCenter. On Android Studio, add the code below to Gradle dependencies:
 
-    compile 'com.github.kaichunlin.transition:core:0.9.1'
+    compile 'com.github.kaichunlin.transition:core:0.9.2'
 
 Adapters that adapts to UI components not found in Android framework or Android Support Library are provided as their own libraries, the table below is the list of libraries:
 
 | Library       | Function           | Description in build.gradle  |
 |:-------------|:-------------|:-----|
-| core | Provides core transition function and adapters | com.github.kaichunlin.transition:core:0.9.1 |
+| core | Provides core transition function and adapters | com.github.kaichunlin.transition:core:0.9.2 |
 | slidinguppanel | [AndroidSlidingUpPanel](https://github.com/umano/AndroidSlidingUpPanel) Adapter | com.github.kaichunlin.transition:slidinguppanel:0.9.1|
 
 As an example, if an app requires the _slidinguppanel_ module, which implicitly requires the _core_ module, then build.gradle will look like below:
