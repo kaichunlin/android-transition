@@ -27,7 +27,7 @@ import com.kaichunlin.transition.adapter.SlidingUpPanelLayoutAdapter;
 import com.kaichunlin.transition.adapter.UnifiedAdapter;
 import com.kaichunlin.transition.animation.Animation;
 import com.kaichunlin.transition.animation.AnimationListener;
-import com.kaichunlin.transition.internal.ScaledTransitionHandler;
+import com.kaichunlin.transition.ScaledTransitionHandler;
 import com.kaichunlin.transition.internal.TransitionController;
 import com.kaichunlin.transition.internal.debug.TraceAnimationListener;
 import com.kaichunlin.transition.internal.debug.TraceTransitionListener;

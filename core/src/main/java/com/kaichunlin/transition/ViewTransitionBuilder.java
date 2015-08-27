@@ -17,7 +17,6 @@ import android.view.animation.LinearInterpolator;
 
 import com.kaichunlin.transition.internal.CustomTransitionController;
 import com.kaichunlin.transition.internal.DefaultTransitionController;
-import com.kaichunlin.transition.internal.ScaledTransitionHandler;
 import com.kaichunlin.transition.internal.TransitionController;
 import com.kaichunlin.transition.internal.TransitionControllerManager;
 import com.nineoldandroids.animation.Animator;
@@ -241,7 +240,12 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     public ViewTransitionBuilder height(@IntRange(from = 0) final int targetHeight) {
-        addTransitionHandler(new HeightTransitionHandler(mView.getHeight(), targetHeight));
+        height(mView.getHeight(), targetHeight);
+        return self();
+    }
+
+    public ViewTransitionBuilder height(@IntRange(from = 0) final int fromHeight, @IntRange(from = 0) final int targetHeight) {
+        addTransitionHandler(new HeightTransitionHandler(fromHeight, targetHeight));
         return self();
     }
 

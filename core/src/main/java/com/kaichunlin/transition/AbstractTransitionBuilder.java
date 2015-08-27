@@ -111,14 +111,13 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the alpha value from the target view's current value to the end value
+     * Changes the alpha to the specified values
      *
-     * @param start
-     * @param end
+     * @param vals
      * @return self
      */
-    public T alpha(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
-        transitFloat(ALPHA, start, end);
+    public T alpha(float... vals) {
+        transitFloat(ALPHA, vals);
         return self();
     }
 
@@ -148,14 +147,13 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the rotation (rotationX and rotationY) value from the target view's current value to the end value
+     * Changes the rotation (rotationX and rotationY) value to the specified values
      *
-     * @param start
-     * @param end
+     * @param vals
      * @return self
      */
-    public T rotation(float start, float end) {
-        transitFloat(ROTATION, start, end);
+    public T rotation(float... vals) {
+        transitFloat(ROTATION, vals);
         return self();
     }
 
@@ -184,14 +182,13 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the rotationX value from the target view's current value to the end value
+     * Changes the rotationX value to the specified values
      *
-     * @param start
-     * @param end
+     * @param vals
      * @return self
      */
-    public T rotationX(float start, float end) {
-        transitFloat(ROTATION_X, start, end);
+    public T rotationX(float... vals) {
+        transitFloat(ROTATION_X, vals);
         return self();
     }
 
@@ -220,14 +217,13 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the rotationY value from the target view's current value to the end value
+     * Changes the rotationY to the specified values
      *
-     * @param start
-     * @param end
+     * @param vals
      * @return self
      */
-    public T rotationY(float start, float end) {
-        transitFloat(ROTATION_Y, start, end);
+    public T rotationY(float... vals) {
+        transitFloat(ROTATION_Y, vals);
         return self();
     }
 
@@ -256,14 +252,13 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the scaleX value from the target view's current value to the end value
+     * Changes the scaleX value to the specified values
      *
-     * @param start
-     * @param end
+     * @param vals
      * @return self
      */
-    public T scaleX(@FloatRange(from = 0.0) float start, @FloatRange(from = 0.0) float end) {
-        transitFloat(SCALE_X, start, end);
+    public T scaleX(float... vals) {
+        transitFloat(SCALE_X, vals);
         return self();
     }
 
@@ -292,14 +287,13 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the scaleY value from the target view's current value to the end value
+     * Changes the scaleY value to the specified values
      *
-     * @param start
-     * @param end
+     * @param vals
      * @return self
      */
-    public T scaleY(@FloatRange(from = 0.0) float start, @FloatRange(from = 0.0) float end) {
-        transitFloat(SCALE_Y, start, end);
+    public T scaleY(float... vals) {
+        transitFloat(SCALE_Y, vals);
         return self();
     }
 
@@ -328,15 +322,14 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the scale (scaleX and scaleY) value from the target view's current value to the end value
+     * Changes the scale (scaleX and scaleY) value to the specified values
      *
-     * @param start
-     * @param end
+     * @param vals
      * @return self
      */
-    public T scale(@FloatRange(from = 0.0) float start, @FloatRange(from = 0.0) float end) {
-        transitFloat(SCALE_X, start, end);
-        transitFloat(SCALE_Y, start, end);
+    public T scale(float... vals) {
+        transitFloat(SCALE_X, vals);
+        transitFloat(SCALE_Y, vals);
         return self();
     }
 
@@ -367,12 +360,11 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     /**
      * Changes the translationX value from the target view's current value to the end value
      *
-     * @param start
-     * @param end
+     * @param vals
      * @return self
      */
-    public T translationX(float start, float end) {
-        transitFloat(TRANSLATION_X, start, end);
+    public T translationX(float... vals) {
+        transitFloat(TRANSLATION_X, vals);
         return self();
     }
 
@@ -403,12 +395,11 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     /**
      * Changes the translationY value from the target view's current value to the end value
      *
-     * @param start
-     * @param end
+     * @param vals
      * @return self
      */
-    public T translationY(float start, float end) {
-        transitFloat(TRANSLATION_Y, start, end);
+    public T translationY(float... vals) {
+        transitFloat(TRANSLATION_Y, vals);
         return self();
     }
 
@@ -439,12 +430,11 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     /**
      * Changes the x value from the target view's current value to the end value
      *
-     * @param start
-     * @param end
+     * @param vals
      * @return self
      */
-    public T x(float start, float end) {
-        transitFloat(X, start, end);
+    public T x(float... vals) {
+        transitFloat(X, vals);
         return self();
     }
 
@@ -475,12 +465,11 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     /**
      * Changes the y value from the target view's current value to the end value
      *
-     * @param start
-     * @param end
+     * @param vals
      * @return self
      */
-    public T y(float start, float end) {
-        transitFloat(Y, start, end);
+    public T y(float... vals) {
+        transitFloat(Y, vals);
         return self();
     }
 
@@ -523,29 +512,55 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * Transits a float property from the start value to the end value
      *
      * @param property
-     * @param start
-     * @param end
+     * @param vals
      * @return self
      */
-    public T transitFloat(@NonNull String property, float start, float end) {
-        mHolders.put(property, PropertyValuesHolder.ofFloat(property, start, end));
-        mShadowHolders.put(property, ShadowValuesHolder.ofFloat(property, start, end));
+    public T transitFloat(@NonNull String property, float... vals) {
+        mHolders.put(property, PropertyValuesHolder.ofFloat(property, vals));
+        mShadowHolders.put(property, ShadowValuesHolder.ofFloat(property, vals));
         return self();
     }
 
+//    /**
+//     * Transits a float property from the start value to the end value
+//     *
+//     * @param property
+//     * @param start
+//     * @param end
+//     * @return self
+//     */
+//    public T transitFloat(@NonNull String property, float start, float end) {
+//        mHolders.put(property, PropertyValuesHolder.ofFloat(property, start, end));
+//        mShadowHolders.put(property, ShadowValuesHolder.ofFloat(property, start, end));
+//        return self();
+//    }
+
     /**
-     * Transits an integer property from the start value to the end value
+     * Transits a float property from the start value to the end value
      *
      * @param property
-     * @param start
-     * @param end
+     * @param vals
      * @return self
      */
-    public T transitInt(@NonNull String property, int start, int end) {
-        mHolders.put(property, PropertyValuesHolder.ofInt(property, start, end));
-        mShadowHolders.put(property, ShadowValuesHolder.ofInt(property, start, end));
+    public T transitInt(@NonNull String property, int... vals) {
+        mHolders.put(property, PropertyValuesHolder.ofInt(property, vals));
+        mShadowHolders.put(property, ShadowValuesHolder.ofInt(property, vals));
         return self();
     }
+
+//    /**
+//     * Transits an integer property from the start value to the end value
+//     *
+//     * @param property
+//     * @param start
+//     * @param end
+//     * @return self
+//     */
+//    public T transitInt(@NonNull String property, int start, int end) {
+//        mHolders.put(property, PropertyValuesHolder.ofInt(property, start, end));
+//        mShadowHolders.put(property, ShadowValuesHolder.ofInt(property, start, end));
+//        return self();
+//    }
 
     /**
      * Reverse the transition effect
@@ -657,38 +672,47 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      */
     static class ShadowValuesHolder implements Cloneable {
         String property;
-        int iStart, iEnd;
-        float fStart, fEnd;
+        int[] iVals;
+        float[] fVals;
         boolean isFloat;
 
-        ShadowValuesHolder(@NonNull String property, float start, float end) {
+        ShadowValuesHolder(@NonNull String property, float... vals) {
             this.property = property;
-            fStart = start;
-            fEnd = end;
+            fVals=vals;
             isFloat = true;
         }
 
-        ShadowValuesHolder(@NonNull String property, int start, int end) {
+        ShadowValuesHolder(@NonNull String property, int... vals) {
             this.property = property;
-            iStart = start;
-            iEnd = end;
+            iVals=vals;
         }
 
 
-        static ShadowValuesHolder ofFloat(@NonNull String property, float start, float end) {
-            return new ShadowValuesHolder(property, start, end);
+        static ShadowValuesHolder ofFloat(@NonNull String property, float... vals) {
+            return new ShadowValuesHolder(property, vals);
         }
 
-        static ShadowValuesHolder ofInt(@NonNull String property, int start, int end) {
-            return new ShadowValuesHolder(property, start, end);
+        static ShadowValuesHolder ofInt(@NonNull String property, int... vals) {
+            return new ShadowValuesHolder(property, vals);
         }
 
         @CheckResult
         PropertyValuesHolder createReverse() {
+            final int max;
             if (isFloat) {
-                return PropertyValuesHolder.ofFloat(property, fEnd, fStart);
+                float[] newfVals=new float[fVals.length];
+                max=fVals.length;
+                for (int i = 0; i < max; i++) {
+                    newfVals[i]=fVals[max-i-1];
+                }
+                return PropertyValuesHolder.ofFloat(property, newfVals);
             } else {
-                return PropertyValuesHolder.ofInt(property, iEnd, iStart);
+                int[] newiVals=new int[iVals.length];
+                max=iVals.length;
+                for (int i = 0; i < max; i++) {
+                    newiVals[i]=iVals[max-i-1];
+                }
+                return PropertyValuesHolder.ofInt(property, newiVals);
             }
         }
 

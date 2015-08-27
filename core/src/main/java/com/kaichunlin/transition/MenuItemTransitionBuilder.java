@@ -75,20 +75,8 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     }
 
     @Override
-    public MenuItemTransitionBuilder alpha(@FloatRange(from = 0.0, to = 1.0) float start, @FloatRange(from = 0.0, to = 1.0) float end) {
-        transitFloat(ALPHA, start, end);
-        return self();
-    }
-
-    @Override
     public MenuItemTransitionBuilder alpha(@FloatRange(from = 0.0, to = 1.0) float end) {
         return alpha(1f, end);
-    }
-
-    @Override
-    public MenuItemTransitionBuilder rotation(float start, float end) {
-        transitFloat(ROTATION, start, end);
-        return self();
     }
 
     @Override
@@ -97,20 +85,8 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     }
 
     @Override
-    public MenuItemTransitionBuilder rotationX(float start, float end) {
-        transitFloat(ROTATION_X, start, end);
-        return self();
-    }
-
-    @Override
     public MenuItemTransitionBuilder rotationX(float end) {
         return rotationX(0f, end);
-    }
-
-    @Override
-    public MenuItemTransitionBuilder rotationY(float start, float end) {
-        transitFloat(ROTATION_Y, start, end);
-        return self();
     }
 
     @Override
@@ -119,20 +95,8 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     }
 
     @Override
-    public MenuItemTransitionBuilder scaleX(@FloatRange(from = 0.0) float start, @FloatRange(from = 0.0) float end) {
-        transitFloat(SCALE_X, start, end);
-        return self();
-    }
-
-    @Override
     public MenuItemTransitionBuilder scaleX(@FloatRange(from = 0.0) float end) {
         return scaleX(0f, end);
-    }
-
-    @Override
-    public MenuItemTransitionBuilder scaleY(@FloatRange(from = 0.0) float start, @FloatRange(from = 0.0) float end) {
-        transitFloat(SCALE_Y, start, end);
-        return self();
     }
 
     @Override
@@ -141,32 +105,13 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     }
 
     @Override
-    public MenuItemTransitionBuilder scale(@FloatRange(from = 0.0) float start, @FloatRange(from = 0.0) float end) {
-        transitFloat(SCALE_X, start, end);
-        transitFloat(SCALE_Y, start, end);
-        return self();
-    }
-
-    @Override
     public MenuItemTransitionBuilder scale(@FloatRange(from = 0.0) float end) {
         return scale(0f, end);
     }
 
     @Override
-    public MenuItemTransitionBuilder translationX(float start, float end) {
-        transitFloat(TRANSLATION_X, start, end);
-        return self();
-    }
-
-    @Override
     public MenuItemTransitionBuilder translationX(float end) {
         return translationX(0f, end);
-    }
-
-    @Override
-    public MenuItemTransitionBuilder translationY(float start, float end) {
-        transitFloat(TRANSLATION_Y, start, end);
-        return self();
     }
 
     @Override
@@ -182,18 +127,6 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     @Override
     public MenuItemTransitionBuilder y(float end) {
         return y(0f, end);
-    }
-
-    @Override
-    public MenuItemTransitionBuilder transitFloat(@NonNull String property, float start, float end) {
-        mHolders.put(property, PropertyValuesHolder.ofFloat(property, start, end));
-        return self();
-    }
-
-    @Override
-    public MenuItemTransitionBuilder transitInt(@NonNull String property, int start, int end) {
-        mHolders.put(property, PropertyValuesHolder.ofInt(property, start, end));
-        return self();
     }
 
     /**
