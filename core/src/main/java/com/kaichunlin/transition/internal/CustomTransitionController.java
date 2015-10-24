@@ -26,8 +26,7 @@ public class CustomTransitionController extends TransitionController<CustomTrans
 
     @Override
     public void updateProgress(float progress) {
-        final int count = mTransitionHandlerList.size();
-        for (int i = 0; i < count; ++i) {
+        for (int i = 0, count = mTransitionHandlerList.size(); i < count; ++i) {
             mTransitionHandlerList.get(i).onUpdateProgress(this, getTarget(), progress);
         }
     }
@@ -36,7 +35,7 @@ public class CustomTransitionController extends TransitionController<CustomTrans
     @Override
     public CustomTransitionController clone() {
         CustomTransitionController newCopy = (CustomTransitionController) super.clone();
-        newCopy.mTransitionHandlerList = new ArrayList<>();
+        newCopy.mTransitionHandlerList = new ArrayList<>(mTransitionHandlerList.size());
         newCopy.mTransitionHandlerList.addAll(mTransitionHandlerList);
         return newCopy;
     }

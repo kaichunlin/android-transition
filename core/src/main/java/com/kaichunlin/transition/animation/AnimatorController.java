@@ -71,14 +71,14 @@ class AnimatorController extends ValueAnimator implements StateController, Value
     public void resetController() {
         mReset = true;
         AbstractAnimation ani;
-        for (int i = 0; i < mAnimationList.size(); i++) {
+        for (int i = 0, size = mAnimationList.size(); i < size; i++) {
             ani = mAnimationList.get(i);
             ani.notifyAnimationReset();
         }
         cancel();
 
         //TODO optimize
-        for (int i = 0; i < mAnimationList.size(); i++) {
+        for (int i = 0, size = mAnimationList.size(); i < size; i++) {
             ani = mAnimationList.get(i);
             ani.getTransition().startTransition();
             ani.getTransition().updateProgress(ani.isReverseAnimation() ? 1 : 0);
@@ -95,7 +95,7 @@ class AnimatorController extends ValueAnimator implements StateController, Value
     public void onAnimationUpdate(ValueAnimator animation) {
         AbstractAnimation ani;
         float progress = (Float) animation.getAnimatedValue();
-        for (int i = 0; i < mAnimationList.size(); i++) {
+        for (int i = 0, size = mAnimationList.size(); i < size; i++) {
             ani = mAnimationList.get(i);
             ani.getTransition().updateProgress(progress);
         }
@@ -103,7 +103,7 @@ class AnimatorController extends ValueAnimator implements StateController, Value
 
     @Override
     public void onAnimationStart(android.animation.Animator animation) {
-        for (int i = 0; i < mAnimationList.size(); i++) {
+        for (int i = 0, size = mAnimationList.size(); i < size; i++) {
             mAnimationList.get(i).notifyAnimationStart();
         }
     }
@@ -115,7 +115,7 @@ class AnimatorController extends ValueAnimator implements StateController, Value
         }
 
         AbstractAnimation ani;
-        for (int i = 0; i < mAnimationList.size(); i++) {
+        for (int i = 0, size = mAnimationList.size(); i < size; i++) {
             ani = mAnimationList.get(i);
             ani.setAnimating(false);
             ani.notifyAnimationEnd();
@@ -126,7 +126,7 @@ class AnimatorController extends ValueAnimator implements StateController, Value
     @Override
     public void onAnimationCancel(android.animation.Animator animation) {
         AbstractAnimation ani;
-        for (int i = 0; i < mAnimationList.size(); i++) {
+        for (int i = 0, size = mAnimationList.size(); i < size; i++) {
             ani = mAnimationList.get(i);
             if (mReset) {
                 ani.notifyAnimationReset();

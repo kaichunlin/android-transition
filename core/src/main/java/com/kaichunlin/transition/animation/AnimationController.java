@@ -93,7 +93,7 @@ class AnimationController extends android.view.animation.Animation implements St
     public void endController() {
         handleStop(STOP_END);
         AbstractAnimation ani;
-        for (int i = 0; i < mAnimationList.size(); i++) {
+        for (int i = 0, size = mAnimationList.size(); i < size; i++) {
             ani = mAnimationList.get(i);
             ani.getTransition().updateProgress(ani.isReverseAnimation() ? 0 : 1);
         }
@@ -103,7 +103,7 @@ class AnimationController extends android.view.animation.Animation implements St
     public void resetController() {
         handleStop(STOP_RESET);
         AbstractAnimation ani;
-        for (int i = 0; i < mAnimationList.size(); i++) {
+        for (int i = 0, size = mAnimationList.size(); i < size; i++) {
             ani = mAnimationList.get(i);
             ani.getTransition().updateProgress(ani.isReverseAnimation() ? 1 : 0);
         }
@@ -124,7 +124,7 @@ class AnimationController extends android.view.animation.Animation implements St
 
     @Override
     public void onAnimationStart(android.view.animation.Animation animation) {
-        for (int i = 0; i < mAnimationList.size(); i++) {
+        for (int i = 0, size = mAnimationList.size(); i < size; i++) {
             mAnimationList.get(i).notifyAnimationStart();
         }
     }
@@ -138,7 +138,7 @@ class AnimationController extends android.view.animation.Animation implements St
             mStopType = STOP_END;
         }
         AbstractAnimation ani;
-        for (int i = 0; i < mAnimationList.size(); i++) {
+        for (int i = 0, size = mAnimationList.size(); i < size; i++) {
             ani = mAnimationList.get(i);
             ani.setAnimating(false);
             switch (mStopType) {

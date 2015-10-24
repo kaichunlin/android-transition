@@ -86,7 +86,12 @@ public class TransitionAnimation extends AbstractAnimation {
         mController.startController();
     }
 
-    protected void prepareAnimation(@NonNull StateController sharedAnimation, @IntRange(from = 0) final int duration) {
+    /**
+     *
+     * @param sharedAnimation
+     * @param duration -1 if duration should not be set
+     */
+    protected void prepareAnimation(@NonNull StateController sharedAnimation, @IntRange(from = -1) final int duration) {
         if (isAnimating()) {
             return;
         }

@@ -19,7 +19,8 @@ import java.util.Set;
 public abstract class AbstractAnimation implements Animation {
     @IntDef({CONTROLLER_ANIMATION, CONTROLLER_ANIMATOR})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface StateControllerType {}
+    public @interface StateControllerType {
+    }
 
     public static final int CONTROLLER_ANIMATION = 0;
     public static final int CONTROLLER_ANIMATOR = 1;
@@ -144,24 +145,36 @@ public abstract class AbstractAnimation implements Animation {
     }
 
     protected void notifyAnimationStart() {
+        if (mAnimationListenerSet.size() == 0) {
+            return;
+        }
         for (AnimationListener listener : mAnimationListenerSet) {
             listener.onAnimationStart(this);
         }
     }
 
     protected void notifyAnimationEnd() {
+        if (mAnimationListenerSet.size() == 0) {
+            return;
+        }
         for (AnimationListener listener : mAnimationListenerSet) {
             listener.onAnimationEnd(this);
         }
     }
 
     protected void notifyAnimationCancel() {
+        if (mAnimationListenerSet.size() == 0) {
+            return;
+        }
         for (AnimationListener listener : mAnimationListenerSet) {
             listener.onAnimationCancel(this);
         }
     }
 
     protected void notifyAnimationReset() {
+        if (mAnimationListenerSet.size() == 0) {
+            return;
+        }
         for (AnimationListener listener : mAnimationListenerSet) {
             listener.onAnimationReset(this);
         }

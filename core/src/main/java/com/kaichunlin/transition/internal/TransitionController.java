@@ -143,7 +143,6 @@ public abstract class TransitionController<T extends TransitionController> {
     }
 
     /**
-     *
      * @param target the view this controller should manipulate
      * @return
      */
@@ -153,7 +152,6 @@ public abstract class TransitionController<T extends TransitionController> {
     }
 
     /**
-     *
      * @param interpolator the Interpolator this controller should be when transiting a view
      */
     public void setInterpolator(@Nullable Interpolator interpolator) {
@@ -161,7 +159,6 @@ public abstract class TransitionController<T extends TransitionController> {
     }
 
     /**
-     *
      * @param updateStateAfterUpdateProgress whether or not to update a controller's enable state after each {@link #updateProgress(float)} call
      */
     public void setUpdateStateAfterUpdateProgress(boolean updateStateAfterUpdateProgress) {
@@ -187,9 +184,9 @@ public abstract class TransitionController<T extends TransitionController> {
     }
 
     public TransitionStateLogger getTransitionStateHolder() {
-        TransitionStateLogger logger=(TransitionStateLogger) getTarget().getTag(R.id.debug_id);
-        if(logger==null) {
-            logger=new TransitionStateLogger(getId());
+        TransitionStateLogger logger = (TransitionStateLogger) getTarget().getTag(R.id.debug_id);
+        if (logger == null) {
+            logger = new TransitionStateLogger(getId());
             getTarget().setTag(R.id.debug_id, logger);
         }
         return logger;

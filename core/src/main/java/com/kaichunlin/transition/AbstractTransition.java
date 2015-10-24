@@ -84,7 +84,7 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
      * @return
      */
     boolean hasMultipleSetup() {
-       return mSetupList.size() > 1;
+        return mSetupList.size() > 1;
     }
 
     @Override
@@ -123,7 +123,7 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
         try {
             newClone = (AbstractTransition) super.clone();
             newClone.setId(newClone.getId() + "_CLONE");
-            newClone.mSetupList=new ArrayList<>();
+            newClone.mSetupList = new ArrayList<>(mSetupList.size());
             newClone.mSetupList.addAll(mSetupList);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();

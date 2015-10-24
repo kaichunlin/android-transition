@@ -99,14 +99,16 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
             }
             LayoutInflater layoutInflater = LayoutInflater.from(mToolbar.getContext());
             int j;
-            for (int i = 0; i < menuItemList.size(); i++) {
+            int setupSize;
+            for (int i = 0, size = menuItemList.size(); i < size; i++) {
                 MenuItem menuItem = menuItemList.get(i);
                 TransitionControllerManager transitionControllerManager = new TransitionControllerManager(getId());
                 if (mInterpolator != null) {
                     transitionControllerManager.setInterpolator(mInterpolator);
                 }
-                for (j = 0; j < mSetupList.size(); j++) {
-                    mSetupList.get(j).setupAnimation(menuItem, transitionControllerManager, i, menuItemList.size());
+                setupSize = mSetupList.size();
+                for (j = 0; j < setupSize; j++) {
+                    mSetupList.get(j).setupAnimation(menuItem, transitionControllerManager, i, size);
                 }
                 View view;
                 if (mTarget == null) {
@@ -133,23 +135,20 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
 
     @Override
     public void updateProgress(float progress) {
-        final int size = mTransittingMenuItems.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0, size = mTransittingMenuItems.size(); i < size; i++) {
             mTransittingMenuItems.get(i).updateProgress(progress);
         }
     }
 
     @Override
     public void stopTransition() {
-        int size = mTransittingMenuItems.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0, size = mTransittingMenuItems.size(); i < size; i++) {
             mTransittingMenuItems.get(i).end();
         }
         if (menuItemList == null) {
             return;
         }
-        size = menuItemList.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0, size = menuItemList.size(); i < size; i++) {
             menuItemList.get(i).setActionView(null);
         }
         mTransittingMenuItems.clear();
@@ -190,9 +189,8 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
     @Override
     public MenuItemTransition clone() {
         MenuItemTransition newCopy = (MenuItemTransition) super.clone();
-        newCopy.mTransittingMenuItems = new ArrayList<>();
-        final int size = mTransittingMenuItems.size();
-        for (int i = 0; i < size; i++) {
+        newCopy.mTransittingMenuItems = new ArrayList<>(mTransittingMenuItems.size());
+        for (int i = 0, size = mTransittingMenuItems.size(); i < size; i++) {
             newCopy.mTransittingMenuItems.add(mTransittingMenuItems.get(i).clone());
         }
         return newCopy;

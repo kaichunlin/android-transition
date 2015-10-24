@@ -649,17 +649,15 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
         AbstractTransitionBuilder newCopy = null;
         try {
             newCopy = (AbstractTransitionBuilder) super.clone();
-            newCopy.mHolders = new ArrayMap<>();
-            int size = mHolders.size();
-            for (int i = 0; i < size; i++) {
+            newCopy.mHolders = new ArrayMap<>(mHolders.size());
+            for (int i = 0, size = mHolders.size(); i < size; i++) {
                 newCopy.mHolders.put(mHolders.keyAt(i), mHolders.valueAt(i).clone());
             }
-            newCopy.mShadowHolders = new ArrayMap<>();
-            size = mShadowHolders.size();
-            for (int i = 0; i < size; i++) {
+            newCopy.mShadowHolders = new ArrayMap<>(mShadowHolders.size());
+            for (int i = 0, size = mShadowHolders.size(); i < size; i++) {
                 newCopy.mShadowHolders.put(mShadowHolders.keyAt(i), mShadowHolders.valueAt(i).clone());
             }
-            newCopy.mDelayed = new ArrayList<>();
+            newCopy.mDelayed = new ArrayList<>(mDelayed.size());
             newCopy.mDelayed.addAll(mDelayed);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
@@ -678,13 +676,13 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
 
         ShadowValuesHolder(@NonNull String property, float... vals) {
             this.property = property;
-            fVals=vals;
+            fVals = vals;
             isFloat = true;
         }
 
         ShadowValuesHolder(@NonNull String property, int... vals) {
             this.property = property;
-            iVals=vals;
+            iVals = vals;
         }
 
 
@@ -700,17 +698,17 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
         PropertyValuesHolder createReverse() {
             final int max;
             if (isFloat) {
-                float[] newfVals=new float[fVals.length];
-                max=fVals.length;
+                float[] newfVals = new float[fVals.length];
+                max = fVals.length;
                 for (int i = 0; i < max; i++) {
-                    newfVals[i]=fVals[max-i-1];
+                    newfVals[i] = fVals[max - i - 1];
                 }
                 return PropertyValuesHolder.ofFloat(property, newfVals);
             } else {
-                int[] newiVals=new int[iVals.length];
-                max=iVals.length;
+                int[] newiVals = new int[iVals.length];
+                max = iVals.length;
                 for (int i = 0; i < max; i++) {
-                    newiVals[i]=iVals[max-i-1];
+                    newiVals[i] = iVals[max - i - 1];
                 }
                 return PropertyValuesHolder.ofInt(property, newiVals);
             }

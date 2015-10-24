@@ -263,7 +263,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     @Override
     public ViewTransitionBuilder clone() {
         ViewTransitionBuilder newCopy = (ViewTransitionBuilder) super.clone();
-        newCopy.mSetupList = new ArrayList<>();
+        newCopy.mSetupList = new ArrayList<>(mSetupList.size());
         newCopy.mSetupList.addAll(mSetupList);
         return newCopy;
     }
@@ -271,8 +271,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     @Override
     public ViewTransitionBuilder reverse() {
         mHolders.clear();
-        final int size = mShadowHolders.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0, size = mShadowHolders.size(); i < size; i++) {
             mHolders.put(mShadowHolders.keyAt(i), mShadowHolders.valueAt(i).createReverse());
         }
         float oldStart = mStart;
@@ -444,13 +443,11 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
             mView = transitionControllerManager.getTarget();
         }
 
-        int size = mDelayed.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0, size = mDelayed.size(); i < size; i++) {
             mDelayed.get(i).evaluate(transitionControllerManager.getTarget(), this);
         }
 
-        size = mSetupList.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0, size = mSetupList.size(); i < size; i++) {
             mSetupList.get(i).setupAnimation(transitionControllerManager);
         }
 

@@ -50,7 +50,7 @@ public class TransitionStateLogger {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(128);
         sb.append("---------- ");
         sb.append(mId);
         sb.append(" Start: ");
@@ -105,7 +105,7 @@ public class TransitionStateLogger {
         }
 
         public String toString(long baseTime) {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder(80);
             sb.append("\t<");
             if (subId.contains("@")) {
                 sb.append(subId.substring(subId.indexOf("@")));

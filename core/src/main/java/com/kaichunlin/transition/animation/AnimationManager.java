@@ -63,9 +63,8 @@ public class AnimationManager extends AbstractAnimation {
         boolean merged = false;
         //no optimization is taken if the TransitionOption is not an AbstractTransition subclass
         if (animation.getTransition() instanceof AbstractTransition) {
-            final int size = mAnimationList.size();
             TransitionOperation to;
-            for (int i = 0; i < size; i++) {
+            for (int i = 0, size = mAnimationList.size(); i < size; i++) {
                 to = mAnimationList.get(i).getTransition();
                 if (to instanceof AbstractTransition) {
                     merged = ((AbstractTransition) to).merge((AbstractTransition) animation.getTransition());
@@ -123,8 +122,7 @@ public class AnimationManager extends AbstractAnimation {
      * Stops and clears all transitions
      */
     public void removeAllAnimations() {
-        final int size = mAnimationList.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0, size = mAnimationList.size(); i < size; i++) {
             mAnimationList.get(i).removeAnimationListener(mAnimationListener);
         }
         mAnimationList.clear();
@@ -134,7 +132,7 @@ public class AnimationManager extends AbstractAnimation {
      * @return
      */
     public List<Animation> getAnimations() {
-        List<Animation> list = new ArrayList<>();
+        List<Animation> list = new ArrayList<>(mAnimationList.size());
         list.addAll(mAnimationList);
         return list;
     }
@@ -144,8 +142,7 @@ public class AnimationManager extends AbstractAnimation {
         if (super.getDuration() == -1) {
             int maxDuration = 0;
             int duration;
-            final int size = mAnimationList.size();
-            for (int i = 0; i < size; i++) {
+            for (int i = 0, size = mAnimationList.size(); i < size; i++) {
                 duration = mAnimationList.get(i).getDuration();
                 if (maxDuration < duration) {
                     maxDuration = duration;
@@ -163,9 +160,8 @@ public class AnimationManager extends AbstractAnimation {
             return;
         }
         super.setReverseAnimation(reverse);
-        final int size = mAnimationList.size();
         Animation animation;
-        for (int i = 0; i < size; i++) {
+        for (int i = 0, size = mAnimationList.size(); i < size; i++) {
             animation = mAnimationList.get(i);
             animation.setReverseAnimation(!animation.isReverseAnimation());
         }
@@ -242,8 +238,7 @@ public class AnimationManager extends AbstractAnimation {
     public void cancelAnimation() {
         if (isAnimating()) {
             if (mSharedController == null) {
-                final int size = mAnimationList.size();
-                for (int i = 0; i < size; i++) {
+                for (int i = 0, size = mAnimationList.size(); i < size; i++) {
                     mAnimationList.get(i).cancelAnimation();
                 }
             } else {
@@ -256,8 +251,7 @@ public class AnimationManager extends AbstractAnimation {
     @Override
     public void pauseAnimation() {
         if (mSharedController == null) {
-            final int size = mAnimationList.size();
-            for (int i = 0; i < size; i++) {
+            for (int i = 0, size = mAnimationList.size(); i < size; i++) {
                 mAnimationList.get(i).pauseAnimation();
             }
         } else {
@@ -269,8 +263,7 @@ public class AnimationManager extends AbstractAnimation {
     @Override
     public void resumeAnimation() {
         if (mSharedController == null) {
-            final int size = mAnimationList.size();
-            for (int i = 0; i < size; i++) {
+            for (int i = 0, size = mAnimationList.size(); i < size; i++) {
                 mAnimationList.get(i).resumeAnimation();
             }
         } else {
@@ -282,8 +275,7 @@ public class AnimationManager extends AbstractAnimation {
     @Override
     public void endAnimation() {
         if (mSharedController == null) {
-            final int size = mAnimationList.size();
-            for (int i = 0; i < size; i++) {
+            for (int i = 0, size = mAnimationList.size(); i < size; i++) {
                 mAnimationList.get(i).endAnimation();
             }
         } else {
@@ -295,8 +287,7 @@ public class AnimationManager extends AbstractAnimation {
     @Override
     public void resetAnimation() {
         if (mSharedController == null) {
-            final int size = mAnimationList.size();
-            for (int i = 0; i < size; i++) {
+            for (int i = 0, size = mAnimationList.size(); i < size; i++) {
                 mAnimationList.get(i).resetAnimation();
             }
         } else {

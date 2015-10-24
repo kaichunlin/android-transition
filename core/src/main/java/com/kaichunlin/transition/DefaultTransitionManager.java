@@ -29,8 +29,7 @@ public class DefaultTransitionManager implements TransitionManager {
 
     @Override
     public void addAllTransitions(@NonNull List<Transition> transitionsList) {
-        final int size = transitionsList.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0, size = transitionsList.size(); i < size; i++) {
             addTransition(transitionsList.get(i));
         }
     }
@@ -40,16 +39,15 @@ public class DefaultTransitionManager implements TransitionManager {
         boolean merged = false;
         //no optimization is taken if the TransitionOption is not an AbstractTransition subclass
         if (transition instanceof AbstractTransition) {
-            final int size = mTransitionList.size();
             TransitionOperation to;
-            for (int i = 0; i < size; i++) {
+            for (int i = 0, size = mTransitionList.size(); i < size; i++) {
                 to = mTransitionList.get(i);
                 if (to instanceof AbstractTransition) {
-                    AbstractTransition atTo=(AbstractTransition) to;
-                    AbstractTransition atTransition=(AbstractTransition) transition;
-                    if(atTo.compatible(atTransition)) {
+                    AbstractTransition atTo = (AbstractTransition) to;
+                    AbstractTransition atTransition = (AbstractTransition) transition;
+                    if (atTo.compatible(atTransition)) {
                         //the Transition has already merged another Transition previously
-                        if(atTo.hasMultipleSetup()) {
+                        if (atTo.hasMultipleSetup()) {
                             atTo.merge(atTransition);
                         } else { //the Transition has not merged another Transition
                             mTransitionList.remove(atTo);
@@ -71,14 +69,13 @@ public class DefaultTransitionManager implements TransitionManager {
     @Override
     public boolean removeTransition(@NonNull Transition transition) {
         //rebuilding mTransitionList
-        if(mBackupTransitionList.remove(transition)) {
-            List<Transition> temp = new ArrayList<>();
+        if (mBackupTransitionList.remove(transition)) {
+            List<Transition> temp = new ArrayList<>(mBackupTransitionList.size());
             temp.addAll(mBackupTransitionList);
             mTransitionList.clear();
             mBackupTransitionList.clear();
 
-            final int size=temp.size();
-            for (int i = 0; i < size; i++) {
+            for (int i = 0, size = temp.size(); i < size; i++) {
                 processAnimation(temp.get(i));
             }
 
@@ -142,20 +139,18 @@ public class DefaultTransitionManager implements TransitionManager {
     @Override
     public void stopTransition() {
         //call listeners so they can perform their actions first, like modifying this adapter's transitions
-        int size = mTransitionListenerList.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0, size = mTransitionListenerList.size(); i < size; i++) {
             mTransitionListenerList.get(i).onTransitionEnd(this);
         }
 
-        size = mTransitionList.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0, size = mTransitionList.size(); i < size; i++) {
             mTransitionList.get(i).stopTransition();
         }
     }
 
     @Override
     public void addTransitionListener(TransitionListener transitionListener) {
-        if(!mTransitionListenerList.contains(transitionListener)) {
+        if (!mTransitionListenerList.contains(transitionListener)) {
             mTransitionListenerList.add(transitionListener);
         }
     }
@@ -167,16 +162,14 @@ public class DefaultTransitionManager implements TransitionManager {
 
     @Override
     public void notifyTransitionStart() {
-        final int size = mTransitionListenerList.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0, size = mTransitionListenerList.size(); i < size; i++) {
             mTransitionListenerList.get(i).onTransitionStart(this);
         }
     }
 
     @Override
     public void notifyTransitionEnd() {
-        final int size = mTransitionListenerList.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0, size = mTransitionListenerList.size(); i < size; i++) {
             mTransitionListenerList.get(i).onTransitionEnd(this);
         }
     }
