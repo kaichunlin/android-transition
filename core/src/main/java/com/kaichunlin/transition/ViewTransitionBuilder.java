@@ -397,7 +397,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     /**
-     * Similar to {@link #transitViewGroup(ViewGroupTransition)}, but with builder.range() auto filled for each child View, calculated in accordance to
+     * Similar to {@link #transitViewGroup(ViewGroupTransition)}, but with builder.range() auto filled for each child View
      *
      * @param viewGroupTransition
      * @param cascade
@@ -407,9 +407,9 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
         transitViewGroup(new ViewGroupTransition() {
             @Override
             public void transit(ViewTransitionBuilder builder, ViewGroupTransitionConfig config) {
-                float fraction = (float) config.index / (config.total + 1);
+                float fraction = (float) config.index / (config.total + 1) * cascade.transitionEnd;
                 if (cascade.reverse) {
-                    fraction = 1 - fraction;
+                    fraction = cascade.transitionEnd - fraction;
                 }
                 float offset = cascade.interpolator.getInterpolation(fraction) * (cascade.cascadeEnd - cascade.cascadeStart);
                 builder.range(cascade.cascadeStart + offset, cascade.transitionEnd);
@@ -426,7 +426,8 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
 
         vt.setTarget(mView);
 
-        //TODO clone() is required since the class implements ViewTransition.Setup and passes itself to ViewTransition, without clone ViewTransitions made from the same Builder will have their states intertwined
+        //TODO clone() is required since the class implements ViewTransition.Setup and passes itself to ViewTransition,
+        // without clone ViewTransitions made from the same Builder will have their states intertwined
         vt.setSetup(clone());
 
         return vt;
@@ -459,7 +460,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
 
         ObjectAnimator anim = new ObjectAnimator();
         anim.setTarget(mView);
-        anim.setValues(mHolders.values().toArray(new PropertyValuesHolder[0]));
+        anim.setValues(getValuesHolders());
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.play(anim);
         animatorSet.setDuration(SCALE_FACTOR);
@@ -519,7 +520,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
         public Interpolator interpolator;
         public float cascadeStart;
         public float cascadeEnd;
-        public float transitionEnd = 1f;
+        public float transitionEnd = 1f; //end of transition effect
         public boolean reverse;
 
         /**
@@ -530,12 +531,31 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
         }
 
         /**
+         * @param reverse  should be effect be applied in reverse, i.e. last child first
+         * @param cascadeEnd this value should never be 1
+         */
+        public Cascade(boolean reverse, float cascadeEnd) {
+            this(reverse, cascadeEnd, new LinearInterpolator());
+        }
+
+        /**
          * @param cascadeEnd   this value should never be 1
          * @param interpolator
          */
         public Cascade(float cascadeEnd, Interpolator interpolator) {
             this.cascadeEnd = cascadeEnd;
             this.interpolator = interpolator;
+        }
+
+        /**
+         * @param reverse  should be effect be applied in reverse, i.e. last child first
+         * @param cascadeEnd   this value should never be 1
+         * @param interpolator
+         */
+        public Cascade(boolean reverse, float cascadeEnd, Interpolator interpolator) {
+            this.cascadeEnd = cascadeEnd;
+            this.interpolator = interpolator;
+            this.reverse = reverse;
         }
     }
 

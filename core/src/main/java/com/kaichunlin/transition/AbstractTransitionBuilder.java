@@ -4,7 +4,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.FloatRange;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
-import android.support.v4.util.ArrayMap;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.animation.Interpolator;
 
@@ -26,26 +26,56 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
 
     static final int SCALE_FACTOR = 10_000;
 
-    public static final String ALPHA = "alpha";
-    public static final String ROTATION = "rotation";
-    public static final String ROTATION_X = "rotationX";
-    public static final String ROTATION_Y = "rotationY";
-    public static final String SCALE_X = "scaleX";
-    public static final String SCALE_Y = "scaleY";
-    public static final String TRANSLATION_X = "translationX";
-    public static final String TRANSLATION_Y = "translationY";
-    public static final String X = "x";
-    public static final String Y = "y";
+    public static final int ALPHA = 0;
+    public static final int ROTATION = 1;
+    public static final int ROTATION_X = 2;
+    public static final int ROTATION_Y = 3;
+    public static final int SCALE = 4;
+    public static final int SCALE_X = 5;
+    public static final int SCALE_Y = 6;
+    public static final int TRANSLATION_X = 7;
+    public static final int TRANSLATION_Y = 8;
+    public static final int X = 9;
+    public static final int Y = 10;
+    protected static final int VISIBILITY = 11;
+    static final int TOTAL = 12;
 
-    ArrayMap<String, PropertyValuesHolder> mHolders = new ArrayMap<>();
-    ArrayMap<String, ShadowValuesHolder> mShadowHolders = new ArrayMap<>();
-    List<DelayedEvaluator<T>> mDelayed = new ArrayList<>();
+    public static String getPropertyName(int propertyId) {
+        switch (propertyId) {
+            case ALPHA:
+                return "alpha";
+            case ROTATION:
+                return "rotation";
+            case ROTATION_X:
+                return "rotationX";
+            case ROTATION_Y:
+                return "rotationY";
+            case SCALE_X:
+                return "scaleX";
+            case SCALE_Y:
+                return "scaleY";
+            case TRANSLATION_X:
+                return "translationX";
+            case TRANSLATION_Y:
+                return "translationY";
+            case X:
+                return "x";
+            case Y:
+                return "y";
+        }
+        throw new IllegalArgumentException();
+    }
+
+    SparseArray<PropertyValuesHolder> mHolders = new SparseArray<>(4);
+    SparseArray<ShadowValuesHolder> mShadowHolders = new SparseArray<>(4);
+    List<DelayedEvaluator<T>> mDelayed = new ArrayList<>(4);
     float mStart = TransitionController.DEFAULT_START;
     float mEnd = TransitionController.DEFAULT_END;
     String mId;
     boolean mReverse;
     Interpolator mInterpolator;
     int mDuration;
+    DelayedProcessor delayedProcessor;
 
     AbstractTransitionBuilder() {
     }
@@ -136,13 +166,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T delayAlpha(@FloatRange(from = 0.0, to = 1.0) final float end) {
-        addDelayedEvaluator(new DelayedEvaluator() {
-            @Override
-            public void evaluate(View view, AbstractTransitionBuilder builder) {
-                builder.alpha(end);
-            }
-        });
+    public T delayAlpha(@FloatRange(from = 0.0, to = 1.0) float end) {
+        getDelayedProcessor().addProcess(ALPHA, end);
         return self();
     }
 
@@ -171,13 +196,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T delayRotation(final float end) {
-        addDelayedEvaluator(new DelayedEvaluator() {
-            @Override
-            public void evaluate(View view, AbstractTransitionBuilder builder) {
-                builder.rotation(end);
-            }
-        });
+    public T delayRotation(float end) {
+        getDelayedProcessor().addProcess(ROTATION, end);
         return self();
     }
 
@@ -206,13 +226,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T delayRotationX(final float end) {
-        addDelayedEvaluator(new DelayedEvaluator() {
-            @Override
-            public void evaluate(View view, AbstractTransitionBuilder builder) {
-                builder.rotationX(end);
-            }
-        });
+    public T delayRotationX(float end) {
+        getDelayedProcessor().addProcess(ROTATION_X, end);
         return self();
     }
 
@@ -241,13 +256,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T delayRotationY(final float end) {
-        addDelayedEvaluator(new DelayedEvaluator() {
-            @Override
-            public void evaluate(View view, AbstractTransitionBuilder builder) {
-                builder.rotationY(end);
-            }
-        });
+    public T delayRotationY(float end) {
+        getDelayedProcessor().addProcess(ROTATION_Y, end);
         return self();
     }
 
@@ -276,13 +286,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T delayScaleX(@FloatRange(from = 0.0) final float end) {
-        addDelayedEvaluator(new DelayedEvaluator() {
-            @Override
-            public void evaluate(View view, AbstractTransitionBuilder builder) {
-                builder.scaleX(end);
-            }
-        });
+    public T delayScaleX(@FloatRange(from = 0.0) float end) {
+        getDelayedProcessor().addProcess(SCALE_X, end);
         return self();
     }
 
@@ -311,13 +316,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T delayScaleY(@FloatRange(from = 0.0) final float end) {
-        addDelayedEvaluator(new DelayedEvaluator() {
-            @Override
-            public void evaluate(View view, AbstractTransitionBuilder builder) {
-                builder.scaleY(end);
-            }
-        });
+    public T delayScaleY(@FloatRange(from = 0.0) float end) {
+        getDelayedProcessor().addProcess(SCALE_Y, end);
         return self();
     }
 
@@ -347,13 +347,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T delayScale(@FloatRange(from = 0.0) final float end) {
-        addDelayedEvaluator(new DelayedEvaluator() {
-            @Override
-            public void evaluate(View view, AbstractTransitionBuilder builder) {
-                builder.scaleX(end).scaleY(end);
-            }
-        });
+    public T delayScale(@FloatRange(from = 0.0) float end) {
+        getDelayedProcessor().addProcess(SCALE, end);
         return self();
     }
 
@@ -382,13 +377,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T delayTranslationX(final float end) {
-        addDelayedEvaluator(new DelayedEvaluator() {
-            @Override
-            public void evaluate(View view, AbstractTransitionBuilder builder) {
-                builder.translationX(end);
-            }
-        });
+    public T delayTranslationX(float end) {
+        getDelayedProcessor().addProcess(TRANSLATION_X, end);
         return self();
     }
 
@@ -417,13 +407,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @param end
      * @return self
      */
-    public T delayTranslationY(final float end) {
-        addDelayedEvaluator(new DelayedEvaluator() {
-            @Override
-            public void evaluate(View view, AbstractTransitionBuilder builder) {
-                builder.translationY(end);
-            }
-        });
+    public T delayTranslationY(float end) {
+        getDelayedProcessor().addProcess(TRANSLATION_Y, end);
         return self();
     }
 
@@ -453,12 +438,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @return self
      */
     public T delayX(final float end) {
-        addDelayedEvaluator(new DelayedEvaluator() {
-            @Override
-            public void evaluate(View view, AbstractTransitionBuilder builder) {
-                builder.x(end);
-            }
-        });
+        getDelayedProcessor().addProcess(X, end);
         return self();
     }
 
@@ -488,12 +468,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
      * @return self
      */
     public T delayY(final float end) {
-        addDelayedEvaluator(new DelayedEvaluator() {
-            @Override
-            public void evaluate(View view, AbstractTransitionBuilder builder) {
-                builder.y(end);
-            }
-        });
+        getDelayedProcessor().addProcess(Y, end);
         return self();
     }
 
@@ -509,15 +484,16 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Transits a float property from the start value to the end value
+     * Transits a float propertyId from the start value to the end value
      *
-     * @param property
+     * @param propertyId
      * @param vals
      * @return self
      */
-    public T transitFloat(@NonNull String property, float... vals) {
-        mHolders.put(property, PropertyValuesHolder.ofFloat(property, vals));
-        mShadowHolders.put(property, ShadowValuesHolder.ofFloat(property, vals));
+    public T transitFloat(int propertyId, float... vals) {
+        String property = getPropertyName(propertyId);
+        mHolders.put(propertyId, PropertyValuesHolder.ofFloat(property, vals));
+        mShadowHolders.put(propertyId, ShadowValuesHolder.ofFloat(property, vals));
         return self();
     }
 
@@ -538,13 +514,14 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     /**
      * Transits a float property from the start value to the end value
      *
-     * @param property
+     * @param propertyId
      * @param vals
      * @return self
      */
-    public T transitInt(@NonNull String property, int... vals) {
-        mHolders.put(property, PropertyValuesHolder.ofInt(property, vals));
-        mShadowHolders.put(property, ShadowValuesHolder.ofInt(property, vals));
+    public T transitInt(int propertyId, int... vals) {
+        String property = getPropertyName(propertyId);
+        mHolders.put(propertyId, PropertyValuesHolder.ofInt(property, vals));
+        mShadowHolders.put(propertyId, ShadowValuesHolder.ofInt(property, vals));
         return self();
     }
 
@@ -649,11 +626,11 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
         AbstractTransitionBuilder newCopy = null;
         try {
             newCopy = (AbstractTransitionBuilder) super.clone();
-            newCopy.mHolders = new ArrayMap<>(mHolders.size());
+            newCopy.mHolders = new SparseArray<>(mHolders.size());
             for (int i = 0, size = mHolders.size(); i < size; i++) {
                 newCopy.mHolders.put(mHolders.keyAt(i), mHolders.valueAt(i).clone());
             }
-            newCopy.mShadowHolders = new ArrayMap<>(mShadowHolders.size());
+            newCopy.mShadowHolders = new SparseArray<>(mShadowHolders.size());
             for (int i = 0, size = mShadowHolders.size(); i < size; i++) {
                 newCopy.mShadowHolders.put(mShadowHolders.keyAt(i), mShadowHolders.valueAt(i).clone());
             }
@@ -663,6 +640,110 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
             e.printStackTrace();
         }
         return newCopy;
+    }
+
+    public T visible() {
+        getDelayedProcessor().addProcess(VISIBILITY, View.VISIBLE);
+        return self();
+    }
+
+    public T invisible() {
+        getDelayedProcessor().addProcess(VISIBILITY, View.INVISIBLE);
+        return self();
+    }
+
+    public T gone() {
+        getDelayedProcessor().addProcess(VISIBILITY, View.GONE);
+        return self();
+    }
+
+    protected DelayedProcessor getDelayedProcessor() {
+        if (delayedProcessor == null) {
+            delayedProcessor = new DelayedProcessor();
+            addDelayedEvaluator(delayedProcessor);
+        }
+        return delayedProcessor;
+    }
+
+    protected PropertyValuesHolder[] getValuesHolders() {
+        final int size = mHolders.size();
+        PropertyValuesHolder[] holders = new PropertyValuesHolder[size];
+        for (int i = 0; i < size; i++) {
+            holders[i] = mHolders.valueAt(i);
+        }
+        return holders;
+    }
+
+    //a shared static DelayedEvaluator class to reduce object creation
+    protected static class DelayedProcessor implements DelayedEvaluator {
+        final float[] process = new float[TOTAL];
+
+        DelayedProcessor() {
+            for (int i = 0; i < process.length; i++) {
+                process[i] = Float.MIN_VALUE;
+            }
+        }
+
+        @Override
+        public void evaluate(View view, AbstractTransitionBuilder builder) {
+            float value;
+            value = process[ALPHA];
+            if (value != Float.MIN_VALUE) {
+                builder.alpha(value);
+            }
+            value = process[ROTATION];
+            if (value != Float.MIN_VALUE) {
+                builder.rotation(value);
+            }
+            value = process[ROTATION_X];
+            if (value != Float.MIN_VALUE) {
+                builder.rotationX(value);
+            }
+            value = process[ROTATION_Y];
+            if (value != Float.MIN_VALUE) {
+                builder.rotationY(value);
+            }
+            value = process[SCALE];
+            if (value != Float.MIN_VALUE) {
+                builder.scale(value, value);
+            }
+            value = process[SCALE_X];
+            if (value != Float.MIN_VALUE) {
+                builder.scaleX(value);
+            }
+            value = process[SCALE_Y];
+            if (value != Float.MIN_VALUE) {
+                builder.scaleY(value);
+            }
+            value = process[TRANSLATION_X];
+            if (value != Float.MIN_VALUE) {
+                builder.translationX(value);
+            }
+            value = process[TRANSLATION_Y];
+            if (value != Float.MIN_VALUE) {
+                builder.translationY(value);
+            }
+            value = process[X];
+            if (value != Float.MIN_VALUE) {
+                builder.x(value);
+            }
+            value = process[Y];
+            if (value != Float.MIN_VALUE) {
+                builder.y(value);
+            }
+            value = process[VISIBILITY];
+            if (value != Float.MIN_VALUE) {
+                view.setVisibility((int) value);
+            }
+        }
+
+        void addProcess(int type, int value) {
+            process[type] = value;
+        }
+
+        void addProcess(int type, float value) {
+            process[type] = value;
+        }
     }
 
     /**

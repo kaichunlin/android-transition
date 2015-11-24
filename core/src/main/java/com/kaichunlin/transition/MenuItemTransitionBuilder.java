@@ -200,7 +200,7 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
         }
 
         ObjectAnimator anim = new ObjectAnimator();
-        anim.setValues(mHolders.values().toArray(new PropertyValuesHolder[0]));
+        anim.setValues(getValuesHolders());
         AnimatorSet set = new AnimatorSet();
         set.play(anim);
         set.setStartDelay((long) (itemIndex * mCascade * SCALE_FACTOR));
