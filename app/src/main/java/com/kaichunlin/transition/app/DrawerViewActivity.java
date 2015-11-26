@@ -5,16 +5,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
+import com.kaichunlin.transition.Cascade;
 import com.kaichunlin.transition.TransitionListener;
 import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.ViewTransition;
 import com.kaichunlin.transition.ViewTransitionBuilder;
 import com.kaichunlin.transition.adapter.DrawerListenerAdapter;
+import com.kaichunlin.transition.animation.Animation;
+import com.kaichunlin.transition.animation.AnimationListener;
 import com.kaichunlin.transition.animation.AnimationManager;
 import com.kaichunlin.transition.internal.debug.TraceTransitionListener;
 import com.kaichunlin.transition.util.TransitionUtil;
@@ -60,6 +64,7 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
 
         //build the desired transition and adds to the adapter
         final ViewTransition transition = mRotateEffectBuilder.build();
+        mDrawerListenerAdapter.addTransition(ViewTransitionBuilder.transit(findViewById(R.id.mainContent)).scale(0.9f));
         mDrawerListenerAdapter.addTransition(transition);
 
         //configure the transition after the layout is complete
@@ -71,13 +76,13 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
                 //init an animation and add a delay to prevent stutter, needs to be higher if animation is enabled
                 final AnimationManager animationManager = new AnimationManager();
                 mRotateEffectBuilder.reverse().buildAnimationFor(animationManager);
-                //add cascading button fly in animation
-                ViewTransitionBuilder.Cascade cascade = new ViewTransitionBuilder.Cascade(0.6f);
-                cascade.cascadeStart = 0.2f;
-                ViewTransitionBuilder.transit(findViewById(R.id.lay_buttons)).interpolator(new AccelerateDecelerateInterpolator()).transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
+
+                //add fade-in animation
+                Cascade cascade = new Cascade(Cascade.SEQUENTIAL, 0.9f);
+                ViewTransitionBuilder.transit(findViewById(R.id.lay_buttons)).alpha(0f, 1f).visible().interpolator(new AccelerateDecelerateInterpolator()).transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
                     @Override
                     public void transit(ViewTransitionBuilder builder, ViewTransitionBuilder.ViewGroupTransitionConfig config) {
-                        builder.translationX(config.parentViewGroup.getRight(), 0).buildAnimationFor(animationManager);
+                        builder.buildAnimationFor(animationManager);
                     }
                 }, cascade);
                 animationManager.startAnimation(600);
@@ -115,17 +120,14 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void updateTransition(View v) {
+        mDrawerListenerAdapter.removeAllTransitions();
         switch (v.getId()) {
             case R.id.rotate_android:
-                mDrawerListenerAdapter.removeAllTransitions();
-
+                mDrawerListenerAdapter.addTransition(ViewTransitionBuilder.transit(findViewById(R.id.mainContent)).scale(0.9f));
                 mDrawerListenerAdapter.addTransition(mRotateEffectBuilder);
                 break;
             case R.id.slide_subviews:
-                mDrawerListenerAdapter.removeAllTransitions();
-
-                ViewTransitionBuilder.Cascade cascade = new ViewTransitionBuilder.Cascade(0.6f);
-                cascade.cascadeStart = 0.2f;
+                Cascade cascade = new Cascade(Cascade.RUN_TO_THE_END, 0.6f).cascadeStart(0.2f);
                 ViewTransitionBuilder.transit(findViewById(R.id.lay_buttons)).interpolator(new AccelerateDecelerateInterpolator()).transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
                     @Override
                     public void transit(ViewTransitionBuilder builder, ViewTransitionBuilder.ViewGroupTransitionConfig config) {
@@ -134,8 +136,6 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
                 }, cascade);
                 break;
             case R.id.slide_bg:
-                mDrawerListenerAdapter.removeAllTransitions();
-
                 mDrawerListenerAdapter.addTransition(ViewTransitionBuilder.transit(findViewById(R.id.bg)).interpolator(new LinearInterpolator()).translationXAsFractionOfWidth(0.25f));
                 break;
         }

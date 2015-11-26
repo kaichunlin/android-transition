@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
     tools:context="com.kaichunlin.transition.app.DrawerViewActivity">
 
     <android.support.v7.widget.Toolbar
@@ -51,17 +52,20 @@
                 <android.support.v7.widget.AppCompatButton
                     style="@style/Button"
                     android:id="@+id/rotate_android"
-                    android:text="@string/drawer_rotate_android" />
+                    android:text="@string/drawer_rotate_android"
+                    android:visibility="gone"/>
 
                 <android.support.v7.widget.AppCompatButton
                     style="@style/Button"
                     android:id="@+id/slide_subviews"
-                    android:text="@string/drawer_slide_subviews" />
+                    android:text="@string/drawer_slide_subviews"
+                    android:visibility="gone" />
 
                 <android.support.v7.widget.AppCompatButton
                     style="@style/Button"
                     android:id="@+id/slide_bg"
-                    android:text="@string/drawer_slide_bg" />
+                    android:text="@string/drawer_slide_bg"
+                    android:visibility="gone" />
             </LinearLayout>
         </FrameLayout>
 

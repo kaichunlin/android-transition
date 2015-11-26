@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import com.kaichunlin.transition.Cascade;
 import com.kaichunlin.transition.TransitionConfig;
 import com.kaichunlin.transition.ViewTransitionBuilder;
 import com.kaichunlin.transition.animation.AnimationManager;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onGlobalLayout() {
                 final AnimationManager am = new AnimationManager();
                 ViewTransitionBuilder builder = ViewTransitionBuilder.transit(findViewById(R.id.main_btns));
-                ViewTransitionBuilder.Cascade cascade = new ViewTransitionBuilder.Cascade(0.6f);
+                Cascade cascade = new Cascade(Cascade.STAGGERED, 0.6f);
                 builder.transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
                     @Override
                     public void transit(ViewTransitionBuilder builder, ViewTransitionBuilder.ViewGroupTransitionConfig config) {

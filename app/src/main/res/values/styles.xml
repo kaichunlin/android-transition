@@ -35,7 +35,6 @@
 
     <style name="Button">
         <item name="android:layout_marginTop">4dp</item>
-        <item name="android:layout_marginBottom">4dp</item>
         <item name="android:layout_marginLeft">24dp</item>
         <item name="android:layout_marginRight">24dp</item>
         <item name="android:layout_width">match_parent</item>

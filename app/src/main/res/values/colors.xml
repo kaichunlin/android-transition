@@ -21,4 +21,6 @@
     <color name="accent">#FFAB4C</color>
     <color name="accentLight">#FFC682</color>
 
+    <color name="medium_blue">#ff33B5E5</color>
+    <color name="bright_red_text">#ffff0000</color>          <!-- bright red -->
 </resources>

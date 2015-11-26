@@ -4,6 +4,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.UiThread;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +23,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
+import com.kaichunlin.transition.Cascade;
 import com.kaichunlin.transition.ViewTransitionBuilder;
 import com.kaichunlin.transition.adapter.SlidingUpPanelLayoutAdapter;
 import com.kaichunlin.transition.adapter.UnifiedAdapter;
@@ -57,6 +59,8 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
         findViewById(R.id.fading_actionbar).setOnClickListener(this);
         findViewById(R.id.rotating_actionbar).setOnClickListener(this);
         findViewById(R.id.grayscale_bg).setOnClickListener(this);
+        findViewById(R.id.cascade_fading).setOnClickListener(this);
+        findViewById(R.id.cascade_rolling).setOnClickListener(this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -156,6 +160,7 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
         updateTransition(v, mUnifiedAdapter.isReverseAnimation() || mUnifiedAdapter.isAnimating());
     }
 
+    @UiThread
     public void updateTransition(View v, boolean animate) {
         if (animate) {
             mUnifiedAdapter.setReverseAnimation(true);
@@ -185,8 +190,7 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
                 builder.target(findViewById(R.id.content)).buildFor(mUnifiedAdapter);
 
                 builder = baseBuilder.clone().target(findViewById(R.id.content));
-                ViewTransitionBuilder.Cascade cascade = new ViewTransitionBuilder.Cascade(0.6f);
-                cascade.reverse = true;
+                Cascade cascade = new Cascade(Cascade.STAGGERED, 0.6f).reverse();
                 builder.transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
                     @Override
                     public void transit(ViewTransitionBuilder builder, ViewTransitionBuilder.ViewGroupTransitionConfig config) {
@@ -219,15 +223,39 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
                 //Uses a CustomTransitionController that applies a ColorMatrixColorFilter to the background view
                 baseBuilder.clone().addTransitionHandler(new ScaledTransitionHandler() {
                     ColorMatrix matrix = new ColorMatrix();
+                    ImageView bg;
 
                     @Override
                     public void onUpdateScaledProgress(TransitionController controller, View target, float progress) {
                         matrix.setSaturation(1 - progress);
                         ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-                        ((ImageView) findViewById(R.id.content_bg)).setColorFilter(filter);
+                        if(bg==null) {
+                            bg=(ImageView) findViewById(R.id.content_bg);
+                        }
+                        bg.setColorFilter(filter);
                     }
                 }).range(0f, 1f).buildFor(mUnifiedAdapter);
                 setHalfHeight = true;
+                break;
+            case R.id.cascade_fading:
+                builder = baseBuilder.clone().target(findViewById(R.id.content));
+                cascade = new Cascade(Cascade.STAGGERED, 0.54f).reverse();
+                builder.transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
+                    @Override
+                    public void transit(ViewTransitionBuilder builder, ViewTransitionBuilder.ViewGroupTransitionConfig config) {
+                        builder.alpha(0f).buildFor(mUnifiedAdapter);
+                    }
+                }, cascade);
+                break;
+            case R.id.cascade_rolling:
+                builder = baseBuilder.clone().target(findViewById(R.id.content));
+                cascade = new Cascade(Cascade.SEQUENTIAL, 0.64f).reverse();
+                builder.transitViewGroup(new ViewTransitionBuilder.ViewGroupTransition() {
+                    @Override
+                    public void transit(ViewTransitionBuilder builder, ViewTransitionBuilder.ViewGroupTransitionConfig config) {
+                        builder.rotationX(90f).buildFor(mUnifiedAdapter);
+                    }
+                }, cascade);
                 break;
         }
 
