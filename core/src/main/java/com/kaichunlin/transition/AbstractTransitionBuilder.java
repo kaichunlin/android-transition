@@ -38,7 +38,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     public static final int X = 9;
     public static final int Y = 10;
     protected static final int VISIBILITY = 11;
-    static final int TOTAL = 12;
+    protected static final int TOTAL = 12;
 
     public static String getPropertyName(int propertyId) {
         switch (propertyId) {
@@ -75,7 +75,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     boolean mReverse;
     Interpolator mInterpolator;
     int mDuration;
-    DelayedProcessor delayedProcessor;
+    DelayedProcessor mDelayedProcessor;
 
     AbstractTransitionBuilder() {
     }
@@ -636,6 +636,11 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
             }
             newCopy.mDelayed = new ArrayList<>(mDelayed.size());
             newCopy.mDelayed.addAll(mDelayed);
+            if(mDelayedProcessor != null) {
+                newCopy.mDelayedProcessor = mDelayedProcessor.clone();
+                newCopy.mDelayed.remove(mDelayedProcessor);
+                newCopy.mDelayed.add(newCopy.mDelayedProcessor);
+            }
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
@@ -658,11 +663,11 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     protected DelayedProcessor getDelayedProcessor() {
-        if (delayedProcessor == null) {
-            delayedProcessor = new DelayedProcessor();
-            addDelayedEvaluator(delayedProcessor);
+        if (mDelayedProcessor == null) {
+            mDelayedProcessor = new DelayedProcessor();
+            addDelayedEvaluator(mDelayedProcessor);
         }
-        return delayedProcessor;
+        return mDelayedProcessor;
     }
 
     protected PropertyValuesHolder[] getValuesHolders() {
@@ -675,11 +680,12 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     //a shared static DelayedEvaluator class to reduce object creation
-    protected static class DelayedProcessor implements DelayedEvaluator {
-        final float[] process = new float[TOTAL];
+    protected static class DelayedProcessor implements DelayedEvaluator, Cloneable {
+        float[] process;
 
         DelayedProcessor() {
-            for (int i = 0; i < process.length; i++) {
+            process =  new float[TOTAL];
+            for (int i = 0; i < TOTAL; i++) {
                 process[i] = Float.MIN_VALUE;
             }
         }
@@ -743,6 +749,21 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
 
         void addProcess(int type, float value) {
             process[type] = value;
+        }
+
+        @CheckResult
+        protected DelayedProcessor clone() {
+            try {
+                DelayedProcessor dp= (DelayedProcessor) super.clone();
+                dp.process =  new float[TOTAL];
+                for (int i = 0; i < TOTAL; i++) {
+                    dp.process[i] = process[i];
+                }
+                return dp;
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 

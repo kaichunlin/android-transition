@@ -12,8 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
 
 import com.kaichunlin.transition.internal.CustomTransitionController;
 import com.kaichunlin.transition.internal.DefaultTransitionController;
@@ -24,7 +22,6 @@ import com.nineoldandroids.animation.AnimatorInflater;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ArgbEvaluator;
 import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.animation.PropertyValuesHolder;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
@@ -397,7 +394,8 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     /**
-     * Similar to {@link #transitViewGroup(ViewGroupTransition)}, but with builder.range() auto filled for each child View
+     * Similar to {@link #transitViewGroup(ViewGroupTransition)}, but with builder.range() auto filled for each child View, how
+     * the start and end value is determined is defined by {@link Cascade} parameter.
      *
      * @param viewGroupTransition
      * @param cascade
@@ -407,12 +405,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
         transitViewGroup(new ViewGroupTransition() {
             @Override
             public void transit(ViewTransitionBuilder builder, ViewGroupTransitionConfig config) {
-                float fraction = (float) config.index / (config.total + 1) * cascade.transitionEnd;
-                if (cascade.reverse) {
-                    fraction = cascade.transitionEnd - fraction;
-                }
-                float offset = cascade.interpolator.getInterpolation(fraction) * (cascade.cascadeEnd - cascade.cascadeStart);
-                builder.range(cascade.cascadeStart + offset, cascade.transitionEnd);
+                cascade.transit(builder, config); //sets up builder.range()
                 viewGroupTransition.transit(builder, config);
             }
         });
@@ -510,52 +503,6 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
 
         public int getChildrenCount() {
             return total;
-        }
-    }
-
-    /**
-     * Controls how cascading effect should be applied
-     */
-    public static class Cascade {
-        public Interpolator interpolator;
-        public float cascadeStart;
-        public float cascadeEnd;
-        public float transitionEnd = 1f; //end of transition effect
-        public boolean reverse;
-
-        /**
-         * @param cascadeEnd this value should never be 1
-         */
-        public Cascade(float cascadeEnd) {
-            this(cascadeEnd, new LinearInterpolator());
-        }
-
-        /**
-         * @param reverse  should be effect be applied in reverse, i.e. last child first
-         * @param cascadeEnd this value should never be 1
-         */
-        public Cascade(boolean reverse, float cascadeEnd) {
-            this(reverse, cascadeEnd, new LinearInterpolator());
-        }
-
-        /**
-         * @param cascadeEnd   this value should never be 1
-         * @param interpolator
-         */
-        public Cascade(float cascadeEnd, Interpolator interpolator) {
-            this.cascadeEnd = cascadeEnd;
-            this.interpolator = interpolator;
-        }
-
-        /**
-         * @param reverse  should be effect be applied in reverse, i.e. last child first
-         * @param cascadeEnd   this value should never be 1
-         * @param interpolator
-         */
-        public Cascade(boolean reverse, float cascadeEnd, Interpolator interpolator) {
-            this.cascadeEnd = cascadeEnd;
-            this.interpolator = interpolator;
-            this.reverse = reverse;
         }
     }
 
