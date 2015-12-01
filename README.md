@@ -8,6 +8,16 @@ differnt UI components like [Drawer](https://developer.android.com/reference/and
 
 ## Changelog
 
+**0.9.3**
+
+ - Many *TransitionBuilder methods now takes varargs
+ - Add visible()/invisible()/gone() to *TransitionBuilder that modifies target View's visibility
+ - Add [ScaledTransitionHandler](https://github.com/kaichunlin/android-transition/blob/fae47fef614f8994ad738768474f565c39fdcd2e/core/src/main/java/com/kaichunlin/transition/ScaledTransitionHandler.java)
+ - Improve [Cascade](https://github.com/kaichunlin/android-transition/blob/master/core/src/main/java/com/kaichunlin/transition/Cascade.java)
+ - Fix erroneously sharing some TransitionBuilder states when cloned
+ - Remove android:allowBackup from AndroidManifest.xml
+ - Minor optimizations
+
 **0.9.2**
 
  - Allow the transition/animation of a single MenuItem
@@ -90,13 +100,13 @@ Integration
 --------
 The simplest way to integrate Android-Transition is to grab them from Maven Central or jCenter. On Android Studio, add the code below to Gradle dependencies:
 
-    compile 'com.github.kaichunlin.transition:core:0.9.2'
+    compile 'com.github.kaichunlin.transition:core:0.9.3'
 
 Adapters that adapts to UI components not found in Android framework or Android Support Library are provided as their own libraries, the table below is the list of libraries:
 
 | Library       | Function           | Description in build.gradle  |
 |:-------------|:-------------|:-----|
-| core | Provides core transition function and adapters | com.github.kaichunlin.transition:core:0.9.2 |
+| core | Provides core transition function and adapters | com.github.kaichunlin.transition:core:0.9.3 |
 | slidinguppanel | [AndroidSlidingUpPanel](https://github.com/umano/AndroidSlidingUpPanel) Adapter | com.github.kaichunlin.transition:slidinguppanel:0.9.1|
 
 As an example, if an app requires the _slidinguppanel_ module, which implicitly requires the _core_ module, then build.gradle will look like below:
