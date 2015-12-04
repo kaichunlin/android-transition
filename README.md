@@ -8,6 +8,10 @@ differnt UI components like [Drawer](https://developer.android.com/reference/and
 
 ## Changelog
 
+**0.9.4**
+
+Because somehow version 0.9.3 uploaded to Maven is broken :-/
+
 **0.9.3**
 
  - Many *TransitionBuilder methods now takes varargs
@@ -42,7 +46,7 @@ On the other hand now it only takes __8 lines of code__ to achieve the effect be
 
 On Android Studio update Gradle dependency to:
 
-    compile 'com.github.kaichunlin.transition:core:0.9.2'
+    compile 'com.github.kaichunlin.transition:core:0.9.4'
 
 To add the corresponding slidinguppanel module:
 
@@ -100,13 +104,13 @@ Integration
 --------
 The simplest way to integrate Android-Transition is to grab them from Maven Central or jCenter. On Android Studio, add the code below to Gradle dependencies:
 
-    compile 'com.github.kaichunlin.transition:core:0.9.3'
+    compile 'com.github.kaichunlin.transition:core:0.9.4'
 
 Adapters that adapts to UI components not found in Android framework or Android Support Library are provided as their own libraries, the table below is the list of libraries:
 
 | Library       | Function           | Description in build.gradle  |
 |:-------------|:-------------|:-----|
-| core | Provides core transition function and adapters | com.github.kaichunlin.transition:core:0.9.3 |
+| core | Provides core transition function and adapters | com.github.kaichunlin.transition:core:0.9.4 |
 | slidinguppanel | [AndroidSlidingUpPanel](https://github.com/umano/AndroidSlidingUpPanel) Adapter | com.github.kaichunlin.transition:slidinguppanel:0.9.1|
 
 As an example, if an app requires the _slidinguppanel_ module, which implicitly requires the _core_ module, then build.gradle will look like below:
