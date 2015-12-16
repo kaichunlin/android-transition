@@ -147,7 +147,11 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
             if (mId == null) {
                 mId = another.mId;
             } else {
-                mId += "_MERGED_" + another.mId;
+                StringBuilder sb = new StringBuilder(mId.length() + another.mId.length());
+                sb.append(mId);
+                sb.append("_MERGED_");
+                sb.append(another.mId);
+                mId = sb.toString();
             }
         }
         mUpdateStateAfterUpdateProgress |= another.mUpdateStateAfterUpdateProgress;

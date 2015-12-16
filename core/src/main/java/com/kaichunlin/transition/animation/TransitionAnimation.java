@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 import android.view.View;
 
 import com.kaichunlin.transition.AbstractTransition;
@@ -160,6 +161,12 @@ public class TransitionAnimation extends AbstractAnimation {
             mController.endController();
             mController = null;
         }
+    }
+
+    @Override
+    public void forceEndState() {
+        startAnimation();
+        endAnimation();
     }
 
     @Override

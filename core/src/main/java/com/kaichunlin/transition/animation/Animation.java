@@ -89,6 +89,12 @@ public interface Animation {
     void endAnimation();
 
     /**
+     *  Forces the animation's end state to be applied immediately even if the animation has not started. If the animation has started, it will end immediately.
+     */
+    @UiThread
+    void forceEndState();
+
+    /**
      * Stops the animation, i.e. the affected Views will be reverted to their original states
      */
     @UiThread

@@ -228,6 +228,11 @@ public class UnifiedAdapter extends AbstractAdapter implements Animation, Transi
     }
 
     @Override
+    public void forceEndState() {
+        mAnimationManager.forceEndState();
+    }
+
+    @Override
     public void resetAnimation() {
         mAnimationManager.resetAnimation();
     }

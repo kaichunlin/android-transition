@@ -179,14 +179,18 @@ public class AnimationManager extends AbstractAnimation {
         if (isAnimating()) {
             cancelAnimation();
         }
-        final int size = mAnimationList.size();
-        if (size == 0) {
+        if (mAnimationList.size() == 0) {
             return;
         }
         mAnimationList.get(0).addAnimationListener(mAnimationListener);
         //call listeners so they can perform their actions first, like modifying this adapter's transitions
         notifyAnimationStart();
 
+        doStartAnimation(duration);
+    }
+
+    private void doStartAnimation(@IntRange(from = 0) int duration) {
+        final int size=mAnimationList.size();
         if (mCheckAnimationType) {
             mPassAnimationTypeCheck = true;
             for (int i = 0; i < size; i++) {
@@ -280,6 +284,16 @@ public class AnimationManager extends AbstractAnimation {
             }
         } else {
             mSharedController.endController();
+        }
+    }
+
+    @UiThread
+    public void forceEndState() {
+        if(isAnimating()) {
+            endAnimation();
+        } else {
+            doStartAnimation(100);
+            endAnimation();
         }
     }
 

@@ -140,6 +140,11 @@ public class AnimationAdapter extends AbstractAdapter implements Animation, Tran
     }
 
     @Override
+    public void forceEndState() {
+        mAnimation.forceEndState();
+    }
+
+    @Override
     public void resetAnimation() {
         mAnimation.resetAnimation();
     }
