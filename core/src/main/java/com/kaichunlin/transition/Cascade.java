@@ -27,6 +27,7 @@ import android.view.animation.LinearInterpolator;
  * Created by Kai-Chun Lin on 2015/11/24.
  */
 public class Cascade implements ViewTransitionBuilder.ViewGroupTransition {
+    private static final Interpolator DEFAULT_INTERPOLATOR = new LinearInterpolator();
     public static final int STAGGERED = 0;
     public static final int RUN_TO_THE_END = 1;
     public static final int SEQUENTIAL = 2;
@@ -45,7 +46,7 @@ public class Cascade implements ViewTransitionBuilder.ViewGroupTransition {
      * @param cascadeEnd this value should never be 1, otherwise no transition will be applied to the last child
      */
     public Cascade(@IntRange(from = 0, to = 2) int type, @FloatRange(from = 0.0, to = 1.0) float cascadeEnd) {
-        this(type, cascadeEnd, new LinearInterpolator());
+        this(type, cascadeEnd, DEFAULT_INTERPOLATOR);
     }
 
     /**

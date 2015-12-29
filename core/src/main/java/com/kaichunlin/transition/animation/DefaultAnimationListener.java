@@ -5,14 +5,14 @@ package com.kaichunlin.transition.animation;
  */
 public class DefaultAnimationListener implements AnimationListener {
     @Override
-    public void onAnimationStart(Animation animationManager){}
+    public void onAnimationStart(Animation animation){}
 
     @Override
-    public void onAnimationEnd(Animation animationManager){}
+    public void onAnimationEnd(Animation animation){}
 
     @Override
-    public void onAnimationCancel(Animation animationManager){}
+    public void onAnimationCancel(Animation animation){}
 
     @Override
-    public void onAnimationReset(Animation animationManager){}
+    public void onAnimationReset(Animation animation){}
 }

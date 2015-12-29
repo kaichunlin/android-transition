@@ -167,6 +167,7 @@ public class TransitionAnimation extends AbstractAnimation {
     public void forceEndState() {
         startAnimation();
         endAnimation();
+        notifyAnimationEnd();
     }
 
     @Override

@@ -45,9 +45,9 @@ public class AnimationManager extends AbstractAnimation {
         }
     };
     private final List<AbstractAnimation> mAnimationList = new ArrayList<>();
+    private StateController mSharedController;
     private boolean mCheckAnimationType;
     private boolean mPassAnimationTypeCheck;
-    private StateController mSharedController;
 
     /**
      * Same as calling addAnimation(transitionBuilder.buildAnimation())
@@ -294,6 +294,7 @@ public class AnimationManager extends AbstractAnimation {
         } else {
             doStartAnimation(100);
             endAnimation();
+            notifyAnimationEnd();
         }
     }
 
