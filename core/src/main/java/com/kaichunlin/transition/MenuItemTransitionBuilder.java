@@ -13,7 +13,6 @@ import android.view.animation.Interpolator;
 import com.kaichunlin.transition.internal.TransitionControllerManager;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.animation.PropertyValuesHolder;
 
 /**
  * Allows the easy creation of {@link MenuItemTransition}
@@ -194,9 +193,11 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
 
     @Override
     public void setupAnimation(@NonNull MenuItem mMenuItem, @NonNull TransitionControllerManager transitionControllerManager, @IntRange(from = 0) int itemIndex, @IntRange(from = 0) int menuCount) {
-        final int size = mDelayed.size();
-        for (int i = 0; i < size; i++) {
-            mDelayed.get(i).evaluate(transitionControllerManager.getTarget(), this);
+        if(mDelayed!=null) {
+            final int size = mDelayed.size();
+            for (int i = 0; i < size; i++) {
+                mDelayed.get(i).evaluate(transitionControllerManager.getTarget(), this);
+            }
         }
 
         ObjectAnimator anim = new ObjectAnimator();
