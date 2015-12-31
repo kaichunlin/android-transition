@@ -10,6 +10,7 @@ import android.support.annotation.FloatRange;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -33,6 +34,14 @@ import java.util.List;
  * Created by Kai-Chun Lin on 2015/4/23.
  */
 public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransitionBuilder, ViewTransition> implements ViewTransition.Setup {
+    private static final String TAG = "ViewTransitionBuilder";
+    protected static final int HEIGHT = 0;
+    protected static final int TRANSLATION_X_AS_FRACTION_OF_WIDTH_WITH_VIEW = 1;
+    protected static final int TRANSLATION_X_AS_FRACTIONS_OF_WIDTH_WITH_VIEW = 2;
+    protected static final int TRANSLATION_Y_AS_FRACTION_OF_HEIGHT_WITH_VIEW = 3;
+    protected static final int TRANSLATION_Y_AS_FRACTIONS_OF_HEIGHT_WITH_VIEW = 4;
+    protected static final int DELAYED_TOTAL = 5;
+    private ViewTransitionDelayedEvaluation mViewDelayedProcessor;
 
     /**
      * Creates a {@link ViewTransitionBuilder} instance with no target view set
@@ -61,6 +70,9 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     private ViewTransitionBuilder(@Nullable View view) {
+        if (view == null) {
+            Log.w(TAG, "Null view is provided, may cause exception");
+        }
         mView = view;
     }
 
@@ -69,17 +81,25 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
      * @return
      */
     public ViewTransitionBuilder target(@Nullable View view) {
+        if (view == null) {
+            Log.w(TAG, "Null view is provided, may cause exception");
+        }
         mView = view;
         return self();
     }
 
+    public View getTargetView() {
+        return mView;
+    }
+
     /**
-     * Adds a custom {@link TransitionHandler}
+     * Adds a custom {@link TransitionHandler}, the builder must be cloned if this method  is called.
      *
      * @param transitionHandler
      * @return
      */
     public ViewTransitionBuilder addTransitionHandler(@NonNull TransitionHandler transitionHandler) {
+        checkModifiability();
         if (mCustomTransitionController == null) {
             mCustomTransitionController = new CustomTransitionController();
         }
@@ -128,49 +148,82 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     /**
-     * @param percent
+     * @param fraction
      * @return
      */
-    public ViewTransitionBuilder translationXAsFractionOfWidth(final float percent) {
-        return translationX(mView.getWidth() * percent);
+    public ViewTransitionBuilder translationXAsFractionOfWidth(float fraction) {
+        return translationX(mView.getWidth() * fraction);
     }
 
     /**
-     * @param percent
+     * @param widthFractions
      * @return
      */
-    public ViewTransitionBuilder delayTranslationXAsFractionOfWidth(final float percent) {
-        final View mView = this.mView;
-        addDelayedEvaluator(new DelayedEvaluator<ViewTransitionBuilder>() {
-            @Override
-            public void evaluate(View view, ViewTransitionBuilder builder) {
-                builder.translationX(mView.getWidth() * percent);
-            }
-        });
+    public ViewTransitionBuilder translationXAsFractionOfWidth(float... widthFractions) {
+        int width = mView.getWidth();
+        for (int i = 0, size = widthFractions.length; i < size; i++) {
+            widthFractions[i] = width * widthFractions[i];
+        }
+        return translationX(widthFractions);
+    }
+
+    /**
+     * @param fraction
+     * @return
+     */
+    public ViewTransitionBuilder delayTranslationXAsFractionOfWidth(float fraction) {
+        getDelayedProcessor().addProcess(TRANSLATION_X_AS_FRACTION_OF_WIDTH, fraction);
+        return self();
+    }
+
+    /**
+     * @param fractions
+     * @return
+     */
+    public ViewTransitionBuilder delayTranslationXAsFractionOfWidth(float... fractions) {
+        getDelayedProcessor().addProcess(TRANSLATION_X_AS_FRACTION_OF_WIDTH, fractions);
         return self();
     }
 
     /**
      * @param targetView
-     * @param percent
+     * @param fraction
      * @return
      */
-    public ViewTransitionBuilder translationXAsFractionOfWidth(@NonNull final View targetView, final float percent) {
-        return translationX(targetView.getWidth() * percent);
+    public ViewTransitionBuilder translationXAsFractionOfWidth(@NonNull final View targetView, float fraction) {
+        return translationX(targetView.getWidth() * fraction);
     }
 
     /**
      * @param targetView
-     * @param percent
+     * @param widthFractions
      * @return
      */
-    public ViewTransitionBuilder delayTranslationXAsFractionOfWidth(@NonNull final View targetView, final float percent) {
-        addDelayedEvaluator(new DelayedEvaluator<ViewTransitionBuilder>() {
-            @Override
-            public void evaluate(View view, ViewTransitionBuilder builder) {
-                builder.translationX(targetView.getWidth() * percent);
-            }
-        });
+    public ViewTransitionBuilder translationXAsFractionOfWidth(@NonNull final View targetView, float... widthFractions) {
+        int width = targetView.getWidth();
+        for (int i = 0, size = widthFractions.length; i < size; i++) {
+            widthFractions[i] = width * widthFractions[i];
+        }
+        return translationX(widthFractions);
+    }
+
+    /**
+     * @param targetView
+     * @param fraction
+     * @return
+     */
+    public ViewTransitionBuilder delayTranslationXAsFractionOfWidth(@NonNull final View targetView, final float fraction) {
+        getViewDelayedProcessor().addProcess(TRANSLATION_X_AS_FRACTION_OF_WIDTH_WITH_VIEW, targetView, fraction);
+        return self();
+    }
+
+    /**
+     * @param targetView
+     * @param widthFractions
+     * @return
+     */
+    public ViewTransitionBuilder delayTranslationXAsFractionOfWidth(@NonNull final View targetView, final float... widthFractions) {
+        getViewDelayedProcessor().addProcess(TRANSLATION_X_AS_FRACTIONS_OF_WIDTH_WITH_VIEW, targetView, widthFractions);
         return self();
     }
 
@@ -180,49 +233,82 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     /**
-     * @param percent
+     * @param fraction
      * @return
      */
-    public ViewTransitionBuilder translationYAsFractionOfHeight(final float percent) {
-        return translationY(mView.getHeight() * percent);
+    public ViewTransitionBuilder translationYAsFractionOfHeight(float fraction) {
+        return translationY(mView.getHeight() * fraction);
     }
 
     /**
-     * @param percent
+     * @param heightFractions
      * @return
      */
-    public ViewTransitionBuilder delayTranslationYAsFractionOfHeight(final float percent) {
-        final View mView = this.mView;
-        addDelayedEvaluator(new DelayedEvaluator<ViewTransitionBuilder>() {
-            @Override
-            public void evaluate(View view, ViewTransitionBuilder builder) {
-                builder.translationY(mView.getHeight() * percent);
-            }
-        });
+    public ViewTransitionBuilder translationYAsFractionOfHeight(float... heightFractions) {
+        int height = mView.getWidth();
+        for (int i = 0, size = heightFractions.length; i < size; i++) {
+            heightFractions[i] = height * heightFractions[i];
+        }
+        return translationY(heightFractions);
+    }
+
+    /**
+     * @param fraction
+     * @return
+     */
+    public ViewTransitionBuilder delayTranslationYAsFractionOfHeight(float fraction) {
+        getDelayedProcessor().addProcess(TRANSLATION_Y_AS_FRACTION_OF_HEIGHT, fraction);
+        return self();
+    }
+
+    /**
+     * @param heightFractions
+     * @return
+     */
+    public ViewTransitionBuilder delayTranslationYAsFractionOfHeight(final float... heightFractions) {
+        getDelayedProcessor().addProcess(TRANSLATION_Y_AS_FRACTION_OF_HEIGHT, heightFractions);
         return self();
     }
 
     /**
      * @param targetView
-     * @param percent
+     * @param fraction
      * @return
      */
-    public ViewTransitionBuilder translationYAsFractionOfHeight(@NonNull final View targetView, final float percent) {
-        return translationY(targetView.getHeight() * percent);
+    public ViewTransitionBuilder translationYAsFractionOfHeight(@NonNull final View targetView, final float fraction) {
+        return translationY(targetView.getHeight() * fraction);
     }
 
     /**
      * @param targetView
-     * @param percent
+     * @param heightFractions
      * @return
      */
-    public ViewTransitionBuilder delayTranslationYAsFractionOfHeight(@NonNull final View targetView, final float percent) {
-        addDelayedEvaluator(new DelayedEvaluator<ViewTransitionBuilder>() {
-            @Override
-            public void evaluate(View view, ViewTransitionBuilder builder) {
-                builder.translationY(targetView.getHeight() * percent);
-            }
-        });
+    public ViewTransitionBuilder translationYAsFractionOfHeight(@NonNull final View targetView, final float... heightFractions) {
+        int height = targetView.getWidth();
+        for (int i = 0, size = heightFractions.length; i < size; i++) {
+            heightFractions[i] = height * heightFractions[i];
+        }
+        return translationY(heightFractions);
+    }
+
+    /**
+     * @param targetView
+     * @param fraction
+     * @return
+     */
+    public ViewTransitionBuilder delayTranslationYAsFractionOfHeight(@NonNull final View targetView, final float fraction) {
+        getViewDelayedProcessor().addProcess(TRANSLATION_Y_AS_FRACTION_OF_HEIGHT_WITH_VIEW, targetView, fraction);
+        return self();
+    }
+
+    /**
+     * @param targetView
+     * @param heightFractions
+     * @return
+     */
+    public ViewTransitionBuilder delayTranslationYAsFractionOfHeight(@NonNull final View targetView, final float... heightFractions) {
+        getViewDelayedProcessor().addProcess(TRANSLATION_Y_AS_FRACTIONS_OF_HEIGHT_WITH_VIEW, targetView, heightFractions);
         return self();
     }
 
@@ -247,12 +333,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     public ViewTransitionBuilder delayHeight(@IntRange(from = 0) final int targetHeight) {
-        addDelayedEvaluator(new DelayedEvaluator<ViewTransitionBuilder>() {
-            @Override
-            public void evaluate(View view, ViewTransitionBuilder builder) {
-                builder.height(targetHeight);
-            }
-        });
+        getDelayedProcessor().addProcess(HEIGHT, targetHeight);
         return self();
     }
 
@@ -267,6 +348,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
 
     @Override
     public ViewTransitionBuilder reverse() {
+        // super.reverse();
         mHolders.clear();
         for (int i = 0, size = mShadowHolders.size(); i < size; i++) {
             mHolders.put(mShadowHolders.keyAt(i), mShadowHolders.valueAt(i).createReverse());
@@ -278,10 +360,13 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     /**
+     * The builder must be cloned if this method  is called.
+     *
      * @param setup
      * @return
      */
     public ViewTransitionBuilder addSetup(@NonNull ViewTransition.Setup setup) {
+        checkModifiability();
         mSetupList.add(setup);
         return self();
     }
@@ -437,8 +522,10 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
             mView = transitionControllerManager.getTarget();
         }
 
-        for (int i = 0, size = mDelayed.size(); i < size; i++) {
-            mDelayed.get(i).evaluate(transitionControllerManager.getTarget(), this);
+        if (mDelayed != null) {
+            for (int i = 0, size = mDelayed.size(); i < size; i++) {
+                mDelayed.get(i).evaluate(transitionControllerManager.getTarget(), this);
+            }
         }
 
         for (int i = 0, size = mSetupList.size(); i < size; i++) {
@@ -458,6 +545,111 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
         animatorSet.play(anim);
         animatorSet.setDuration(SCALE_FACTOR);
         transitionControllerManager.addAnimatorSetAsTransition(mView, animatorSet).setRange(mStart, mEnd);
+    }
+
+    protected ViewTransitionDelayedEvaluation getViewDelayedProcessor() {
+        if (mViewDelayedProcessor == null) {
+            mViewDelayedProcessor = new ViewTransitionDelayedEvaluation();
+            addDelayedEvaluator(mViewDelayedProcessor);
+        }
+        return mViewDelayedProcessor;
+    }
+
+    protected static class ViewTransitionDelayedEvaluation implements DelayedEvaluator<ViewTransitionBuilder> {
+        View[] views;
+        float[] process;
+        float[][] process2;
+
+        ViewTransitionDelayedEvaluation() {
+            views = new View[DELAYED_TOTAL];
+            process = new float[DELAYED_TOTAL];
+            for (int i = 0; i < DELAYED_TOTAL; i++) {
+                process[i] = Float.MIN_VALUE;
+            }
+            process2 = new float[DELAYED_TOTAL][];
+        }
+
+        @Override
+        public void evaluate(View view, ViewTransitionBuilder builder) {
+            View targetView;
+            float value;
+            float[] orgValues;
+            float[] newValues;
+            value = process[HEIGHT];
+            if (value != Float.MIN_VALUE) {
+                builder.height((int) value);
+            }
+
+            value = process[TRANSLATION_X_AS_FRACTION_OF_WIDTH_WITH_VIEW];
+            if (value != Float.MIN_VALUE) {
+                builder.height((int) value);
+                builder.translationX(views[TRANSLATION_X_AS_FRACTION_OF_WIDTH_WITH_VIEW].getWidth() * value);
+            }
+            if (process2[TRANSLATION_X_AS_FRACTIONS_OF_WIDTH_WITH_VIEW] != null) {
+                orgValues = process2[TRANSLATION_X_AS_FRACTIONS_OF_WIDTH_WITH_VIEW];
+                newValues = new float[orgValues.length + 1];
+                targetView = views[TRANSLATION_X_AS_FRACTIONS_OF_WIDTH_WITH_VIEW];
+                int width = (targetView != null ? targetView : view).getWidth();
+                newValues[0] = width;
+                for (int i = 0; i < orgValues.length; i++) {
+                    newValues[i + 1] = width * orgValues[i];
+                }
+                builder.translationX(newValues);
+            }
+
+            value = process[TRANSLATION_Y_AS_FRACTION_OF_HEIGHT_WITH_VIEW];
+            if (value != Float.MIN_VALUE) {
+                builder.height((int) value);
+                builder.translationY(views[TRANSLATION_Y_AS_FRACTION_OF_HEIGHT_WITH_VIEW].getHeight() * value);
+            }
+            if (process2[TRANSLATION_Y_AS_FRACTIONS_OF_HEIGHT_WITH_VIEW] != null) {
+                orgValues = process2[TRANSLATION_Y_AS_FRACTIONS_OF_HEIGHT_WITH_VIEW];
+                newValues = new float[orgValues.length + 1];
+                targetView = views[TRANSLATION_Y_AS_FRACTIONS_OF_HEIGHT_WITH_VIEW];
+                int height = (targetView != null ? targetView : view).getHeight();
+                newValues[0] = height;
+                for (int i = 0; i < orgValues.length; i++) {
+                    newValues[i + 1] = height * orgValues[i];
+                }
+                builder.translationY(newValues);
+            }
+        }
+
+        void addProcess(int type, int value) {
+            process[type] = value;
+        }
+
+        void addProcess(int type, View view, int value) {
+            process[type] = value;
+            views[type] = view;
+        }
+
+        void addProcess(int type, float value) {
+            process[type] = value;
+        }
+
+        void addProcess(int type, View view, float value) {
+            process[type] = value;
+            views[type] = view;
+        }
+
+        public void addProcess(int type, View view, float[] values) {
+            process2[type] = values;
+            views[type] = view;
+        }
+
+        @CheckResult
+        protected DelayedProcessor clone() {
+            try {
+                DelayedProcessor dp = (DelayedProcessor) super.clone();
+                dp.process = new float[TOTAL];
+                System.arraycopy(process, 0, dp.process, 0, process.length);
+                return dp;
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
     /**

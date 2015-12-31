@@ -62,7 +62,7 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
         // (v.s. simultaneously), MenuItem will reset to enabled when transiting, and invalidates menu on transition
         // completion
         MenuItemTransitionBuilder sharedBuilder = MenuItemTransitionBuilder.transit(mToolbar).visibleOnStartAnimation(true).invalidateOptionOnStopTransition(this, true);
-        MenuItemTransitionBuilder builder = sharedBuilder.clone().id("Flip").alpha(1f, 0.5f).translationX(0, 30).cascade(0.3f);
+        MenuItemTransitionBuilder builder = sharedBuilder.id("Flip").alpha(1f, 0.5f).translationX(0, 30).cascade(0.3f);
         mFlipOpen = builder.scaleX(1f, 0f).build();
         mFlipClose = builder.reverse().translationX(0, -30).build();
         mShrinkClose = builder.scale(1f, 0f).id("Shrink").build();

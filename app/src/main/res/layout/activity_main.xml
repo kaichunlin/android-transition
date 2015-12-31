@@ -8,6 +8,17 @@
     tools:context="com.kaichunlin.transition.app.MainActivity"
     android:gravity="top">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
+        android:title="@string/app_name"
+        app:title="@string/app_name"
+        app:theme="@style/Toolbar" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -18,17 +29,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="top">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
-                android:title="@string/app_name"
-                app:title="@string/app_name"
-                app:theme="@style/Toolbar" />
 
             <android.support.v7.widget.AppCompatButton
                 style="@style/Button"
