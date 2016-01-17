@@ -22,7 +22,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.github.ksoichiro:android-observablescrollview:1.5.1'
+    compile 'com.github.ksoichiro:android-observablescrollview:1.6.0'
     compile project(':core')
 }
 
