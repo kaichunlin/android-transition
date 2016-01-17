@@ -8,7 +8,7 @@ import android.view.animation.LinearInterpolator;
 
 /**
  * Defines how a cascading transition should be applied for each child of a ViewGroup, this is used for
- * {@link ViewTransitionBuilder#transitViewGroup(ViewTransitionBuilder.ViewGroupTransition, Cascade).
+ * {@link ViewTransitionBuilder#transitViewGroup(ViewTransitionBuilder.ViewGroupTransition, Cascade)}.
  * There are 3 different type:
  * 1. STAGGERED, where effects would interleave with each other, the length of the effect = getTransitionEnd() - getCascadeEnd():
  * child 0: |------|
