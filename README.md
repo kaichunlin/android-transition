@@ -8,6 +8,16 @@ differnt UI components like [Drawer](https://developer.android.com/reference/and
 
 ## Changelog
 
+**0.9.5**
+
+ - Add [Animation.forceEndState()](https://github.com/kaichunlin/android-transition/blob/d2019b99dfb6b6293142757421ec781617f69d69/core/src/main/java/com/kaichunlin/transition/animation/Animation.java#L95)
+ - Add [DefaultAnimationListener](https://github.com/kaichunlin/android-transition/blob/40f5aad24a7d8c0e626bb946c803a5842db653dd/core/src/main/java/com/kaichunlin/transition/animation/DefaultAnimationListener.java)
+ - Add a bunch of delayed methods with varargs to [ViewTransitionBuilder](https://github.com/kaichunlin/android-transition/blob/40f5aad24a7d8c0e626bb946c803a5842db653dd/core/src/main/java/com/kaichunlin/transition/ViewTransitionBuilder.java) & [MenuItemTransitionBuilder](https://github.com/kaichunlin/android-transition/blob/40f5aad24a7d8c0e626bb946c803a5842db653dd/core/src/main/java/com/kaichunlin/transition/MenuItemTransitionBuilder.java)
+ - Add [ColorTransition](https://github.com/kaichunlin/android-transition/blob/94f4f872020e78a58a3ae32d55a518c223af3dab/core/src/main/java/com/kaichunlin/transition/widget/ColorTransition.java)
+ - Add [AutoReverseAnimationListener](https://github.com/kaichunlin/android-transition/blob/40f5aad24a7d8c0e626bb946c803a5842db653dd/core/src/main/java/com/kaichunlin/transition/animation/AutoReverseAnimationListener.java)
+ - Reduce transient objects created by ViewTransitionBuilder
+ - Update dependent library versions: (com.github.ksoichiro:android-observablescrollview:1.5.1 --> 1.6.0, com.sothree.slidinguppanel:library:3.0.0 -->  3.2.1
+
 **0.9.4**
 
 Because somehow version 0.9.3 uploaded to Maven is broken :-/
@@ -104,14 +114,14 @@ Integration
 --------
 The simplest way to integrate Android-Transition is to grab them from Maven Central or jCenter. On Android Studio, add the code below to Gradle dependencies:
 
-    compile 'com.github.kaichunlin.transition:core:0.9.4'
+    compile 'com.github.kaichunlin.transition:core:0.9.5'
 
 Adapters that adapts to UI components not found in Android framework or Android Support Library are provided as their own libraries, the table below is the list of libraries:
 
 | Library       | Function           | Description in build.gradle  |
 |:-------------|:-------------|:-----|
-| core | Provides core transition function and adapters | com.github.kaichunlin.transition:core:0.9.4 |
-| slidinguppanel | [AndroidSlidingUpPanel](https://github.com/umano/AndroidSlidingUpPanel) Adapter | com.github.kaichunlin.transition:slidinguppanel:0.9.1|
+| core | Provides core transition function and adapters | com.github.kaichunlin.transition:core:0.9.5 |
+| slidinguppanel | [AndroidSlidingUpPanel](https://github.com/umano/AndroidSlidingUpPanel) Adapter | com.github.kaichunlin.transition:slidinguppanel:0.9.5|
 
 As an example, if an app requires the _slidinguppanel_ module, which implicitly requires the _core_ module, then build.gradle will look like below:
 
@@ -119,7 +129,7 @@ As an example, if an app requires the _slidinguppanel_ module, which implicitly 
        //other dependencies
        ...
 
-        compile 'com.github.kaichunlin.transition:slidinguppanel:0.9.1'
+        compile 'com.github.kaichunlin.transition:slidinguppanel:0.9.5'
      }
 
 Usage
