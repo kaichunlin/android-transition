@@ -55,19 +55,19 @@ On the other hand now it only takes __8 lines of code__ to achieve the effect be
 ![](/github/animation_transition.gif)
 
 On Android Studio update Gradle dependency to:
-
+```groovy
     compile 'com.github.kaichunlin.transition:core:0.9.4'
-
+```
 To add the corresponding slidinguppanel module:
-
+```groovy
     compile 'com.github.kaichunlin.transition:slidinguppanel:0.9.1'
-
+```
 **0.8.3**
 
 [Android Support Annotations](http://tools.android.com/tech-docs/support-annotations) are applied across the codebase which should help catching incorrect usage early. On Android Studio update Gradle dependency to:
-
+```groovy
     compile 'com.github.kaichunlin.transition:core:0.8.3'
-
+```
 Note that while many annotations such as @NonNull and @Nullable work on [SDK Build Tools](https://developer.android.com/tools/revisions/build-tools.html) 22.0.x, some annotations like @IntRange and @FlatRange only work when preview version (23.0.0 rc2) is used.
 
 --------
@@ -113,9 +113,9 @@ Features
 Integration
 --------
 The simplest way to integrate Android-Transition is to grab them from Maven Central or jCenter. On Android Studio, add the code below to Gradle dependencies:
-
+```groovy
     compile 'com.github.kaichunlin.transition:core:0.9.5'
-
+```
 Adapters that adapts to UI components not found in Android framework or Android Support Library are provided as their own libraries, the table below is the list of libraries:
 
 | Library       | Function           | Description in build.gradle  |
@@ -124,14 +124,14 @@ Adapters that adapts to UI components not found in Android framework or Android 
 | slidinguppanel | [AndroidSlidingUpPanel](https://github.com/umano/AndroidSlidingUpPanel) Adapter | com.github.kaichunlin.transition:slidinguppanel:0.9.5|
 
 As an example, if an app requires the _slidinguppanel_ module, which implicitly requires the _core_ module, then build.gradle will look like below:
-
+```groovy
      dependencies {
        //other dependencies
        ...
 
         compile 'com.github.kaichunlin.transition:slidinguppanel:0.9.5'
      }
-
+```
 Usage
 --------
 + [Transition](https://github.com/kaichunlin/android-transition/blob/674c3d2f0967f20d9f372a233651b2ae6b5ca90c/core/src/main/java/com/kaichunlin/transition/Transition.java) is the primary object used to specify the desired operation on a View. The primary way to create Transitions is through the use of [ViewTransitionBuilder](https://github.com/kaichunlin/android-transition/blob/674c3d2f0967f20d9f372a233651b2ae6b5ca90c/core/src/main/java/com/kaichunlin/transition/ViewTransitionBuilder.java) and [MenuItemTransitionBuilder](https://github.com/kaichunlin/android-transition/blob/674c3d2f0967f20d9f372a233651b2ae6b5ca90c/core/src/main/java/com/kaichunlin/transition/MenuItemTransitionBuilder.java).
