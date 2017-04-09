@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by Kai on 2015/7/12.
  */
 public abstract class AbstractAnimation implements Animation {
     @IntDef({CONTROLLER_ANIMATION, CONTROLLER_ANIMATOR})
@@ -109,13 +108,18 @@ public abstract class AbstractAnimation implements Animation {
     public abstract void startAnimation();
 
     /**
-     * Starts the animation with the specified duration
+     * Starts the animation with the specified duration in milliseconds
      *
      * @param duration
      */
     @UiThread
     public abstract void startAnimation(@IntRange(from = 0) int duration);
 
+    /**
+     * Starts the animation with the default duration (300 ms) after a set delay.
+     *
+     * @param delay time to delay the animation in milliseconds
+     */
     @Override
     public void startAnimationDelayed(@IntRange(from = 0) int delay) {
         if (mHandler == null) {

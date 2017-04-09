@@ -15,9 +15,7 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
- * Allows the easy creation of {@link MenuItemTransition}
- * <p>
- * Created by Kai-Chun Lin on 2015/4/23.
+ * Allows the easy creation of {@link MenuItemTransition}.
  */
 public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuItemTransitionBuilder, MenuItemTransition> implements MenuItemTransition.Setup {
 

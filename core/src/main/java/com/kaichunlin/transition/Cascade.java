@@ -9,22 +9,34 @@ import android.view.animation.LinearInterpolator;
 /**
  * Defines how a cascading transition should be applied for each child of a ViewGroup, this is used for
  * {@link ViewTransitionBuilder#transitViewGroup(ViewTransitionBuilder.ViewGroupTransition, Cascade)}.
+ * <br>
  * There are 3 different type:
+ * <br>
  * 1. STAGGERED, where effects would interleave with each other, the length of the effect = getTransitionEnd() - getCascadeEnd():
- * child 0: |------|
- * child 1:     |------|
- * child 2:         |------|
+ * <br>
+ *     <pre>    child 0: |------|</pre>
+ * <br>
+ *     <pre>    child 1:     |------|</pre>
+ * <br>
+ *     <pre>    child 2:         |------|</pre>
+ * <br>
  * 2. RUN_TO_THE_END, where each effect would run to getTransitionEnd(), disregarding when it started:
- * child 0: |--------------|
- * child 1:     |----------|
- * child 2:         |------|
+ * <br>
+ *      <pre>    child 0: |--------------|<pre>
+ * <br>
+ *      <pre>    child 1:     |----------|<pre>
+ * <br>
+ *      <pre>    child 2:         |------|<pre>
+ * <br>
  * 3. SEQUENTIAL, where each effect would run to complete before playing the next effect:
+ * <br>
  * Effect would be run as:
- * child 0: |----|
- * child 1:      |----|
- * child 2:           |----|
- *
- * Created by Kai-Chun Lin on 2015/11/24.
+ * <br>
+ *      <pre>     child 0: |----|<pre>
+ * <br>
+ *      <pre>    child 1:        |----|<pre>
+ * <br>
+ *      <pre>    child 2:              |----|<pre>
  */
 public class Cascade implements ViewTransitionBuilder.ViewGroupTransition {
     private static final Interpolator DEFAULT_INTERPOLATOR = new LinearInterpolator();

@@ -14,8 +14,6 @@ import java.util.List;
  * For some reason changing the layout with ValueAnimator is very slow, so this is the default
  * {@link StateController} used by {@link AnimationManager} and {@link TransitionAnimation} to
  * advance animation state.
- * <p>
- * Created by Kai on 2015/8/7.
  */
 class AnimationController extends android.view.animation.Animation implements StateController, android.view.animation.Animation.AnimationListener {
     private static final int STOP_END = 0x01;

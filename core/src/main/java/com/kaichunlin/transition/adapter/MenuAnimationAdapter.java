@@ -8,8 +8,6 @@ import android.view.Menu;
 
 /**
  * Similar to {@link AnimationAdapter} with the addition of MenuItem animation support.
- * <p>
- * Created by Kai on 2015/6/22.
  */
 public class MenuAnimationAdapter extends AnimationAdapter implements MenuOptionHandler {
     private MenuOptionHandler mMenuOptionHandler = new DefaultMenuOptionHandler(this, getAdapterState());

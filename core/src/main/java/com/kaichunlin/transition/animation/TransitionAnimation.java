@@ -5,14 +5,12 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
-import android.support.annotation.UiThread;
 import android.view.View;
 
 import com.kaichunlin.transition.AbstractTransition;
 import com.kaichunlin.transition.TransitionOperation;
 
 /**
- * Created by Kai on 2015/7/12.
  */
 public class TransitionAnimation extends AbstractAnimation {
     private StateController mController;

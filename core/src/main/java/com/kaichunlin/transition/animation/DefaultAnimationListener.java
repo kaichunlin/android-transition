@@ -1,7 +1,7 @@
 package com.kaichunlin.transition.animation;
 
 /**
- * Created by Kai on 2015/12/13.
+ * Provides default (empty) implementation for {@link AnimationListener}
  */
 public class DefaultAnimationListener implements AnimationListener {
     @Override

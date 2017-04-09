@@ -7,7 +7,7 @@ import com.kaichunlin.transition.TransitionConfig;
 import com.kaichunlin.transition.TransitionListener;
 
 /**
- * Created by Kai on 2015/7/18.
+ * Uses Log.i to output the start and end of a transition.
  */
 public class TraceTransitionListener implements TransitionListener {
     private long mStart;

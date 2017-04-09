@@ -1,9 +1,7 @@
 package com.kaichunlin.transition;
 
 /**
- * Configuration that affects the whole framework
- * <p>
- * Created by Kai-Chun Lin on 2015/4/28.
+ * Framework-wide debug configuration.
  */
 public class TransitionConfig {
     static boolean _debug;

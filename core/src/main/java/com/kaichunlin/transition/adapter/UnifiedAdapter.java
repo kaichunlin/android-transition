@@ -15,7 +15,7 @@ import com.kaichunlin.transition.TransitionManager;
 import java.util.List;
 
 /**
- * Created by Kai on 2015/7/10.
+ * Allows the combination of both transition (through {@link TransitionAdapter}) and animation (through {@link AnimationManager}).
  */
 public class UnifiedAdapter extends AbstractAdapter implements Animation, TransitionListener {
     private final TransitionAdapter mAdapter;

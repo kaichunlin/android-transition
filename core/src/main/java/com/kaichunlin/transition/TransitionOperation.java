@@ -5,7 +5,6 @@ import android.support.annotation.UiThread;
 import com.kaichunlin.transition.adapter.TransitionAdapter;
 
 /**
- * Created by Kai on 2015/7/12.
  */
 public interface TransitionOperation {
     /**

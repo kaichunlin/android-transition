@@ -6,9 +6,7 @@ import android.support.annotation.NonNull;
 import com.kaichunlin.transition.MenuItemTransition;
 
 /**
- * Stores the menu ID-MenuItemTransition pair
- * <p>
- * Created by Kai-Chun Lin on 2015/5/10.
+ * Stores the menu ID-MenuItemTransition pair.
  */
 public class MenuOptionConfiguration {
 

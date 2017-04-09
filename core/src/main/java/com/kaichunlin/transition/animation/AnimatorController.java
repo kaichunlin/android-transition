@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Kai on 2015/8/7.
  */
 class AnimatorController extends ValueAnimator implements StateController, ValueAnimator.AnimatorUpdateListener, android.animation.Animator.AnimatorListener {
     private final List<AbstractAnimation> mAnimationList = new ArrayList<>();

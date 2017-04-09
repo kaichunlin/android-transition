@@ -8,8 +8,6 @@ import com.kaichunlin.transition.internal.TransitionController;
  * The progress valued passed to @link {@link #onUpdateScaledProgress(TransitionController, View, float)} has taken the start and
  * end range into consideration. The method will only be called when the progress is within range, and the value passed has been
  * scaled to always be [0..1].
- * <p>
- * Created by Kai on 2015/8/6.
  */
 public abstract class ScaledTransitionHandler implements TransitionHandler {
     private final boolean updateOnceOutsideRange;

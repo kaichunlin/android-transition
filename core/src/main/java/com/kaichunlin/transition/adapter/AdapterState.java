@@ -2,15 +2,11 @@ package com.kaichunlin.transition.adapter;
 
 import android.support.annotation.IntDef;
 
-import com.kaichunlin.transition.TransitionManager;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Stores an {@link TransitionManager}'s state
- * <p>
- * Created by Kai on 2015/7/11.
+ * Stores an adapter's open/close state when applicable.
  */
 public class AdapterState {
     public static final int CLOSE = 0;

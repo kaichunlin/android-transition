@@ -1,7 +1,7 @@
 package com.kaichunlin.transition.animation;
 
 /**
- * Created by Kai on 2015/7/18.
+ * Listens to animation state update.
  */
 public interface AnimationListener {
     void onAnimationStart(Animation animationManager);

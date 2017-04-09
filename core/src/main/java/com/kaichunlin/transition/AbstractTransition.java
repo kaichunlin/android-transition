@@ -13,8 +13,6 @@ import java.util.List;
 
 /**
  * Provides common implementations for all transitions.
- * <p>
- * Created by Kai-Chun Lin on 2015/4/18.
  */
 public abstract class AbstractTransition<T extends AbstractTransition, S extends AbstractTransition.Setup> implements Transition<S> {
     List<S> mSetupList = new ArrayList<>();

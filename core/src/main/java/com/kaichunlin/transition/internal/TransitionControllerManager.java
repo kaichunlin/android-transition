@@ -17,9 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manages the transition state of a set of {@link TransitionController}
- * <p>
- * Created by Kai-Chun Lin on 2015/4/14.
+ * Manages the transition state of a set of {@link TransitionController} as a single unit.
  */
 public class TransitionControllerManager implements Cloneable {
     private List<TransitionController> mTransitionControls = new ArrayList<>();

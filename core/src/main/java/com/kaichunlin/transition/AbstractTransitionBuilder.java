@@ -19,9 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Provides foundation to build classes that allows easy creation of ITransition
- * <p>
- * Created by Kai-Chun Lin on 2015/4/23.
+ * Provides foundation to build classes that allows easy creation of ITransition.
  */
 public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuilder, S extends Transition> implements Cloneable {
 

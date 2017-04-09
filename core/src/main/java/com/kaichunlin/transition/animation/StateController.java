@@ -1,9 +1,7 @@
 package com.kaichunlin.transition.animation;
 
 /**
- * Used to advance animation state.
- *
- * Created by Kai on 2015/8/7.
+ * Controls the current animation state.
  */
 interface StateController {
     void addAnimation(AbstractAnimation animation);

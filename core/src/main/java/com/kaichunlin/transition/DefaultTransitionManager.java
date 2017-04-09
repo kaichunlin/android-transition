@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Manages a collection of {@link Transition}
- * <p>
- * Created by Kai on 2015/7/14.
+ * Manages a collection of {@link Transition}.
  */
 public class DefaultTransitionManager implements TransitionManager {
     private ArrayList<TransitionListener> mTransitionListenerList = new ArrayList<>();

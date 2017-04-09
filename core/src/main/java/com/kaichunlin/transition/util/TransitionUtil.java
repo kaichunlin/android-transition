@@ -15,11 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Support utility methods
- * <p>
- * Created by Kai-Chun Lin on 2015/4/18.
+ * Support utility methods.
  */
 public class TransitionUtil {
+
     /**
      * Get the list of visible MenuItems
      *
@@ -62,8 +61,8 @@ public class TransitionUtil {
                 for (int j = 0; j < childCount; j++) {
                     innerView = ((ActionMenuView) v).getChildAt(j);
                     if (innerView instanceof ActionMenuItemView) {
-                        menuItem=((ActionMenuItemView) innerView).getItemData();
-                        if(menuItem.getItemId() == menuId) {
+                        menuItem = ((ActionMenuItemView) innerView).getItemData();
+                        if (menuItem.getItemId() == menuId) {
                             return menuItem;
                         }
                     }

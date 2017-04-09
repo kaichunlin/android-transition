@@ -5,7 +5,7 @@ import com.kaichunlin.transition.animation.AnimationListener;
 import com.kaichunlin.transition.TransitionConfig;
 
 /**
- * Created by Kai on 2015/7/18.
+ * Use Log.i to output the start and end of an animation
  */
 public class TraceAnimationListener implements AnimationListener {
     private long mStart;

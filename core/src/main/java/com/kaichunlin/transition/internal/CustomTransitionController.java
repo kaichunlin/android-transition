@@ -9,8 +9,6 @@ import java.util.List;
 
 /**
  * Allows customized transition behavior by implementing {@link #updateProgress(float)}
- * <p>
- * Created by Kai-Chun Lin on 2015/4/28.
  */
 public class CustomTransitionController extends TransitionController<CustomTransitionController> implements Cloneable {
     private List<TransitionHandler> mTransitionHandlerList = new ArrayList<>();

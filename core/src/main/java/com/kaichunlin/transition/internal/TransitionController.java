@@ -10,7 +10,6 @@ import com.kaichunlin.transition.R;
 import com.kaichunlin.transition.util.TransitionStateLogger;
 
 /**
- * Created by Kai-Chun Lin on 2015/4/28.
  */
 public abstract class TransitionController<T extends TransitionController> {
     public static final float DEFAULT_START = 0f;

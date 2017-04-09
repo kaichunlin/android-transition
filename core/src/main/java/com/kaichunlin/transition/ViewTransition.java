@@ -9,9 +9,7 @@ import com.kaichunlin.transition.internal.TransitionControllerManager;
 import com.kaichunlin.transition.util.TransitionStateLogger;
 
 /**
- * Provides transitions effects to all views other than one controlled by {@link android.view.MenuItem}
- * <p>
- * Created by Kai-Chun Lin on 2015/4/18.
+ * Provides transitions effects to all views other than one controlled by {@link android.view.MenuItem}.
  */
 @UiThread
 public class ViewTransition extends AbstractTransition<ViewTransition, ViewTransition.Setup> {

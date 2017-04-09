@@ -3,9 +3,7 @@ package com.kaichunlin.transition;
 import java.util.List;
 
 /**
- * Allows the adaption of different UI interactive components (e.g. Drawer) to support transition effects
- * <p>
- * Created by Kai-Chun Lin on 2015/5/20.
+ * Allows the adaption of different UI interactive components (e.g. Drawer) to support transition effects.
  */
 public interface TransitionManager extends TransitionOperation {
 

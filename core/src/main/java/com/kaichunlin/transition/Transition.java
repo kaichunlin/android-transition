@@ -6,8 +6,6 @@ import android.view.animation.Interpolator;
 
 /**
  * Represent the operations that should be performed with the given progress, usually performed on a view.
- * <p>
- * Created by Kai-Chun Lin on 2015/4/18.
  */
 public interface Transition<T extends AbstractTransition.Setup> extends TransitionOperation, Cloneable {
 

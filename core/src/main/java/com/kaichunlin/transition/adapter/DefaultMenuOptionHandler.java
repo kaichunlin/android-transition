@@ -9,9 +9,7 @@ import com.kaichunlin.transition.MenuItemTransition;
 import com.kaichunlin.transition.TransitionManager;
 
 /**
- * Provides default support for handling MenuItem transitions
- * <p>
- * Created by Kai on 2015/5/10.
+ * Provides default support for handling MenuItem transitions.
  */
 public class DefaultMenuOptionHandler implements MenuOptionHandler {
     private final TransitionManager mTransitionManager;

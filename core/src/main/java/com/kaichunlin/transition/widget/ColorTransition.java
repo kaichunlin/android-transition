@@ -6,7 +6,7 @@ import com.kaichunlin.transition.ScaledTransitionHandler;
 import com.kaichunlin.transition.internal.TransitionController;
 
 /**
- * Created by Kai on 2016/1/1.
+ * Transit from one color to another
  */
 public abstract class ColorTransition extends ScaledTransitionHandler {
     final int startColor;

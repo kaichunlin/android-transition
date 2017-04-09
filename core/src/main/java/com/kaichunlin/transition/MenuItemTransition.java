@@ -21,9 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Provides transition support to a MenuItem
- * <p>
- * Created by Kai-Chun Lin on 2015/4/18.
+ * Provides transition support to a MenuItem.
  */
 public class MenuItemTransition extends AbstractTransition<MenuItemTransition, MenuItemTransition.Setup> {
     private List<TransitionControllerManager> mTransittingMenuItems = new ArrayList<>();

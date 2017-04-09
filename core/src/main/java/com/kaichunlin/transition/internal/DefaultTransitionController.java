@@ -17,7 +17,6 @@ import java.util.ArrayList;
  * <p>
  * TODO may be possible to switch to use NineOldDroid's ViewPropertyAnimator for better performance
  * <p>
- * Created by Kai-Chun Lin on 2015/4/16.
  */
 public class DefaultTransitionController extends TransitionController<DefaultTransitionController> implements Cloneable {
     protected AnimatorSet mAnimSet;

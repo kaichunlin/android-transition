@@ -6,9 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.Menu;
 
 /**
- * Adds support for {@link android.view.MenuItem} transition
- * <p>
- * Created by Kai-Chun Lin on 2015/5/11.
+ * Adds support for {@link android.view.MenuItem} transition.
  */
 public abstract class MenuBaseAdapter extends AbstractAdapter implements MenuOptionHandler {
     MenuOptionHandler mMenuHandler;

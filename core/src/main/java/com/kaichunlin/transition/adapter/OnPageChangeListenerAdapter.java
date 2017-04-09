@@ -20,9 +20,7 @@ import java.util.List;
 import java.util.WeakHashMap;
 
 /**
- * Adapter for PageView
- * <p>
- * Created by Kai-Chun Lin on 2015/4/18.
+ * Adapter for ViewPager.
  */
 public class OnPageChangeListenerAdapter extends AbstractAdapter implements ViewPager.OnPageChangeListener, ViewPager.PageTransformer {
     public static final float LEFT_OF_CENTER = -1f;

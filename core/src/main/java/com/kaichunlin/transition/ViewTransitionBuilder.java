@@ -29,9 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Allows the easy creation of {@link ViewTransition}
- * <p>
- * Created by Kai-Chun Lin on 2015/4/23.
+ * Allows the easy creation of {@link ViewTransition}.
  */
 public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransitionBuilder, ViewTransition> implements ViewTransition.Setup {
     private static final String TAG = "ViewTransitionBuilder";

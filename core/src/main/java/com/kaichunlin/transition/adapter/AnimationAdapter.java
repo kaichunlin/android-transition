@@ -17,8 +17,6 @@ import com.kaichunlin.transition.TransitionListener;
  * However it must be noted that when AnimationAdapter reuses transitions configured for another {@link AbstractAdapter}, any changes made
  * to the other {@link AbstractAdapter} may effect AnimationAdapter and cause strange errors. For more complex case, {@link UnifiedAdapter}
  * should be used instead.
- * <p>
- * Created by Kai on 2015/7/10.
  */
 public class AnimationAdapter extends AbstractAdapter implements Animation, TransitionListener {
     private final TransitionAdapter mAdapter;

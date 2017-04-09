@@ -11,9 +11,7 @@ import com.kaichunlin.transition.TransitionManager;
 import java.util.List;
 
 /**
- * Provides implementation shared by most adapters
- * <p>
- * Created by Kai-Chun Lin on 2015/4/18.
+ * Provides implementation shared by most adapters.
  */
 public abstract class AbstractAdapter implements TransitionAdapter {
     private TransitionManager mTransitionManager = new DefaultTransitionManager();

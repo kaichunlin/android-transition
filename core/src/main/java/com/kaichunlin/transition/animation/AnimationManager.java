@@ -14,9 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manages a collection of {@link Animation}
- * <p>
- * Created by Kai on 2015/7/15.
+ * Manages a collection of {@link Animation} as a single unit.
  */
 public class AnimationManager extends AbstractAnimation {
     private final AnimationListener mAnimationListener = new AnimationListener() {

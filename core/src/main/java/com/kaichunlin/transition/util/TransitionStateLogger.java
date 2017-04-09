@@ -9,9 +9,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Used to help trace the state of transition for debugging purpose
- * <p>
- * Created by Kai-Chun Lin on 2015/5/3.
+ * Used to help trace the state of transition for debugging purpose.
  */
 public class TransitionStateLogger {
     public final String mId;

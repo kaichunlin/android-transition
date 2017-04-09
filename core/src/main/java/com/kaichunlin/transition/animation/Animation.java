@@ -4,7 +4,6 @@ import android.support.annotation.IntRange;
 import android.support.annotation.UiThread;
 
 /**
- * Created by Kai on 2015/7/12.
  */
 public interface Animation {
 

@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.Menu;
 
 /**
- * Created by Kai on 2015/7/10.
  */
 public interface MenuOptionHandler {
     AdapterState getAdapterState();
