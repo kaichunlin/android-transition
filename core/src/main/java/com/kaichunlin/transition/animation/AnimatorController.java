@@ -1,7 +1,6 @@
 package com.kaichunlin.transition.animation;
 
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
 import android.os.Build;
 import android.view.animation.LinearInterpolator;
 
@@ -43,19 +42,17 @@ class AnimatorController extends ValueAnimator implements StateController, Value
         mCancel = false;
     }
 
-    @TargetApi(19)
     @Override
     public void pauseController() {
-        if (Build.VERSION.SDK_INT < 19) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return;
         }
         pause();
     }
 
-    @TargetApi(19)
     @Override
     public void resumeController() {
-        if (Build.VERSION.SDK_INT < 19) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return;
         }
         resume();

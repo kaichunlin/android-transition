@@ -5,6 +5,7 @@ import android.support.annotation.UiThread;
 
 /**
  */
+@UiThread
 public interface Animation {
 
     /**
@@ -33,7 +34,6 @@ public interface Animation {
     /**
      * Starts the animation with the default duration (300 ms)
      */
-    @UiThread
     void startAnimation();
 
     /**
@@ -41,7 +41,6 @@ public interface Animation {
      *
      * @param duration
      */
-    @UiThread
     void startAnimation(@IntRange(from = 0) int duration);
 
     /**
@@ -62,40 +61,30 @@ public interface Animation {
     /**
      * Cancels the animation, i.e. the affected Views will retain their last states. A canceled animation cannot be resumed.
      */
-    @UiThread
     void cancelAnimation();
 
     /**
      * Pauses the animation, i.e. the affected Views will retain their last states. A canceled animation can be resumed.
-     * <p>
-     * Only works for API 19+
      */
-    @UiThread
     void pauseAnimation();
 
     /**
      * Resumes the animation, i.e. the affected Views will continue its animation
-     * <p>
-     * Only works for API 19+
      */
-    @UiThread
     void resumeAnimation();
 
     /**
      * Ends the animation, i.e. the affected Views will be assigned their final states
      */
-    @UiThread
     void endAnimation();
 
     /**
      *  Forces the animation's end state to be applied immediately even if the animation has not started. If the animation has started, it will end immediately.
      */
-    @UiThread
     void forceEndState();
 
     /**
      * Stops the animation, i.e. the affected Views will be reverted to their original states
      */
-    @UiThread
     void resetAnimation();
 }

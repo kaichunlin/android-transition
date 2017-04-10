@@ -3,20 +3,22 @@ package com.kaichunlin.transition.adapter;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 
 import com.kaichunlin.transition.AbstractTransitionBuilder;
-import com.kaichunlin.transition.animation.Animation;
-import com.kaichunlin.transition.animation.AnimationListener;
-import com.kaichunlin.transition.animation.AnimationManager;
 import com.kaichunlin.transition.Transition;
 import com.kaichunlin.transition.TransitionListener;
 import com.kaichunlin.transition.TransitionManager;
+import com.kaichunlin.transition.animation.Animation;
+import com.kaichunlin.transition.animation.AnimationListener;
+import com.kaichunlin.transition.animation.AnimationManager;
 
 import java.util.List;
 
 /**
  * Allows the combination of both transition (through {@link TransitionAdapter}) and animation (through {@link AnimationManager}).
  */
+@UiThread
 public class UnifiedAdapter extends AbstractAdapter implements Animation, TransitionListener {
     private final TransitionAdapter mAdapter;
     private final AnimationManager mAnimationManager;

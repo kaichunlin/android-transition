@@ -16,6 +16,7 @@ import java.util.List;
 /**
  * Manages a collection of {@link Animation} as a single unit.
  */
+@UiThread
 public class AnimationManager extends AbstractAnimation {
     private final AnimationListener mAnimationListener = new AnimationListener() {
 
@@ -165,13 +166,11 @@ public class AnimationManager extends AbstractAnimation {
         }
     }
 
-    @UiThread
     @Override
     public void startAnimation() {
         startAnimation(getDuration());
     }
 
-    @UiThread
     @Override
     public void startAnimation(@IntRange(from = 0) int duration) {
         if (isAnimating()) {
@@ -235,7 +234,6 @@ public class AnimationManager extends AbstractAnimation {
         }
     }
 
-    @UiThread
     @Override
     public void cancelAnimation() {
         if (isAnimating()) {
@@ -249,7 +247,6 @@ public class AnimationManager extends AbstractAnimation {
         }
     }
 
-    @UiThread
     @Override
     public void pauseAnimation() {
         if (mSharedController == null) {
@@ -261,7 +258,6 @@ public class AnimationManager extends AbstractAnimation {
         }
     }
 
-    @UiThread
     @Override
     public void resumeAnimation() {
         if (mSharedController == null) {
@@ -273,7 +269,6 @@ public class AnimationManager extends AbstractAnimation {
         }
     }
 
-    @UiThread
     @Override
     public void endAnimation() {
         if (mSharedController == null) {
@@ -285,9 +280,9 @@ public class AnimationManager extends AbstractAnimation {
         }
     }
 
-    @UiThread
+    @Override
     public void forceEndState() {
-        if(isAnimating()) {
+        if (isAnimating()) {
             endAnimation();
         } else {
             doStartAnimation(100);
@@ -296,7 +291,6 @@ public class AnimationManager extends AbstractAnimation {
         }
     }
 
-    @UiThread
     @Override
     public void resetAnimation() {
         if (mSharedController == null) {

@@ -1,10 +1,10 @@
 package com.kaichunlin.transition.animation;
 
-import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 import android.view.View;
 
 import com.kaichunlin.transition.AbstractTransition;
@@ -12,6 +12,7 @@ import com.kaichunlin.transition.TransitionOperation;
 
 /**
  */
+@UiThread
 public class TransitionAnimation extends AbstractAnimation {
     private StateController mController;
     private boolean mReverse;
@@ -131,10 +132,9 @@ public class TransitionAnimation extends AbstractAnimation {
         }
     }
 
-    @TargetApi(19)
     @Override
     public void pauseAnimation() {
-        if (Build.VERSION.SDK_INT < 19) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return;
         }
         if (mController != null) {
@@ -142,10 +142,9 @@ public class TransitionAnimation extends AbstractAnimation {
         }
     }
 
-    @TargetApi(19)
     @Override
     public void resumeAnimation() {
-        if (Build.VERSION.SDK_INT < 19) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return;
         }
         if (mController != null) {

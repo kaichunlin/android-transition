@@ -15,6 +15,7 @@ import java.util.Set;
 
 /**
  */
+@UiThread
 public abstract class AbstractAnimation implements Animation {
     @IntDef({CONTROLLER_ANIMATION, CONTROLLER_ANIMATOR})
     @Retention(RetentionPolicy.SOURCE)
@@ -104,7 +105,6 @@ public abstract class AbstractAnimation implements Animation {
     /**
      * Starts the animation with the default duration (300 ms)
      */
-    @UiThread
     public abstract void startAnimation();
 
     /**
@@ -112,7 +112,6 @@ public abstract class AbstractAnimation implements Animation {
      *
      * @param duration
      */
-    @UiThread
     public abstract void startAnimation(@IntRange(from = 0) int duration);
 
     /**

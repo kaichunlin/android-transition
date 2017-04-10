@@ -2,12 +2,13 @@ package com.kaichunlin.transition.adapter;
 
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 
+import com.kaichunlin.transition.TransitionListener;
+import com.kaichunlin.transition.TransitionManager;
+import com.kaichunlin.transition.animation.Animation;
 import com.kaichunlin.transition.animation.AnimationListener;
 import com.kaichunlin.transition.animation.TransitionAnimation;
-import com.kaichunlin.transition.animation.Animation;
-import com.kaichunlin.transition.TransitionManager;
-import com.kaichunlin.transition.TransitionListener;
 
 /**
  * This adapter integrates traditional animations using the same methods and logic as the rest of the framework. It can be configured
@@ -18,6 +19,7 @@ import com.kaichunlin.transition.TransitionListener;
  * to the other {@link AbstractAdapter} may effect AnimationAdapter and cause strange errors. For more complex case, {@link UnifiedAdapter}
  * should be used instead.
  */
+@UiThread
 public class AnimationAdapter extends AbstractAdapter implements Animation, TransitionListener {
     private final TransitionAdapter mAdapter;
     private Animation mAnimation;
