@@ -138,7 +138,7 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
      * @return
      */
     @CheckResult
-    public boolean compatible(AbstractTransition another) {
+    public boolean isCompatible(AbstractTransition another) {
         if (getClass().equals(another.getClass()) && mTarget == another.mTarget && mReverse == another.mReverse && ((mInterpolator == null && another.mInterpolator == null) ||
                 mInterpolator.getClass().equals(another.mInterpolator.getClass()))) {
             return true;
@@ -155,7 +155,7 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
      */
     @CheckResult
     public boolean merge(AbstractTransition another) {
-        if (!compatible(another)) {
+        if (!isCompatible(another)) {
             return false;
         }
         if (another.mId != null) {

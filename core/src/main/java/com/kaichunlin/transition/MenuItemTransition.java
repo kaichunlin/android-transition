@@ -230,8 +230,8 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
     }
 
     @Override
-    public boolean compatible(AbstractTransition another) {
-        if (super.compatible(another) && mMenuId == ((MenuItemTransition) another).mMenuId) {
+    public boolean isCompatible(AbstractTransition another) {
+        if (super.isCompatible(another) && mMenuId == ((MenuItemTransition) another).mMenuId) {
             return true;
         }
         return false;

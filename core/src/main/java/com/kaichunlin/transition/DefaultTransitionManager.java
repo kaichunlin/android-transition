@@ -43,7 +43,7 @@ public class DefaultTransitionManager implements TransitionManager {
                 if (to instanceof AbstractTransition) {
                     AbstractTransition atTo = (AbstractTransition) to;
                     AbstractTransition atTransition = (AbstractTransition) transition;
-                    if (atTo.compatible(atTransition)) {
+                    if (atTo.isCompatible(atTransition)) {
                         //the Transition has already merged another Transition previously
                         if (atTo.hasMultipleSetup()) {
                             atTo.merge(atTransition);
