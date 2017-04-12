@@ -1,10 +1,13 @@
 package com.kaichunlin.transition;
 
 import android.support.annotation.FloatRange;
-import android.support.annotation.IntRange;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Defines how a cascading transition should be applied for each child of a ViewGroup, this is used for
@@ -44,7 +47,12 @@ public class Cascade implements ViewTransitionBuilder.ViewGroupTransition {
     public static final int RUN_TO_THE_END = 1;
     public static final int SEQUENTIAL = 2;
 
-    public final int type;
+    @IntDef({STAGGERED, RUN_TO_THE_END, SEQUENTIAL})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface Type {
+    }
+
+    public final @Type int type;
     public final Interpolator interpolator;
     float mCascadeStart;
     //end of the cascade, i.e. the last child will start the effect at this point
@@ -57,14 +65,14 @@ public class Cascade implements ViewTransitionBuilder.ViewGroupTransition {
     /**
      * @param cascadeEnd This value should never be 1, otherwise no transition will be applied to the last child.
      */
-    public Cascade(@IntRange(from = 0, to = 2) int type, @FloatRange(from = 0.0, to = 1.0) float cascadeEnd) {
+    public Cascade(@Type int type, @FloatRange(from = 0.0, to = 1.0) float cascadeEnd) {
         this(type, cascadeEnd, DEFAULT_INTERPOLATOR);
     }
 
     /**
      * @param cascadeEnd This value should never be 1, otherwise no transition will be applied to the last child.
      */
-    public Cascade(@IntRange(from = 0, to = 2) int type, @FloatRange(from = 0.0, to = 1.0) float cascadeEnd, @NonNull Interpolator interpolator) {
+    public Cascade(@Type int type, @FloatRange(from = 0.0, to = 1.0) float cascadeEnd, @NonNull Interpolator interpolator) {
         this.type = type;
         this.cascadeEnd = cascadeEnd;
         this.interpolator = interpolator;
