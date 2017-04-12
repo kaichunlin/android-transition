@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Allows the easy creation of {@link ViewTransition}.
+ * Builder for {@link ViewTransition}.
  */
 public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransitionBuilder, ViewTransition> implements ViewTransition.Setup {
     private static final String TAG = "ViewTransitionBuilder";
@@ -42,7 +42,8 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     private ViewTransitionDelayedEvaluation mViewDelayedProcessor;
 
     /**
-     * Creates a {@link ViewTransitionBuilder} instance with no target view set
+     * Creates a {@link ViewTransitionBuilder} instance without any target view, {@link #target(View)}
+     * should be called before build* is called.
      *
      * @return
      */
@@ -51,7 +52,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     /**
-     * Creates  a {@link ViewTransitionBuilder} instance with the target view set
+     * Creates a {@link ViewTransitionBuilder} instance with the target view set.
      *
      * @param view
      * @return
@@ -75,7 +76,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     /**
-     * @param view the view the created {@link ViewTransition} should manipulate
+     * @param view The view the created {@link ViewTransition} should manipulate.
      * @return
      */
     public ViewTransitionBuilder target(@Nullable View view) {
@@ -91,9 +92,9 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     /**
-     * Adds a custom {@link TransitionHandler}, the builder must be cloned if this method  is called.
+     * Adds a custom {@link ViewTransformer}, the builder must be cloned if this method  is called.
      *
-     * @param transitionHandler
+     * @param viewTransformer
      * @return
      */
     public ViewTransitionBuilder addTransitionHandler(@NonNull TransitionHandler transitionHandler) {
@@ -387,11 +388,11 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     public ViewTransitionBuilder backgroundColor(@ColorInt final int fromColor, @ColorInt final int toColor) {
         addSetup(new ViewTransition.Setup() {
             @Override
-            public void setupAnimation(final TransitionControllerManager transitionControllerManager) {
-                ObjectAnimator animator = ObjectAnimator.ofInt(transitionControllerManager.getTarget(), "backgroundColor", fromColor, toColor);
+            public void setupAnimation(@NonNull final TransitionControllerManager manager) {
+                ObjectAnimator animator = ObjectAnimator.ofInt(manager.getTarget(), "backgroundColor", fromColor, toColor);
                 animator.setDuration(10_000);
                 animator.setEvaluator(new ArgbEvaluator());
-                transitionControllerManager.addTransitionController(DefaultTransitionController.wrapAnimator(animator));
+                manager.addTransitionController(DefaultTransitionController.wrapAnimator(animator));
             }
         });
         return self();
@@ -418,13 +419,13 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     /**
-     * TODO Current support is rudimentary, may expand support if there are enough demand for this
+     * TODO Current support is rudimentary, may expand support if there are enough demand for this.
      * <p>
      * Converts an animator to ITransition when built, note that not all functions of Animator are supported.
      * <p>
      * Non-working functions: repeatMode, repeatCount, delay, duration (when in a set), Interpolator.
      * <p>
-     * Furthermore, {@link #transitViewGroup(ViewGroupTransition)} does not work with this method
+     * Furthermore, {@link #transitViewGroup(ViewGroupTransition)} does not work with this method.
      *
      * @param animator
      * @return
@@ -432,12 +433,12 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     public ViewTransitionBuilder animator(@NonNull final Animator animator) {
         addSetup(new ViewTransition.Setup() {
             @Override
-            public void setupAnimation(TransitionControllerManager transitionControllerManager) {
+            public void setupAnimation(@NonNull final TransitionControllerManager manager) {
                 Animator animator2 = animator.clone();
                 if (animator2 instanceof AnimatorSet) {
-                    transitionControllerManager.addTransitionController(DefaultTransitionController.wrapAnimatorSet((AnimatorSet) animator2));
+                    manager.addTransitionController(DefaultTransitionController.wrapAnimatorSet((AnimatorSet) animator2));
                 } else {
-                    transitionControllerManager.addTransitionController(DefaultTransitionController.wrapAnimator(animator2));
+                    manager.addTransitionController(DefaultTransitionController.wrapAnimator(animator2));
                 }
             }
         });
@@ -445,7 +446,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     /**
-     * See animator(Animator)
+     * See {@link #animator(Animator)}.
      *
      * @param context
      * @param animatorId
@@ -457,10 +458,13 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     /**
-     * Throws ClassCastException if the target view is not a ViewGroup. Apply the specified {@link ViewGroupTransition} to all the children views of the target view.
+     * The view previously set (through {@link #target(View)}) is casted as a ViewGroup, and the specified
+     * {@link ViewGroupTransition} will {@link ViewGroupTransition#transit(ViewTransitionBuilder, ViewGroupTransitionConfig)}
+     * all the children views.
      *
      * @param viewGroupTransition
      * @return
+     * @throws ClassCastException If the target view is not a ViewGroup.
      */
     public ViewTransitionBuilder transitViewGroup(@NonNull ViewGroupTransition viewGroupTransition) {
         ViewGroup vg = (ViewGroup) mView;
@@ -515,25 +519,25 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     @Override
-    public void setupAnimation(@NonNull TransitionControllerManager transitionControllerManager) {
+    public void setupAnimation(@NonNull TransitionControllerManager manager) {
         if (mView == null) {
-            mView = transitionControllerManager.getTarget();
+            mView = manager.getTarget();
         }
 
         if (mDelayed != null) {
             for (int i = 0, size = mDelayed.size(); i < size; i++) {
-                mDelayed.get(i).evaluate(transitionControllerManager.getTarget(), this);
+                mDelayed.get(i).evaluate(manager.getTarget(), this);
             }
         }
 
         for (int i = 0, size = mSetupList.size(); i < size; i++) {
-            mSetupList.get(i).setupAnimation(transitionControllerManager);
+            mSetupList.get(i).setupAnimation(manager);
         }
 
         if (mCustomTransitionController != null) {
-            mCustomTransitionController.setTarget(transitionControllerManager.getTarget());
+            mCustomTransitionController.setTarget(manager.getTarget());
             mCustomTransitionController.setRange(mStart, mEnd);
-            transitionControllerManager.addTransitionController(mCustomTransitionController.clone());
+            manager.addTransitionController(mCustomTransitionController.clone());
         }
 
         ObjectAnimator anim = new ObjectAnimator();
@@ -542,7 +546,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.play(anim);
         animatorSet.setDuration(SCALE_FACTOR);
-        transitionControllerManager.addAnimatorSetAsTransition(mView, animatorSet).setRange(mStart, mEnd);
+        manager.addAnimatorSetAsTransition(mView, animatorSet).setRange(mStart, mEnd);
     }
 
     protected ViewTransitionDelayedEvaluation getViewDelayedProcessor() {
@@ -553,6 +557,9 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
         return mViewDelayedProcessor;
     }
 
+    /**
+     * Performs evaluation on delayed operations.
+     */
     protected static class ViewTransitionDelayedEvaluation implements DelayedEvaluator<ViewTransitionBuilder> {
         View[] views;
         float[] process;
@@ -651,7 +658,8 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     /**
-     * Allows customized {@link ViewTransition} to be applied to each child view of a ViewGroup
+     * Allows customized {@link ViewTransition} to be applied to each child view of a ViewGroup, see
+     * {@link #transitViewGroup(ViewGroupTransition)} / {@link #transitViewGroup(ViewGroupTransition, Cascade)}
      */
     public interface ViewGroupTransition {
         /**
@@ -661,7 +669,8 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     /**
-     * Encapsulates relevant data when transiting a ViewGroup
+     * Encapsulates relevant data when transiting a ViewGroup, including total number of children,
+     * the current View being processed, and its position within the ViewGroup.
      */
     public class ViewGroupTransitionConfig {
         public final ViewGroup parentViewGroup;

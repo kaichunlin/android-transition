@@ -8,14 +8,14 @@ import java.util.List;
 public interface TransitionManager extends TransitionOperation {
 
     /**
-     * Same as calling addTransition(transitionBuilder.build())
+     * Same as calling addTransition(transitionBuilder.build()).
      *
      * @param transitionBuilder
      */
     void addTransition(AbstractTransitionBuilder transitionBuilder);
 
     /**
-     * Adds a transition
+     * Adds a transition.
      *
      * @param transition
      */
@@ -24,17 +24,17 @@ public interface TransitionManager extends TransitionOperation {
     void addAllTransitions(List<Transition> transitionsList);
 
     /**
-     * Removes a transition, should not be called while transition is in progress (isTransitioning() returns true)
+     * Removes a transition, should not be called while transition is in progress.
      *
      * @param transition
-     * @return true if a transition is removed, false otherwise
+     * @return true if a transition is removed, false otherwise.
      */
     boolean removeTransition(Transition transition);
 
     List<Transition> getTransitions();
 
     /**
-     * Stops and clears all transitions
+     * Stops and clears all transitions.
      */
     void removeAllTransitions();
 

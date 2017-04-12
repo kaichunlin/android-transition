@@ -67,7 +67,7 @@ public class AnimationManager extends AbstractAnimation {
                 to = mAnimationList.get(i).getTransition();
                 if (to instanceof AbstractTransition) {
                     merged = ((AbstractTransition) to).merge((AbstractTransition) animation.getTransition());
-                    if(merged) {
+                    if (merged) {
                         break;
                     }
                 }
@@ -187,7 +187,7 @@ public class AnimationManager extends AbstractAnimation {
     }
 
     private void doStartAnimation(@IntRange(from = 0) int duration) {
-        final int size=mAnimationList.size();
+        final int size = mAnimationList.size();
         if (mCheckAnimationType) {
             mPassAnimationTypeCheck = true;
             for (int i = 0; i < size; i++) {

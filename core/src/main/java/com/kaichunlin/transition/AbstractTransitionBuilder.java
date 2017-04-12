@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Provides foundation to build classes that allows easy creation of ITransition.
+ * Provides foundation to build classes that allows easy creation of {@link Transition}.
  */
 public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuilder, S extends Transition> implements Cloneable {
 
@@ -79,6 +79,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     float mEnd = TransitionController.DEFAULT_END;
     String mId;
     boolean mReverse;
+    boolean mApplyInitialConditions;
     Interpolator mInterpolator;
     int mDuration;
     DelayedProcessor mDelayedProcessor;
@@ -87,14 +88,22 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     AbstractTransitionBuilder() {
     }
 
+    /**
+     * Sets the ID of the transition for debug purpose, same as {@link Transition#setId(String)}.
+     *
+     * @param id
+     * @return
+     */
     public T id(String id) {
         mId = id;
         return self();
     }
 
     /**
-     * Sets the start and end range of the transition, this affects where the end the transition is reached and no further modification will be performed on the target view
-     * For most {@link TransitionManager} the range will be [0..1]
+     * Sets the start and end range of the transition, this affects where the end the transition is
+     * reached and no further modification will be performed on the target view.
+     * <p>
+     * For most {@link TransitionManager} the range will be [0..1].
      *
      * @param start
      * @param end
@@ -107,8 +116,10 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Sets the start range of the transition, this affects where the end the transition is reached and no further modification will be performed on the target view
-     * For most {@link TransitionManager} the range will be [0..1]
+     * Sets the start range of the transition, this affects where the end the transition is reached
+     * and no further modification will be performed on the target view.
+     * <p>
+     * For most {@link TransitionManager} the range will be [0..1].
      *
      * @param start
      * @return
@@ -119,8 +130,10 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Sets the end range of the transition, this affects where the end the transition is reached and no further modification will be performed on the target view
-     * For most {@link TransitionManager} the range will be [0..1]
+     * Sets the end range of the transition, this affects where the end the transition is reached
+     * and no further modification will be performed on the target view.
+     * <p>
+     * For most {@link TransitionManager} the range will be [0..1].
      *
      * @param end
      * @return
@@ -143,7 +156,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the alpha to the specified values
+     * Changes the alpha to the specified values.
      *
      * @param vals
      * @return self
@@ -155,7 +168,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
 
 
     /**
-     * Changes the alpha value from the target view's current value to the end value
+     * Changes the alpha value from the target view's current value to the end value.
      *
      * @param end
      * @return self
@@ -163,7 +176,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     public abstract T alpha(@FloatRange(from = 0.0, to = 1.0) float end);
 
     /**
-     * Similar to alpha(float...), but wait until the transition is about to start to perform the evaluation
+     * Similar to alpha(float...), but wait until the transition is about to start to perform the evaluation.
      *
      * @param transitions
      * @return self
@@ -174,7 +187,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Similar to alpha(float), but wait until the transition is about to start to perform the evaluation
+     * Similar to alpha(float), but wait until the transition is about to start to perform the evaluation.
      *
      * @param end
      * @return self
@@ -185,7 +198,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the rotation (rotationX and rotationY) value to the specified values
+     * Changes the rotation (rotationX and rotationY) value to the specified values.
      *
      * @param vals
      * @return self
@@ -196,7 +209,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the rotation value from the target view's current value to the end value
+     * Changes the rotation value from the target view's current value to the end value.
      *
      * @param end
      * @return self
@@ -204,7 +217,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     public abstract T rotation(float end);
 
     /**
-     * Similar to rotation(float...), but wait until the transition is about to start to perform the evaluation
+     * Similar to rotation(float...), but wait until the transition is about to start to perform the evaluation.
      *
      * @param transitions
      * @return self
@@ -215,7 +228,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Similar to rotation(float), but wait until the transition is about to start to perform the evaluation
+     * Similar to rotation(float), but wait until the transition is about to start to perform the evaluation.
      *
      * @param end
      * @return self
@@ -226,7 +239,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the rotationX value to the specified values
+     * Changes the rotationX value to the specified values.
      *
      * @param vals
      * @return self
@@ -237,7 +250,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the rotationX value from the target view's current value to the end value
+     * Changes the rotationX value from the target view's current value to the end value.
      *
      * @param end
      * @return self
@@ -245,7 +258,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     public abstract T rotationX(float end);
 
     /**
-     * Similar to rotationX(float...), but wait until the transition is about to start to perform the evaluation
+     * Similar to rotationX(float...), but wait until the transition is about to start to perform the evaluation.
      *
      * @param transitions
      * @return self
@@ -256,7 +269,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Similar to rotationX(float), but wait until the transition is about to start to perform the evaluation
+     * Similar to rotationX(float), but wait until the transition is about to start to perform the evaluation.
      *
      * @param end
      * @return self
@@ -267,7 +280,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the rotationY to the specified values
+     * Changes the rotationY to the specified values.
      *
      * @param vals
      * @return self
@@ -278,7 +291,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the rotationY value from the target view's current value to the end value
+     * Changes the rotationY value from the target view's current value to the end value.
      *
      * @param end
      * @return self
@@ -286,7 +299,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     public abstract T rotationY(float end);
 
     /**
-     * Similar to rotationY(float...), but wait until the transition is about to start to perform the evaluation
+     * Similar to rotationY(float...), but wait until the transition is about to start to perform the evaluation.
      *
      * @param transitions
      * @return self
@@ -297,7 +310,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Similar to rotationY(float), but wait until the transition is about to start to perform the evaluation
+     * Similar to rotationY(float), but wait until the transition is about to start to perform the evaluation.
      *
      * @param end
      * @return self
@@ -308,7 +321,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the scaleX value to the specified values
+     * Changes the scaleX value to the specified values.
      *
      * @param vals
      * @return self
@@ -319,7 +332,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the scaleX value from the target view's current value to the end value
+     * Changes the scaleX value from the target view's current value to the end value.
      *
      * @param end
      * @return self
@@ -327,7 +340,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     public abstract T scaleX(@FloatRange(from = 0.0) float end);
 
     /**
-     * Similar to scaleX(float...), but wait until the transition is about to start to perform the evaluation
+     * Similar to scaleX(float...), but wait until the transition is about to start to perform the evaluation.
      *
      * @param transition
      * @return self
@@ -338,7 +351,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Similar to scaleX(float), but wait until the transition is about to start to perform the evaluation
+     * Similar to scaleX(float), but wait until the transition is about to start to perform the evaluation.
      *
      * @param end
      * @return self
@@ -349,7 +362,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the scaleY value to the specified values
+     * Changes the scaleY value to the specified values.
      *
      * @param vals
      * @return self
@@ -360,7 +373,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the scaleY value from the target view's current value to the end value
+     * Changes the scaleY value from the target view's current value to the end value.
      *
      * @param end
      * @return self
@@ -368,7 +381,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     public abstract T scaleY(@FloatRange(from = 0.0) float end);
 
     /**
-     * Similar to scaleX(float...), but wait until the transition is about to start to perform the evaluation
+     * Similar to scaleX(float...), but wait until the transition is about to start to perform the evaluation.
      *
      * @param transitions
      * @return self
@@ -379,7 +392,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Similar to scaleX(float), but wait until the transition is about to start to perform the evaluation
+     * Similar to scaleX(float), but wait until the transition is about to start to perform the evaluation.
      *
      * @param end
      * @return self
@@ -390,7 +403,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the scale (scaleX and scaleY) value to the specified values
+     * Changes the scale (scaleX and scaleY) value to the specified values.
      *
      * @param vals
      * @return self
@@ -402,7 +415,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the scale value from the target view's current value to the end value
+     * Changes the scale value from the target view's current value to the end value.
      *
      * @param end
      * @return self
@@ -410,7 +423,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     public abstract T scale(@FloatRange(from = 0.0) float end);
 
     /**
-     * Similar to scale(float...), but wait until the transition is about to start to perform the evaluation
+     * Similar to scale(float...), but wait until the transition is about to start to perform the evaluation.
      *
      * @param transitions
      * @return self
@@ -421,7 +434,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Similar to scale(float), but wait until the transition is about to start to perform the evaluation
+     * Similar to scale(float), but wait until the transition is about to start to perform the evaluation.
      *
      * @param end
      * @return self
@@ -432,7 +445,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the translationX value from the target view's current value to the end value
+     * Changes the translationX value from the target view's current value to the end value.
      *
      * @param vals
      * @return self
@@ -443,7 +456,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the translationX value from the target view's current value to the end value
+     * Changes the translationX value from the target view's current value to the end value.
      *
      * @param end
      * @return self
@@ -451,7 +464,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     public abstract T translationX(float end);
 
     /**
-     * Similar to delayTranslationX(float...), but wait until the transition is about to start to perform the evaluation
+     * Similar to delayTranslationX(float...), but wait until the transition is about to start to perform
+     * the evaluation.
      *
      * @param transitions
      * @return self
@@ -462,7 +476,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Similar to delayTranslationX(float), but wait until the transition is about to start to perform the evaluation
+     * Similar to delayTranslationX(float), but wait until the transition is about to start to perform the
+     * evaluation.
      *
      * @param end
      * @return self
@@ -473,7 +488,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the translationY value from the target view's current value to the end value
+     * Changes the translationY value from the target view's current value to the end value.
      *
      * @param vals
      * @return self
@@ -484,7 +499,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the translationY value from the target view's current value to the end value
+     * Changes the translationY value from the target view's current value to the end value.
      *
      * @param end
      * @return self
@@ -492,7 +507,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     public abstract T translationY(float end);
 
     /**
-     * Similar to delayTranslationY(float...), but wait until the transition is about to start to perform the evaluation
+     * Similar to delayTranslationY(float...), but wait until the transition is about to start to perform
+     * the evaluation.
      *
      * @param transitions
      * @return self
@@ -503,7 +519,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Similar to delayTranslationY(float), but wait until the transition is about to start to perform the evaluation
+     * Similar to delayTranslationY(float), but wait until the transition is about to start to perform the
+     * evaluation.
      *
      * @param end
      * @return self
@@ -514,7 +531,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the x value from the target view's current value to the end value
+     * Changes the x value from the target view's current value to the end value.
      *
      * @param vals
      * @return self
@@ -525,7 +542,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the x value from the target view's current value to the end value
+     * Changes the x value from the target view's current value to the end value.
      *
      * @param end
      * @return self
@@ -533,7 +550,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     public abstract T x(float end);
 
     /**
-     * Similar to x(float), but wait until the transition is about to start to perform the evaluation
+     * Similar to x(float), but wait until the transition is about to start to perform the evaluation.
      *
      * @param transitions
      * @return self
@@ -544,7 +561,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Similar to x(float), but wait until the transition is about to start to perform the evaluation
+     * Similar to x(float), but wait until the transition is about to start to perform the evaluation.
      *
      * @param end
      * @return self
@@ -555,7 +572,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the y value from the target view's current value to the end value
+     * Changes the y value from the target view's current value to the end value.
      *
      * @param vals
      * @return self
@@ -566,7 +583,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Changes the y value from the target view's current value to the end value
+     * Changes the y value from the target view's current value to the end value.
      *
      * @param end
      * @return self
@@ -574,7 +591,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     public abstract T y(float end);
 
     /**
-     * Similar to y(float), but wait until the transition is about to start to perform the evaluation
+     * Similar to y(float), but wait until the transition is about to start to perform the evaluation.
      *
      * @param transitions
      * @return self
@@ -585,7 +602,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Similar to y(float), but wait until the transition is about to start to perform the evaluation
+     * Similar to y(float), but wait until the transition is about to start to perform the evaluation.
      *
      * @param end
      * @return self
@@ -596,7 +613,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Only applies when building {@link Animation}
+     * Only applies when building {@link Animation}.
      *
      * @param duration
      * @return
@@ -607,10 +624,6 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
 
-//    public boolean shouldClone() {
-//        return mOwnerRef != null && mOwnerRef.get() != null;
-//    }
-
     protected void checkModifiability() {
         if (mOwnerRef == null || mOwnerRef.get() == null) {
             mOwnerRef = null;
@@ -619,25 +632,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
         }
     }
 
-//    /**
-//     * Auto clone itself when necessary.
-//     *
-//     * @return
-//     */
-//    public T autoClone() {
-//        mAutoClone = true;
-//        return self();
-//    }
-//
-//    public T cloneIfNecessary() {
-//        if(shouldClone()) {
-//            return (T) clone();
-//        }
-//        return self();
-//    }
-
     /**
-     * Transits a float propertyId from the start value to the end value
+     * Transits a float propertyId from the start value to the end value.
      *
      * @param propertyId
      * @param vals
@@ -651,7 +647,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Transits a float property from the start value to the end value
+     * Transits a float property from the start value to the end value.
      *
      * @param propertyId
      * @param vals
@@ -665,7 +661,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Reverse the transition effect
+     * Reverse the transition effect.
      *
      * @return self
      */
@@ -681,14 +677,15 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
 
     @CheckResult
     /**
-     * Asks the subclass to create and set a ITransition
+     * Asks the subclass to create and set a ITransition.
      *
-     * @return ITransition that would perform the desired transition
+     * @return {@link Transition} that would perform the desired transition.
      */
     protected abstract S createTransition();
 
     /**
-     * Builds a ITransition, the created object will not be modified when the builder's modifier methods are called.
+     * Builds a {@link Transition}, the created object will not be modified when the builder's modifier
+     * methods are called.
      *
      * @return
      */
@@ -712,6 +709,10 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
         if (mDuration != 0) {
             animation.setDuration(mDuration);
         }
+        if(mApplyInitialConditions) {
+            animation.startAnimation();
+            animation.pauseAnimation();
+        }
         return animation;
     }
 
@@ -719,11 +720,15 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
         TransitionAnimation animation = buildAnimation();
         markObjectAsModifiabilityFlag(animation);
         animationManager.addAnimation(animation);
+        if(mApplyInitialConditions) {
+            animation.startAnimation();
+            animation.pauseAnimation();
+        }
         return animation;
     }
 
     /**
-     * Sets the {@link TransitionManager}, once set calling {@link build()} would automatically add
+     * Sets the {@link TransitionManager}, once set calling {@link #build()} would automatically add
      * the created {@link ViewTransition} to the adapter.
      *
      * @param transitionManager
@@ -732,6 +737,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     public S buildFor(@NonNull TransitionManager transitionManager) {
         markObjectAsModifiabilityFlag(transitionManager);
         S transition = build();
+        transition.setProgress(0);
         transitionManager.addTransition(transition);
         return transition;
     }
@@ -741,7 +747,8 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Adds a DelayedEvaluator whose evaluate(View, BaseTransitionBuilder) method will only be called when the transition is about to start
+     * Adds a DelayedEvaluator whose evaluate(View, BaseTransitionBuilder) method will only be called
+     * when the transition is about to start.
      *
      * @param delayed
      * @return
@@ -793,6 +800,11 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
 
     public T invisible() {
         getDelayedProcessor().addProcess(VISIBILITY, View.INVISIBLE);
+        return self();
+    }
+
+    public T applyInitialConditions() {
+        mApplyInitialConditions = true;
         return self();
     }
 
@@ -1019,7 +1031,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * Holds values so the reversed version of PropertyValuesHolder can be created
+     * Holds values so the reversed version of PropertyValuesHolder can be created.
      */
     static class ShadowValuesHolder implements Cloneable {
         String property;
@@ -1079,9 +1091,16 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
     }
 
     /**
-     * This delays the evaluation to the time when transition is about to start, so the current state of the target view can be used in the evaluation
+     * Used to delay the evaluation to the time when transition is about to start, so the current state
+     * of the target view can be used in the evaluation.
      */
     public interface DelayedEvaluator<T extends AbstractTransitionBuilder> {
+        /**
+         * Evaluate builder with the given View's states.
+         *
+         * @param view
+         * @param builder
+         */
         void evaluate(View view, T builder);
     }
 }

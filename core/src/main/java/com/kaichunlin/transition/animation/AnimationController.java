@@ -11,9 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * For some reason changing the layout with ValueAnimator is very slow, so this is the default
- * {@link StateController} used by {@link AnimationManager} and {@link TransitionAnimation} to
- * advance animation state.
+ * The default {@link StateController} used by {@link AnimationManager} and {@link TransitionAnimation}
+ * to control animation state.
  */
 class AnimationController extends android.view.animation.Animation implements StateController, android.view.animation.Animation.AnimationListener {
     private static final int STOP_END = 0x01;
@@ -72,7 +71,7 @@ class AnimationController extends android.view.animation.Animation implements St
     }
 
     /**
-     * Currently not suppported
+     * Currently not supported
      */
     @Override
     public void pauseController() {
@@ -80,7 +79,7 @@ class AnimationController extends android.view.animation.Animation implements St
     }
 
     /**
-     * Currently not suppported
+     * Currently not supported
      */
     @Override
     public void resumeController() {

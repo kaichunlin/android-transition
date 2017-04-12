@@ -96,16 +96,18 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
         return mTarget;
     }
 
+    @Override
     public T setUpdateStateAfterUpdateProgress(boolean updateStateAfterUpdateProgress) {
         mUpdateStateAfterUpdateProgress = updateStateAfterUpdateProgress;
         return self();
     }
 
     /**
-     * Invalidates the current transition, which may mean the currently running transition is stopped
+     * Invalidates the current transition, which may mean the currently running transition is stopped.
      */
     protected abstract void invalidate();
 
+    // Returns the correct type.
     protected abstract T self();
 
     @Override
@@ -129,6 +131,13 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
         return newClone;
     }
 
+    /**
+     * Checks to see if another AbstractTransition's states is isCompatible for merging.
+     *
+     * @param another
+     * @return
+     */
+    @CheckResult
     public boolean compatible(AbstractTransition another) {
         if (getClass().equals(another.getClass()) && mTarget == another.mTarget && mReverse == another.mReverse && ((mInterpolator == null && another.mInterpolator == null) ||
                 mInterpolator.getClass().equals(another.mInterpolator.getClass()))) {
@@ -137,6 +146,14 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
         return false;
     }
 
+    /**
+     * Merge another AbstractTransition's states into this object, such that the other AbstractTransition
+     * can be discarded.
+     *
+     * @param another
+     * @return true if the merge is successful.
+     */
+    @CheckResult
     public boolean merge(AbstractTransition another) {
         if (!compatible(another)) {
             return false;
@@ -172,7 +189,7 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
     }
 
     /**
-     * Represents an object that will create ITransitionController Objects to be added to a TransitionManager
+     * Represents an object that configures how a Transition for a specific effect.
      */
     public interface Setup {
     }

@@ -8,12 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Uses a {@link android.animation.ValueAnimator} as the control to drive the animation, used by
+ * {@link AnimationManager} and {@link TransitionAnimation}. For some reason changing the layout with
+ * ValueAnimator is very slow so {@link AnimationController} should be used instead, unless
+ * {@link #pauseController()} and {@link #resumeController()} functions are needed.
  */
 class AnimatorController extends ValueAnimator implements StateController, ValueAnimator.AnimatorUpdateListener, android.animation.Animator.AnimatorListener {
     private final List<AbstractAnimation> mAnimationList = new ArrayList<>();
     private boolean mReset;
     private boolean mCancel;
 
+    /**
+     *
+     * @param reverse Whether or not to reverse the animation.
+     */
     AnimatorController(boolean reverse) {
         setInterpolator(new LinearInterpolator());
         if (reverse) {

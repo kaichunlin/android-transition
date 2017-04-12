@@ -49,9 +49,10 @@ public abstract class AbstractAnimation implements Animation {
     }
 
     /**
-     * The driver for the animation, can be either {@link #CONTROLLER_ANIMATION} or {@link #CONTROLLER_ANIMATOR},
-     * currently the chief difference is that {@link #CONTROLLER_ANIMATION} may be more performant in some situations,
-     * where as {@link #CONTROLLER_ANIMATOR} allows pausing/resuming the animation on API level 19 or later.
+     * The driver for the animation, can be either {@link #CONTROLLER_ANIMATION} or
+     * {@link #CONTROLLER_ANIMATOR}, currently the chief difference is that {@link #CONTROLLER_ANIMATION}
+     * may be more performant in some situations, where as {@link #CONTROLLER_ANIMATOR} allows
+     * pausing/resuming the animation on API level 19 or later.
      * <p>
      * {@link #CONTROLLER_ANIMATION} is the default, unless a valid View cannot be found (for example when animating
      * the menu), then {@link #CONTROLLER_ANIMATOR} is automatically used.
@@ -70,17 +71,17 @@ public abstract class AbstractAnimation implements Animation {
     }
 
     /**
-     * @param animationListener
+     * @param listener
      */
-    public void addAnimationListener(AnimationListener animationListener) {
-        mAnimationListenerSet.add(animationListener);
+    public void addAnimationListener(AnimationListener listener) {
+        mAnimationListenerSet.add(listener);
     }
 
     /**
-     * @param animationListener
+     * @param listener
      */
-    public void removeAnimationListener(AnimationListener animationListener) {
-        mAnimationListenerSet.remove(animationListener);
+    public void removeAnimationListener(AnimationListener listener) {
+        mAnimationListenerSet.remove(listener);
     }
 
     public void setDuration(@IntRange(from = 0) int duration) {
@@ -103,12 +104,12 @@ public abstract class AbstractAnimation implements Animation {
     }
 
     /**
-     * Starts the animation with the default duration (300 ms)
+     * Starts the animation with the default duration.
      */
     public abstract void startAnimation();
 
     /**
-     * Starts the animation with the specified duration in milliseconds
+     * Starts the animation with the specified duration in milliseconds.
      *
      * @param duration
      */

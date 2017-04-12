@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Allows customized transition behavior by implementing {@link #updateProgress(float)}
+ * Aggregates a set of {@link ViewTransformer}s.
  */
 public class CustomTransitionController extends TransitionController<CustomTransitionController> implements Cloneable {
     private List<TransitionHandler> mTransitionHandlerList = new ArrayList<>();

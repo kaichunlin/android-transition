@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Provides transition support to a MenuItem.
+ * Provides transition effects to a MenuItem.
  */
 public class MenuItemTransition extends AbstractTransition<MenuItemTransition, MenuItemTransition.Setup> {
     private List<TransitionControllerManager> mTransittingMenuItems = new ArrayList<>();
@@ -33,18 +33,46 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
     private int mMenuId;
     private List<MenuItem> menuItemList;
 
+    /**
+     * Creates transition effect for a Toolbar's {@link MenuItem}s.
+     *
+     * @param toolbar
+     * @return
+     */
     public MenuItemTransition(@NonNull Toolbar toolbar) {
         this(null, toolbar, null);
     }
 
+    /**
+     * Creates transition effect for a Toolbar's {@link MenuItem}s.
+     *
+     * @param id      Same as calling {@link #setId(String)}, set an ID for debugging purpose.
+     * @param toolbar
+     * @return
+     */
     public MenuItemTransition(@Nullable String id, @NonNull Toolbar toolbar) {
         this(id, toolbar, null);
     }
 
+    /**
+     * Creates transition effect for a Toolbar's {@link MenuItem}s.
+     *
+     * @param toolbar
+     * @param view    The custom View to display when the transition is active.
+     * @return
+     */
     public MenuItemTransition(@NonNull Toolbar toolbar, @Nullable View view) {
         this(null, toolbar, view);
     }
 
+    /**
+     * Creates transition effect for a Toolbar's {@link MenuItem}s.
+     *
+     * @param id      Same as calling {@link #setId(String)}, set an ID for debugging purpose.
+     * @param toolbar
+     * @param view    The custom View to display when the transition is active.
+     * @return
+     */
     public MenuItemTransition(@Nullable String id, @NonNull Toolbar toolbar, @Nullable View view) {
         super(id);
         this.mToolbar = toolbar;
@@ -61,11 +89,12 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
     }
 
     /**
-     * @param setVisibleOnStartAnimation should the visibility of the target MenuItem be forcibly set when {@link #startTransition()} is called
+     * @param visible Sets whether the visibility of the target MenuItem be forcibly set when
+     *                {@link #startTransition()} is called
      * @return
      */
-    public MenuItemTransition setVisibleOnStartAnimation(boolean setVisibleOnStartAnimation) {
-        this.mSetVisibleOnStartTransition = setVisibleOnStartAnimation;
+    public MenuItemTransition setVisibleOnStartAnimation(boolean visible) {
+        this.mSetVisibleOnStartTransition = visible;
         return self();
     }
 
@@ -84,10 +113,11 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
         if (mSetVisibleOnStartTransition) {
             mToolbar.getMenu().setGroupVisible(0, true);
         }
+        //only retrieve MenuItem from mToolbar when run for the first time
         if (mTransittingMenuItems.size() == 0) {
             if (mMenuId == 0) {
                 menuItemList = TransitionUtil.getVisibleMenuItemList(mToolbar);
-            } else { //only apply to a specific MenuItem
+            } else { //this transition only applies to a specific MenuItem
                 menuItemList = new ArrayList<>();
                 MenuItem menuItem = TransitionUtil.getMenuItem(mToolbar, mMenuId);
                 if (menuItem == null) {
@@ -109,7 +139,7 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
                     mSetupList.get(j).setupAnimation(menuItem, transitionControllerManager, i, size);
                 }
                 View view;
-                if (mTarget == null) {
+                if (mTarget == null) { //uses default view with original menu icon
                     view = layoutInflater.inflate(R.layout.menu_animation, null).findViewById(R.id.menu_animation);
                     ((ImageView) view).setImageDrawable(menuItem.getIcon());
                 } else {
@@ -164,7 +194,7 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
     }
 
     /**
-     * @return should {@link Activity#invalidateOptionsMenu()} be called when transition stops
+     * @return Should {@link Activity#invalidateOptionsMenu()} be called when transition stops.
      */
     public boolean isInvalidateOptionOnStopTransition() {
         return mInvalidateOptionOnStopTransition;
@@ -173,13 +203,14 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
     /**
      * Sets whether or not to call {@link Activity#invalidateOptionsMenu()} after a transition stops.
      *
-     * @param activity                        Activity that should have its {@link Activity#invalidateOptionsMenu()} method called, or null if invalidateOptionOnStopAnimation parameter is false
-     * @param invalidateOptionOnStopAnimation
+     * @param activity   Activity that should have its {@link Activity#invalidateOptionsMenu()} method
+     *                   called, or null if invalidate parameter is false.
+     * @param invalidate
      * @return
      */
-    public MenuItemTransition setInvalidateOptionOnStopTransition(@NonNull Activity activity, boolean invalidateOptionOnStopAnimation) {
+    public MenuItemTransition setInvalidateOptionOnStopTransition(@NonNull Activity activity, boolean invalidate) {
         this.mActivityRef = new WeakReference<>(activity);
-        this.mInvalidateOptionOnStopTransition = invalidateOptionOnStopAnimation;
+        this.mInvalidateOptionOnStopTransition = invalidate;
         return self();
     }
 
@@ -223,17 +254,19 @@ public class MenuItemTransition extends AbstractTransition<MenuItemTransition, M
     }
 
     /**
-     * Represents an object that will create {@link TransitionController} Objects to be added to a {@link TransitionControllerManager}
+     * Represents an object that will create {@link TransitionController}s to be added to a
+     * {@link TransitionControllerManager}.
      */
     public interface Setup extends AbstractTransition.Setup {
         /**
-         * Create one or more {@link TransitionController} for each {@link android.view.MenuItem} and add them to mTransitionManager
+         * Create one or more {@link TransitionController} for each {@link android.view.MenuItem} and add
+         * them to TransitionControllerManager.
          *
          * @param mMenuItem
-         * @param transitionControllerManager
-         * @param itemIndex
-         * @param menuCount
+         * @param manager
+         * @param itemIndex Position of the MenuItem.
+         * @param menuCount Total number of MenuItem's.
          */
-        void setupAnimation(MenuItem mMenuItem, TransitionControllerManager transitionControllerManager, int itemIndex, int menuCount);
+        void setupAnimation(MenuItem mMenuItem, TransitionControllerManager manager, int itemIndex, int menuCount);
     }
 }

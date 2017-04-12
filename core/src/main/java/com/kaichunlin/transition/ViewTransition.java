@@ -24,8 +24,8 @@ public class ViewTransition extends AbstractTransition<ViewTransition, ViewTrans
     }
 
     /**
-     * @param id    unique ID that can identify the transition
-     * @param setup creates the {@link TransitionController}'s when {@link #startTransition()} is called
+     * @param id    Unique ID that can identify the transition.
+     * @param setup Creates the {@link TransitionController}'s when {@link #startTransition()} is called.
      */
     public ViewTransition(@Nullable String id, @Nullable Setup setup) {
         super(id);
@@ -100,12 +100,12 @@ public class ViewTransition extends AbstractTransition<ViewTransition, ViewTrans
     }
 
     /**
-     * Creates the {@link TransitionController}'s when {@link #startTransition()} is called
+     * Creates the {@link TransitionController}'s when {@link #startTransition()} is called.
      */
     public interface Setup extends AbstractTransition.Setup {
         /**
-         * @param transitionControllerManager the {@link TransitionControllerManager} that the created {@link TransitionController} should be added to
+         * @param manager The {@link TransitionControllerManager} that the created {@link TransitionController} should be added to
          */
-        void setupAnimation(TransitionControllerManager transitionControllerManager);
+        void setupAnimation(TransitionControllerManager manager);
     }
 }

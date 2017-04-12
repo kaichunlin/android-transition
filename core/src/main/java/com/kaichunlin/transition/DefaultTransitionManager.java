@@ -132,7 +132,7 @@ public class DefaultTransitionManager implements TransitionManager {
     }
 
     /**
-     * Stops all transitions
+     * Stops all transitions.
      */
     @Override
     public void stopTransition() {

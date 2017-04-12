@@ -55,14 +55,14 @@ public class Cascade implements ViewTransitionBuilder.ViewGroupTransition {
 
 
     /**
-     * @param cascadeEnd this value should never be 1, otherwise no transition will be applied to the last child
+     * @param cascadeEnd This value should never be 1, otherwise no transition will be applied to the last child.
      */
     public Cascade(@IntRange(from = 0, to = 2) int type, @FloatRange(from = 0.0, to = 1.0) float cascadeEnd) {
         this(type, cascadeEnd, DEFAULT_INTERPOLATOR);
     }
 
     /**
-     * @param cascadeEnd this value should never be 1, otherwise no transition will be applied to the last child
+     * @param cascadeEnd This value should never be 1, otherwise no transition will be applied to the last child.
      */
     public Cascade(@IntRange(from = 0, to = 2) int type, @FloatRange(from = 0.0, to = 1.0) float cascadeEnd, @NonNull Interpolator interpolator) {
         this.type = type;
@@ -109,6 +109,12 @@ public class Cascade implements ViewTransitionBuilder.ViewGroupTransition {
         return mReverse;
     }
 
+    /**
+     * Configures a {@link ViewTransitionBuilder} per the Cascade's Type.
+     *
+     * @param builder
+     * @param config Contains context about the view being configured.
+     */
     @Override
     public void transit(ViewTransitionBuilder builder, ViewTransitionBuilder.ViewGroupTransitionConfig config) {
         float cascadeLength = cascadeEnd - mCascadeStart;

@@ -1,23 +1,34 @@
 package com.kaichunlin.transition.animation;
 
 /**
- * Listens to animation state update.
+ * Receives state notifications from an animation.
  */
 public interface AnimationListener {
-    void onAnimationStart(Animation animationManager);
+    /**
+     * Notifies the start of the animation.
+     *
+     * @param animation The started animation.
+     */
+    void onAnimationStart(Animation animation);
 
     /**
-     * Notify the animation's ended, the affected Views have been assigned their final states
+     * Notifies the end of the animation; the affected Views have been assigned their final states.
+     *
+     * @param animation The animation which reached its end.
      */
-    void onAnimationEnd(Animation animationManager);
+    void onAnimationEnd(Animation animation);
 
     /**
-     * Notify the animation's canceled, the affected Views retain their last states
+     * Notifies the cancellation of the animation; the affected Views retain the states assigned in the last animated frame.
+     *
+     * @param animation The animation which was cancelled.
      */
-    void onAnimationCancel(Animation animationManager);
+    void onAnimationCancel(Animation animation);
 
     /**
-     * Notify the animation's been reset, the affected Views have been reverted to their original states
+     * Notifies the animation's been reset; the affected Views have been reverted to the states when the animation was started.
+     *
+     * @param animation The animation which was reset.
      */
-    void onAnimationReset(Animation animationManager);
+    void onAnimationReset(Animation animation);
 }

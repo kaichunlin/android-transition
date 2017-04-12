@@ -87,18 +87,19 @@ public class TransitionAnimation extends AbstractAnimation {
     }
 
     /**
+     * Called before {@link StateController#startController()} to configure the animation.
      *
-     * @param sharedAnimation
-     * @param duration -1 if duration should not be set
+     * @param sharedController A shared {@link StateController} to reduce resource usage.
+     * @param duration Duration of the animation, -1 if sharedController's duration should not be overridden.
      */
-    protected void prepareAnimation(@NonNull StateController sharedAnimation, @IntRange(from = -1) final int duration) {
+    protected void prepareAnimation(@NonNull StateController sharedController, @IntRange(from = -1) final int duration) {
         if (isAnimating()) {
             return;
         }
         setAnimating(true);
         getTransition().startTransition(mReverse ? 1 : 0);
 
-        mController = sharedAnimation;
+        mController = sharedController;
         if (duration != -1) {
             mController.setAnimationDuration(duration);
         }

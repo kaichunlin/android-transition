@@ -8,18 +8,19 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.animation.Interpolator;
 
 import com.kaichunlin.transition.internal.TransitionControllerManager;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
- * Allows the easy creation of {@link MenuItemTransition}.
+ * Builder for {@link MenuItemTransition}.
  */
 public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuItemTransitionBuilder, MenuItemTransition> implements MenuItemTransition.Setup {
 
     /**
+     * Creates a transition effects builder for Toolbar {@link MenuItem}s.
+     *
      * @param toolbar
      * @return
      */
@@ -28,7 +29,9 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     }
 
     /**
-     * @param id
+     * Creates a builder for Toolbar {@link MenuItem}s.
+     *
+     * @param id Same as calling {@link Transition#setId(String)}, set an ID for debugging purpose.
      * @param toolbar
      * @return
      */
@@ -36,10 +39,26 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
         return new MenuItemTransitionBuilder(id, toolbar);
     }
 
+
+    /**
+     * Creates a builder for a specific Toolbar {@link MenuItem}.
+     *
+     * @param menuId The ID of the MenuItem to have transition effect created.
+     * @param toolbar
+     * @return
+     */
     public static MenuItemTransitionBuilder transit(@IdRes int menuId, @NonNull Toolbar toolbar) {
         return new MenuItemTransitionBuilder(menuId, toolbar);
     }
 
+    /**
+     * Creates a builder for a specific Toolbar {@link MenuItem}.
+     *
+     * @param id Same as calling {@link Transition#setId(String)}, set an ID for debugging purpose.
+     * @param menuId The ID of the MenuItem to have transition effect created.
+     * @param toolbar
+     * @return
+     */
     public static MenuItemTransitionBuilder transit(String id, @IdRes int menuId, @NonNull Toolbar toolbar) {
         return new MenuItemTransitionBuilder(id, menuId, toolbar);
     }
@@ -127,7 +146,9 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     }
 
     /**
-     * Cascades the starting range of transition for each {@link android.view.MenuItem} such that the first {@link android.view.MenuItem} will transit from <i>start</i>, the 2nd MenuItem will transit from <i>start+cascade</i> and so on
+     * Cascades the starting range of transition for each {@link android.view.MenuItem} such that the
+     * first {@link android.view.MenuItem} will transit from <i>start</i>, the 2nd MenuItem will
+     * transit from <i>start+cascade</i> and so on.
      *
      * @param cascade
      * @return
@@ -138,26 +159,27 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     }
 
     /**
-     * See {@link MenuItemTransition#setVisibleOnStartAnimation(boolean)}
+     * See {@link MenuItemTransition#setVisibleOnStartAnimation(boolean)}.
      *
-     * @param visibleOnStartTransition
+     * @param visible
      * @return
      */
-    public MenuItemTransitionBuilder visibleOnStartAnimation(boolean visibleOnStartTransition) {
-        mVisibleOnStartTransition = visibleOnStartTransition;
+    public MenuItemTransitionBuilder visibleOnStartAnimation(boolean visible) {
+        mVisibleOnStartTransition = visible;
         return self();
     }
 
     /**
-     * See {@link MenuItemTransition#setInterpolator(Interpolator)}
+     * See {@link MenuItemTransition#setInvalidateOptionOnStopTransition(Activity, boolean)}}.
      *
-     * @param activity                        Activity that should have its invalidateOptionsMenu() method called, or null if invalidateOptionOnStopAnimation parameter is false
-     * @param invalidateOptionOnStopAnimation
+     * @param activity Activity that should have its invalidateOptionsMenu() method called, or null
+     *                 if invalidate parameter is false
+     * @param invalidate
      * @return
      */
-    public MenuItemTransitionBuilder invalidateOptionOnStopTransition(@NonNull Activity activity, boolean invalidateOptionOnStopAnimation) {
+    public MenuItemTransitionBuilder invalidateOptionOnStopTransition(@NonNull Activity activity, boolean invalidate) {
         mActivity = activity;
-        mInvalidateOptionOnStopAnimation = invalidateOptionOnStopAnimation;
+        mInvalidateOptionOnStopAnimation = invalidate;
         return self();
     }
 
@@ -171,17 +193,17 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     @CheckResult(suggest = "The created MenuItemTransition should be utilized")
     @Override
     protected MenuItemTransition createTransition() {
-        MenuItemTransition vt = new MenuItemTransition(mId, mToolbar);
+        MenuItemTransition transition = new MenuItemTransition(mId, mToolbar);
         if (mMenuId != 0) {
-            vt.setMenuId(mMenuId);
+            transition.setMenuId(mMenuId);
         }
         //TODO clone() is required since the class implements ViewTransition.Setup and passes itself to ViewTransition, without clone ViewTransitions made from the same Builder will have their states intertwined
-        vt.setSetup(clone());
-        vt.setVisibleOnStartAnimation(mVisibleOnStartTransition);
+        transition.setSetup(clone());
+        transition.setVisibleOnStartAnimation(mVisibleOnStartTransition);
         if (mActivity != null) {
-            vt.setInvalidateOptionOnStopTransition(mActivity, mInvalidateOptionOnStopAnimation);
+            transition.setInvalidateOptionOnStopTransition(mActivity, mInvalidateOptionOnStopAnimation);
         }
-        return vt;
+        return transition;
     }
 
     @Override
@@ -190,11 +212,12 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
     }
 
     @Override
-    public void setupAnimation(@NonNull MenuItem mMenuItem, @NonNull TransitionControllerManager transitionControllerManager, @IntRange(from = 0) int itemIndex, @IntRange(from = 0) int menuCount) {
+    public void setupAnimation(@NonNull MenuItem mMenuItem, @NonNull TransitionControllerManager manager,
+                               @IntRange(from = 0) int itemIndex, @IntRange(from = 0) int menuCount) {
         if(mDelayed!=null) {
             final int size = mDelayed.size();
             for (int i = 0; i < size; i++) {
-                mDelayed.get(i).evaluate(transitionControllerManager.getTarget(), this);
+                mDelayed.get(i).evaluate(manager.getTarget(), this);
             }
         }
 
@@ -204,6 +227,6 @@ public class MenuItemTransitionBuilder extends AbstractTransitionBuilder<MenuIte
         set.play(anim);
         set.setStartDelay((long) (itemIndex * mCascade * SCALE_FACTOR));
         set.setDuration((long) (SCALE_FACTOR - itemIndex * mCascade * SCALE_FACTOR));
-        transitionControllerManager.addAnimatorSetAsTransition(set).setRange(mStart, mEnd);
+        manager.addAnimatorSetAsTransition(set).setRange(mStart, mEnd);
     }
 }
