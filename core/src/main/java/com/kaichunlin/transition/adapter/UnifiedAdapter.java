@@ -7,7 +7,7 @@ import android.support.annotation.UiThread;
 
 import com.kaichunlin.transition.AbstractTransitionBuilder;
 import com.kaichunlin.transition.Transition;
-import com.kaichunlin.transition.TransitionListener;
+import com.kaichunlin.transition.TransitionManagerListener;
 import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.animation.Animation;
 import com.kaichunlin.transition.animation.AnimationListener;
@@ -19,7 +19,7 @@ import java.util.List;
  * Allows the combination of both transition (through {@link TransitionAdapter}) and animation (through {@link AnimationManager}).
  */
 @UiThread
-public class UnifiedAdapter extends AbstractAdapter implements Animation, TransitionListener {
+public class UnifiedAdapter extends AbstractAdapter implements Animation, TransitionManagerListener {
     private final TransitionAdapter mAdapter;
     private final AnimationManager mAnimationManager;
     private boolean mUpdateProgressAdapter = true;
@@ -31,15 +31,15 @@ public class UnifiedAdapter extends AbstractAdapter implements Animation, Transi
 
     /**
      * @param adapter          its methods should not be called elsewhere
-     * @param animationManager its methods should not be called elsewhere
+     * @param manager its methods should not be called elsewhere
      */
-    public UnifiedAdapter(@NonNull TransitionAdapter adapter, @NonNull AnimationManager animationManager) {
+    public UnifiedAdapter(@NonNull TransitionAdapter adapter, @NonNull AnimationManager manager) {
         super(adapter == null ? new AdapterState() : adapter.getAdapterState());
 
         mAdapter = adapter;
         getAdapter().addTransitionListener(this);
 
-        mAnimationManager = animationManager;
+        mAnimationManager = manager;
     }
 
     @Nullable
@@ -48,10 +48,10 @@ public class UnifiedAdapter extends AbstractAdapter implements Animation, Transi
     }
 
     @Override
-    public void addTransition(@NonNull AbstractTransitionBuilder transitionBuilder) {
+    public void addTransition(@NonNull AbstractTransitionBuilder builder) {
         invalidateTransitions();
 
-        super.addTransition(transitionBuilder);
+        super.addTransition(builder);
     }
 
     @Override
@@ -112,16 +112,16 @@ public class UnifiedAdapter extends AbstractAdapter implements Animation, Transi
         }
     }
 
-    public void addTransitionListener(TransitionListener transitionListener) {
-        super.addTransitionListener(transitionListener);
+    public void addTransitionListener(TransitionManagerListener listener) {
+        super.addTransitionListener(listener);
 
         if (mAdapter != null) {
             mAdapter.addTransitionListener(this);
         }
     }
 
-    public void removeTransitionListener(TransitionListener transitionListener) {
-        super.removeTransitionListener(transitionListener);
+    public void removeTransitionListener(TransitionManagerListener listener) {
+        super.removeTransitionListener(listener);
 
         if (mAdapter != null) {
             mAdapter.removeTransitionListener(this);
@@ -129,7 +129,7 @@ public class UnifiedAdapter extends AbstractAdapter implements Animation, Transi
     }
 
     @Override
-    public void onTransitionStart(TransitionManager transitionManager) {
+    public void onTransitionStart(TransitionManager manager) {
         if (mUpdateProgressAdapter) {
             getAdapter().removeAllTransitions();
             getAdapter().addAllTransitions(getTransitions());
@@ -139,18 +139,18 @@ public class UnifiedAdapter extends AbstractAdapter implements Animation, Transi
     }
 
     @Override
-    public void onTransitionEnd(TransitionManager transitionManager) {
+    public void onTransitionEnd(TransitionManager manager) {
         notifyTransitionEnd();
     }
 
     @Override
-    public void addAnimationListener(AnimationListener animationListener) {
-        mAnimationManager.addAnimationListener(animationListener);
+    public void addAnimationListener(AnimationListener listener) {
+        mAnimationManager.addAnimationListener(listener);
     }
 
     @Override
-    public void removeAnimationListener(AnimationListener animationListener) {
-        mAnimationManager.removeAnimationListener(animationListener);
+    public void removeAnimationListener(AnimationListener listener) {
+        mAnimationManager.removeAnimationListener(listener);
     }
 
     @Override

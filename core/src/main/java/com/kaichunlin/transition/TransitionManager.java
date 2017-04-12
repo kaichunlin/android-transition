@@ -38,9 +38,9 @@ public interface TransitionManager extends TransitionOperation {
      */
     void removeAllTransitions();
 
-    void addTransitionListener(TransitionListener transitionListener);
+    void addTransitionListener(TransitionManagerListener listener);
 
-    void removeTransitionListener(TransitionListener transitionListener);
+    void removeTransitionListener(TransitionManagerListener listener);
 
     void notifyTransitionStart();
 

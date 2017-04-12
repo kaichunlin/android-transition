@@ -4,7 +4,7 @@ import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
-import com.kaichunlin.transition.TransitionListener;
+import com.kaichunlin.transition.TransitionManagerListener;
 import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.animation.Animation;
 import com.kaichunlin.transition.animation.AnimationListener;
@@ -20,7 +20,7 @@ import com.kaichunlin.transition.animation.TransitionAnimation;
  * should be used instead.
  */
 @UiThread
-public class AnimationAdapter extends AbstractAdapter implements Animation, TransitionListener {
+public class AnimationAdapter extends AbstractAdapter implements Animation, TransitionManagerListener {
     private final TransitionAdapter mAdapter;
     private Animation mAnimation;
 
@@ -40,8 +40,8 @@ public class AnimationAdapter extends AbstractAdapter implements Animation, Tran
     }
 
     @Override
-    public void addTransitionListener(TransitionListener transitionListener) {
-        super.addTransitionListener(transitionListener);
+    public void addTransitionListener(TransitionManagerListener listener) {
+        super.addTransitionListener(listener);
 
         if (mAdapter != null) {
             mAdapter.addTransitionListener(this);
@@ -49,8 +49,8 @@ public class AnimationAdapter extends AbstractAdapter implements Animation, Tran
     }
 
     @Override
-    public void removeTransitionListener(TransitionListener transitionListener) {
-        super.removeTransitionListener(transitionListener);
+    public void removeTransitionListener(TransitionManagerListener listener) {
+        super.removeTransitionListener(listener);
 
         if (mAdapter != null) {
             mAdapter.removeTransitionListener(this);
@@ -68,12 +68,12 @@ public class AnimationAdapter extends AbstractAdapter implements Animation, Tran
     }
 
     @Override
-    public void onTransitionStart(TransitionManager transitionManager) {
+    public void onTransitionStart(TransitionManager manager) {
         notifyTransitionStart();
     }
 
     @Override
-    public void onTransitionEnd(TransitionManager transitionManager) {
+    public void onTransitionEnd(TransitionManager manager) {
         notifyTransitionEnd();
     }
 

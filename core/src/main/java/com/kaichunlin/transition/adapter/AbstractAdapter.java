@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.kaichunlin.transition.AbstractTransitionBuilder;
 import com.kaichunlin.transition.DefaultTransitionManager;
 import com.kaichunlin.transition.Transition;
-import com.kaichunlin.transition.TransitionListener;
+import com.kaichunlin.transition.TransitionManagerListener;
 import com.kaichunlin.transition.TransitionManager;
 
 import java.util.List;
@@ -25,8 +25,8 @@ public abstract class AbstractAdapter implements TransitionAdapter {
         mAdapterState = adapterState;
     }
 
-    public void setTransitionManager(TransitionManager transitionManager) {
-        mTransitionManager = transitionManager;
+    public void setTransitionManager(TransitionManager manager) {
+        mTransitionManager = manager;
     }
 
     public TransitionManager getTransitionManager() {
@@ -39,8 +39,8 @@ public abstract class AbstractAdapter implements TransitionAdapter {
     }
 
     @Override
-    public void addTransition(@NonNull AbstractTransitionBuilder transitionBuilder) {
-        mTransitionManager.addTransition(transitionBuilder);
+    public void addTransition(@NonNull AbstractTransitionBuilder builder) {
+        mTransitionManager.addTransition(builder);
     }
 
     @Override
@@ -101,13 +101,13 @@ public abstract class AbstractAdapter implements TransitionAdapter {
     }
 
     @Override
-    public void addTransitionListener(TransitionListener transitionListener) {
-        mTransitionManager.addTransitionListener(transitionListener);
+    public void addTransitionListener(TransitionManagerListener listener) {
+        mTransitionManager.addTransitionListener(listener);
     }
 
     @Override
-    public void removeTransitionListener(TransitionListener transitionListener) {
-        mTransitionManager.removeTransitionListener(transitionListener);
+    public void removeTransitionListener(TransitionManagerListener listener) {
+        mTransitionManager.removeTransitionListener(listener);
     }
 
     @Override

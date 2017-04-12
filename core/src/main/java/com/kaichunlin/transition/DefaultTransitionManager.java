@@ -11,7 +11,7 @@ import java.util.Set;
  * Manages a collection of {@link Transition}.
  */
 public class DefaultTransitionManager implements TransitionManager {
-    private ArrayList<TransitionListener> mTransitionListenerList = new ArrayList<>();
+    private ArrayList<TransitionManagerListener> mListenerList = new ArrayList<>();
     private ArrayList<Transition> mTransitionList = new ArrayList<>();
     private Set<Transition> mBackupTransitionList = new HashSet<>();
 
@@ -137,8 +137,8 @@ public class DefaultTransitionManager implements TransitionManager {
     @Override
     public void stopTransition() {
         //call listeners so they can perform their actions first, like modifying this adapter's transitions
-        for (int i = 0, size = mTransitionListenerList.size(); i < size; i++) {
-            mTransitionListenerList.get(i).onTransitionEnd(this);
+        for (int i = 0, size = mListenerList.size(); i < size; i++) {
+            mListenerList.get(i).onTransitionEnd(this);
         }
 
         for (int i = 0, size = mTransitionList.size(); i < size; i++) {
@@ -147,28 +147,28 @@ public class DefaultTransitionManager implements TransitionManager {
     }
 
     @Override
-    public void addTransitionListener(TransitionListener transitionListener) {
-        if (!mTransitionListenerList.contains(transitionListener)) {
-            mTransitionListenerList.add(transitionListener);
+    public void addTransitionListener(TransitionManagerListener listener) {
+        if (!mListenerList.contains(listener)) {
+            mListenerList.add(listener);
         }
     }
 
     @Override
-    public void removeTransitionListener(TransitionListener transitionListener) {
-        mTransitionListenerList.remove(transitionListener);
+    public void removeTransitionListener(TransitionManagerListener listener) {
+        mListenerList.remove(listener);
     }
 
     @Override
     public void notifyTransitionStart() {
-        for (int i = 0, size = mTransitionListenerList.size(); i < size; i++) {
-            mTransitionListenerList.get(i).onTransitionStart(this);
+        for (int i = 0, size = mListenerList.size(); i < size; i++) {
+            mListenerList.get(i).onTransitionStart(this);
         }
     }
 
     @Override
     public void notifyTransitionEnd() {
-        for (int i = 0, size = mTransitionListenerList.size(); i < size; i++) {
-            mTransitionListenerList.get(i).onTransitionEnd(this);
+        for (int i = 0, size = mListenerList.size(); i < size; i++) {
+            mListenerList.get(i).onTransitionEnd(this);
         }
     }
 }
