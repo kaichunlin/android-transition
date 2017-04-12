@@ -2,7 +2,7 @@ package com.kaichunlin.transition.internal;
 
 import android.support.annotation.CheckResult;
 
-import com.kaichunlin.transition.TransitionHandler;
+import com.kaichunlin.transition.transformer.ViewTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,21 +11,21 @@ import java.util.List;
  * Aggregates a set of {@link ViewTransformer}s.
  */
 public class CustomTransitionController extends TransitionController<CustomTransitionController> implements Cloneable {
-    private List<TransitionHandler> mTransitionHandlerList = new ArrayList<>();
+    private List<ViewTransformer> mViewTransformerList = new ArrayList<>();
 
     public CustomTransitionController() {
         super(null);
         updateProgressWidth();
     }
 
-    public void addTransitionHandler(TransitionHandler mTransitionHandler) {
-        mTransitionHandlerList.add(mTransitionHandler);
+    public void addTransitionHandler(ViewTransformer mViewTransformer) {
+        mViewTransformerList.add(mViewTransformer);
     }
 
     @Override
     public void updateProgress(float progress) {
-        for (int i = 0, count = mTransitionHandlerList.size(); i < count; ++i) {
-            mTransitionHandlerList.get(i).onUpdateProgress(this, getTarget(), progress);
+        for (int i = 0, count = mViewTransformerList.size(); i < count; ++i) {
+            mViewTransformerList.get(i).updateView(this, getTarget(), progress);
         }
     }
 
@@ -33,8 +33,8 @@ public class CustomTransitionController extends TransitionController<CustomTrans
     @Override
     public CustomTransitionController clone() {
         CustomTransitionController newCopy = (CustomTransitionController) super.clone();
-        newCopy.mTransitionHandlerList = new ArrayList<>(mTransitionHandlerList.size());
-        newCopy.mTransitionHandlerList.addAll(mTransitionHandlerList);
+        newCopy.mViewTransformerList = new ArrayList<>(mViewTransformerList.size());
+        newCopy.mViewTransformerList.addAll(mViewTransformerList);
         return newCopy;
     }
 

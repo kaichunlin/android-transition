@@ -18,6 +18,8 @@ import com.kaichunlin.transition.internal.CustomTransitionController;
 import com.kaichunlin.transition.internal.DefaultTransitionController;
 import com.kaichunlin.transition.internal.TransitionController;
 import com.kaichunlin.transition.internal.TransitionControllerManager;
+import com.kaichunlin.transition.transformer.ScaledTransformer;
+import com.kaichunlin.transition.transformer.ViewTransformer;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorInflater;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -97,12 +99,12 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
      * @param viewTransformer
      * @return
      */
-    public ViewTransitionBuilder addTransitionHandler(@NonNull TransitionHandler transitionHandler) {
+    public ViewTransitionBuilder addTransitionHandler(@NonNull ViewTransformer viewTransformer) {
         checkModifiability();
         if (mCustomTransitionController == null) {
             mCustomTransitionController = new CustomTransitionController();
         }
-        mCustomTransitionController.addTransitionHandler(transitionHandler);
+        mCustomTransitionController.addTransitionHandler(viewTransformer);
         return self();
     }
 
@@ -327,7 +329,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     public ViewTransitionBuilder height(@IntRange(from = 0) final int fromHeight, @IntRange(from = 0) final int targetHeight) {
-        addTransitionHandler(new HeightTransitionHandler(fromHeight, targetHeight));
+        addTransitionHandler(new HeightTransformer(fromHeight, targetHeight));
         return self();
     }
 
@@ -414,7 +416,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
      * @return
      */
     public ViewTransitionBuilder backgroundColorHSV(@ColorInt final int fromColor, @ColorInt final int toColor) {
-        addTransitionHandler(new BackgroundColorHsvTransitionHandler(fromColor, toColor));
+        addTransitionHandler(new BackgroundColorHsvTransformer(fromColor, toColor));
         return self();
     }
 
@@ -705,37 +707,37 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
         }
     }
 
-    private static class HeightTransitionHandler extends ScaledTransitionHandler {
+    private static class HeightTransformer extends ScaledTransformer {
         private final int curHeight;
         private final int targetHeight;
 
-        public HeightTransitionHandler(int curHeight, int targetHeight) {
+        public HeightTransformer(int curHeight, int targetHeight) {
             this.curHeight = curHeight;
             this.targetHeight = targetHeight;
         }
 
         @Override
-        public void onUpdateScaledProgress(TransitionController controller, View target, float modifiedProgress) {
+        public void updateViewScaled(TransitionController controller, View target, float scaledProgress) {
             if (controller.isReverse()) {
-                target.getLayoutParams().height = (int) ((curHeight - targetHeight) * modifiedProgress + targetHeight);
+                target.getLayoutParams().height = (int) ((curHeight - targetHeight) * scaledProgress + targetHeight);
             } else {
-                target.getLayoutParams().height = (int) ((targetHeight - curHeight) * modifiedProgress + curHeight);
+                target.getLayoutParams().height = (int) ((targetHeight - curHeight) * scaledProgress + curHeight);
             }
             target.requestLayout();
         }
     }
 
-    private static class BackgroundColorHsvTransitionHandler extends ScaledTransitionHandler {
+    private static class BackgroundColorHsvTransformer extends ScaledTransformer {
         private final int fromColor;
         private final int toColor;
 
-        public BackgroundColorHsvTransitionHandler(int fromColor, int toColor) {
+        public BackgroundColorHsvTransformer(int fromColor, int toColor) {
             this.fromColor = fromColor;
             this.toColor = toColor;
         }
 
         @Override
-        public void onUpdateScaledProgress(TransitionController controller, View target, float modifiedProgress) {
+        public void updateViewScaled(TransitionController controller, View target, float scaledProgress) {
             //source: http://stackoverflow.com/questions/18216285/android-animate-color-change-from-color-to-color
             final float[] from = new float[3],
                     to = new float[3];
@@ -744,9 +746,9 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
 
             final float[] hsv = new float[3];
             // Transition along each axis of HSV (hue, saturation, value)
-            hsv[0] = from[0] + (to[0] - from[0]) * modifiedProgress;
-            hsv[1] = from[1] + (to[1] - from[1]) * modifiedProgress;
-            hsv[2] = from[2] + (to[2] - from[2]) * modifiedProgress;
+            hsv[0] = from[0] + (to[0] - from[0]) * scaledProgress;
+            hsv[1] = from[1] + (to[1] - from[1]) * scaledProgress;
+            hsv[2] = from[2] + (to[2] - from[2]) * scaledProgress;
 
             target.setBackgroundColor(Color.HSVToColor(hsv));
         }

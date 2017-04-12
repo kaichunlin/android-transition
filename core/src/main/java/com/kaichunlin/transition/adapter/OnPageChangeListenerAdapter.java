@@ -9,7 +9,7 @@ import com.kaichunlin.transition.DefaultTransitionManager;
 import com.kaichunlin.transition.R;
 import com.kaichunlin.transition.Transition;
 import com.kaichunlin.transition.TransitionConfig;
-import com.kaichunlin.transition.TransitionHandler;
+import com.kaichunlin.transition.transformer.ViewTransformer;
 import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.ViewTransition;
 import com.kaichunlin.transition.ViewTransitionBuilder;
@@ -30,11 +30,11 @@ public class OnPageChangeListenerAdapter extends AbstractAdapter implements View
     /**
      * Keeps the left fragment in the center of the screen
      */
-    public static final TransitionHandler LEFT_IN_PLACE = new TransitionHandler() {
+    public static final ViewTransformer LEFT_IN_PLACE = new ViewTransformer() {
         float oldX;
 
         @Override
-        public void onUpdateProgress(TransitionController controller, View target, float progress) {
+        public void updateView(TransitionController controller, View target, float progress) {
             float x = 0;
             if (progress <= 0) {
                 x = target.getWidth() * -progress;
@@ -55,11 +55,11 @@ public class OnPageChangeListenerAdapter extends AbstractAdapter implements View
     /**
      * Keeps the right fragment in the center of the screen
      */
-    public static final TransitionHandler RIGHT_IN_PLACE = new TransitionHandler() {
+    public static final ViewTransformer RIGHT_IN_PLACE = new ViewTransformer() {
         float oldX;
 
         @Override
-        public void onUpdateProgress(TransitionController controller, View target, float progress) {
+        public void updateView(TransitionController controller, View target, float progress) {
             float x = 0;
             if (progress > 0 && progress <= 1) {
                 x = target.getWidth() * -progress;
