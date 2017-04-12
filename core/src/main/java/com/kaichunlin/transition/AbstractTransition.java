@@ -153,7 +153,6 @@ public abstract class AbstractTransition<T extends AbstractTransition, S extends
      * @param another
      * @return true if the merge is successful.
      */
-    @CheckResult
     public boolean merge(AbstractTransition another) {
         if (!isCompatible(another)) {
             return false;
