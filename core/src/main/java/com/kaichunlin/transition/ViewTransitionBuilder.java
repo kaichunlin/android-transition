@@ -246,7 +246,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
      * @return
      */
     public ViewTransitionBuilder translationYAsFractionOfHeight(float... heightFractions) {
-        int height = mView.getWidth();
+        int height = mView.getHeight();
         for (int i = 0, size = heightFractions.length; i < size; i++) {
             heightFractions[i] = height * heightFractions[i];
         }
@@ -286,7 +286,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
      * @return
      */
     public ViewTransitionBuilder translationYAsFractionOfHeight(@NonNull final View targetView, final float... heightFractions) {
-        int height = targetView.getWidth();
+        int height = targetView.getHeight();
         for (int i = 0, size = heightFractions.length; i < size; i++) {
             heightFractions[i] = height * heightFractions[i];
         }
