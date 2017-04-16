@@ -334,7 +334,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     public ViewTransitionBuilder delayHeight(@IntRange(from = 0) final int targetHeight) {
-        getDelayedProcessor().addProcess(HEIGHT, targetHeight);
+        getViewDelayedProcessor().addProcess(HEIGHT, targetHeight);
         return self();
     }
 
@@ -589,7 +589,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
 
             value = process[TRANSLATION_X_AS_FRACTION_OF_WIDTH_WITH_VIEW];
             if (value != Float.MIN_VALUE) {
-                builder.height((int) value);
+                builder.width((int) value);
                 builder.translationX(views[TRANSLATION_X_AS_FRACTION_OF_WIDTH_WITH_VIEW].getWidth() * value);
             }
             if (process2[TRANSLATION_X_AS_FRACTIONS_OF_WIDTH_WITH_VIEW] != null) {

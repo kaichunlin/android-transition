@@ -984,7 +984,7 @@ public abstract class AbstractTransitionBuilder<T extends AbstractTransitionBuil
                 for (int i = 0; i < values.length; i++) {
                     widths[i + 1] = width * values[i];
                 }
-                builder.translationY(widths);
+                builder.translationX(widths);
             }
 
             value = process[TRANSLATION_Y_AS_FRACTION_OF_HEIGHT];
