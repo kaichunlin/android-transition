@@ -99,12 +99,12 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
      * @param viewTransformer
      * @return
      */
-    public ViewTransitionBuilder addTransitionHandler(@NonNull ViewTransformer viewTransformer) {
+    public ViewTransitionBuilder addViewTransformer(@NonNull ViewTransformer viewTransformer) {
         checkModifiability();
         if (mCustomTransitionController == null) {
             mCustomTransitionController = new CustomTransitionController();
         }
-        mCustomTransitionController.addTransitionHandler(viewTransformer);
+        mCustomTransitionController.addViewTransformer(viewTransformer);
         return self();
     }
 
@@ -329,7 +329,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     }
 
     public ViewTransitionBuilder height(@IntRange(from = 0) final int fromHeight, @IntRange(from = 0) final int targetHeight) {
-        addTransitionHandler(new HeightTransformer(fromHeight, targetHeight));
+        addViewTransformer(new HeightTransformer(fromHeight, targetHeight));
         return self();
     }
 
@@ -416,7 +416,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
      * @return
      */
     public ViewTransitionBuilder backgroundColorHSV(@ColorInt final int fromColor, @ColorInt final int toColor) {
-        addTransitionHandler(new BackgroundColorHsvTransformer(fromColor, toColor));
+        addViewTransformer(new BackgroundColorHsvTransformer(fromColor, toColor));
         return self();
     }
 

@@ -18,7 +18,7 @@ public class CustomTransitionController extends TransitionController<CustomTrans
         updateProgressWidth();
     }
 
-    public void addTransitionHandler(ViewTransformer mViewTransformer) {
+    public void addViewTransformer(ViewTransformer mViewTransformer) {
         mViewTransformerList.add(mViewTransformer);
     }
 

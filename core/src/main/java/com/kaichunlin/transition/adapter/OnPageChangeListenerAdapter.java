@@ -113,14 +113,14 @@ public class OnPageChangeListenerAdapter extends AbstractAdapter implements View
 
     public static OnPageChangeListenerAdapter bindWithDepthTransition(@NonNull OnPageChangeListenerAdapter adapter) {
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER * 0.25f).scale(1f, 0.75f).id("RIGHT_1"));
-        adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER).alpha(1f, 0.5f).id("RIGHT_2").addTransitionHandler(RIGHT_IN_PLACE));
+        adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER).alpha(1f, 0.5f).id("RIGHT_2").addViewTransformer(RIGHT_IN_PLACE));
         return adapter;
     }
 
     public static OnPageChangeListenerAdapter bindWithRotate(@NonNull OnPageChangeListenerAdapter adapter) {
-        adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, LEFT_OF_CENTER).id("LEFT_CENTER").addTransitionHandler(LEFT_IN_PLACE));
+        adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, LEFT_OF_CENTER).id("LEFT_CENTER").addViewTransformer(LEFT_IN_PLACE));
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, LEFT_OF_CENTER * 0.5f).rotationY(0, -90).scale(1f, 0.5f).id("LEFT"));
-        adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER).id("RIGHT_CENTER").addTransitionHandler(RIGHT_IN_PLACE));
+        adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER).id("RIGHT_CENTER").addViewTransformer(RIGHT_IN_PLACE));
         adapter.addTransition(ViewTransitionBuilder.transit().range(CENTER, RIGHT_OF_CENTER * 0.5f).rotationY(0, 90).scale(1f, 0.5f).id("RIGHT"));
         return adapter;
     }
