@@ -42,7 +42,6 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
     protected static final int TRANSLATION_Y_AS_FRACTION_OF_HEIGHT_WITH_VIEW = 4;
     protected static final int TRANSLATION_Y_AS_FRACTIONS_OF_HEIGHT_WITH_VIEW = 5;
     protected static final int DELAYED_TOTAL = 6;
-    private ViewTransitionDelayedEvaluation mViewDelayedProcessor;
 
     /**
      * Creates a {@link ViewTransitionBuilder} instance without any target view, {@link #target(View)}
@@ -64,6 +63,7 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
         return new ViewTransitionBuilder(view);
     }
 
+    private ViewTransitionDelayedEvaluation mViewDelayedProcessor;
     private CustomTransitionController mCustomTransitionController;
     private List<ViewTransition.Setup> mSetupList = new ArrayList<>();
     private View mView;
@@ -360,6 +360,14 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
         ViewTransitionBuilder newCopy = (ViewTransitionBuilder) super.clone();
         newCopy.mSetupList = new ArrayList<>(mSetupList.size());
         newCopy.mSetupList.addAll(mSetupList);
+        if (mCustomTransitionController != null) {
+            newCopy.mCustomTransitionController = mCustomTransitionController.clone();
+        }
+        if (mDelayedProcessor != null) {
+            newCopy.mDelayedProcessor = mDelayedProcessor.clone();
+            newCopy.mDelayed.remove(mDelayedProcessor);
+            newCopy.mDelayed.add(newCopy.mDelayedProcessor);
+        }
         return newCopy;
     }
 
