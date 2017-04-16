@@ -5,22 +5,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
 import com.kaichunlin.transition.Cascade;
-import com.kaichunlin.transition.TransitionListener;
 import com.kaichunlin.transition.TransitionManager;
+import com.kaichunlin.transition.TransitionManagerListener;
 import com.kaichunlin.transition.ViewTransition;
 import com.kaichunlin.transition.ViewTransitionBuilder;
 import com.kaichunlin.transition.adapter.DrawerListenerAdapter;
-import com.kaichunlin.transition.animation.Animation;
-import com.kaichunlin.transition.animation.AnimationListener;
 import com.kaichunlin.transition.animation.AnimationManager;
-import com.kaichunlin.transition.internal.debug.TraceTransitionListener;
+import com.kaichunlin.transition.internal.debug.TraceTransitionManagerListener;
 import com.kaichunlin.transition.util.TransitionUtil;
 
 import kaichunlin.transition.app.R;
@@ -90,21 +87,21 @@ public class DrawerViewActivity extends AppCompatActivity implements View.OnClic
                 //this is to prevent conflict when the drawer is being opened while the above animation is still in progress
                 //unfortunately there's no way to reconcile the two, so the transiting/animating View will "jump" to a new state
                 //TODO evaluate if it's possible to reconcile the two states automatically, maybe if they share the same ITransition instance?
-                mDrawerListenerAdapter.addTransitionListener(new TransitionListener() {
+                mDrawerListenerAdapter.addTransitionListener(new TransitionManagerListener() {
                     @Override
-                    public void onTransitionStart(TransitionManager transitionManager) {
+                    public void onTransitionStart(TransitionManager manager) {
                         animationManager.endAnimation();
                     }
 
                     @Override
-                    public void onTransitionEnd(TransitionManager transitionManager) {
+                    public void onTransitionEnd(TransitionManager manager) {
                     }
                 });
             }
         });
 
         //debug
-        mDrawerListenerAdapter.addTransitionListener(new TraceTransitionListener());
+        mDrawerListenerAdapter.addTransitionListener(new TraceTransitionManagerListener());
     }
 
     @Override

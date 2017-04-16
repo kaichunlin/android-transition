@@ -29,10 +29,10 @@ import com.kaichunlin.transition.adapter.SlidingUpPanelLayoutAdapter;
 import com.kaichunlin.transition.adapter.UnifiedAdapter;
 import com.kaichunlin.transition.animation.Animation;
 import com.kaichunlin.transition.animation.AnimationListener;
-import com.kaichunlin.transition.ScaledTransitionHandler;
 import com.kaichunlin.transition.internal.TransitionController;
 import com.kaichunlin.transition.internal.debug.TraceAnimationListener;
-import com.kaichunlin.transition.internal.debug.TraceTransitionListener;
+import com.kaichunlin.transition.internal.debug.TraceTransitionManagerListener;
+import com.kaichunlin.transition.transformer.ScaledTransformer;
 import com.kaichunlin.transition.util.TransitionUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -68,7 +68,7 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
 
         //set up the adapter
         SlidingUpPanelLayoutAdapter mSlidingUpPanelLayoutAdapter = new SlidingUpPanelLayoutAdapter();
-        supl.setPanelSlideListener(mSlidingUpPanelLayoutAdapter);
+        supl.addPanelSlideListener(mSlidingUpPanelLayoutAdapter);
         //the adapter accepts another SlidingUpPanelLayout.PanelSlideListener so other customizations can be performed
         mSlidingUpPanelLayoutAdapter.setPanelSlideListener(new DialogPanelSlideListener(this));
 
@@ -96,7 +96,7 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
         });
 
         //debug
-        mUnifiedAdapter.addTransitionListener(new TraceTransitionListener());
+        mUnifiedAdapter.addTransitionListener(new TraceTransitionManagerListener());
         mUnifiedAdapter.addAnimationListener(new TraceAnimationListener());
 
         //this is required since some transition requires the width/height/position of a view, which is not yet properly initialized until layout is complete
@@ -165,6 +165,7 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
         if (animate) {
             mUnifiedAdapter.setReverseAnimation(true);
             mUnifiedAdapter.startAnimation();
+            return;
         }
 
         //TODO removeAllTransitions() has to be called *after* mAnimationAdapter.resetAnimation(), this subtle order of execution requirement should be removed
@@ -221,12 +222,12 @@ public class SlidingUpPanelActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.grayscale_bg:
                 //Uses a CustomTransitionController that applies a ColorMatrixColorFilter to the background view
-                baseBuilder.clone().addTransitionHandler(new ScaledTransitionHandler() {
+                baseBuilder.clone().addViewTransformer(new ScaledTransformer() {
                     ColorMatrix matrix = new ColorMatrix();
                     ImageView bg;
 
                     @Override
-                    public void onUpdateScaledProgress(TransitionController controller, View target, float progress) {
+                    public void updateViewScaled(TransitionController controller, View target, float progress) {
                         matrix.setSaturation(1 - progress);
                         ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
                         if(bg==null) {

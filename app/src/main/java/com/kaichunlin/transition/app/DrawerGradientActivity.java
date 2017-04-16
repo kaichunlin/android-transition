@@ -15,7 +15,7 @@ import android.view.animation.LinearInterpolator;
 
 import com.kaichunlin.transition.ViewTransitionBuilder;
 import com.kaichunlin.transition.adapter.DrawerListenerAdapter;
-import com.kaichunlin.transition.internal.debug.TraceTransitionListener;
+import com.kaichunlin.transition.internal.debug.TraceTransitionManagerListener;
 import com.kaichunlin.transition.util.TransitionUtil;
 
 import kaichunlin.transition.app.R;
@@ -58,7 +58,7 @@ public class DrawerGradientActivity extends AppCompatActivity implements View.On
         mDrawerListenerAdapter.setDrawerListener(new DialogDrawerListener(this));
 
         //debug
-        mDrawerListenerAdapter.addTransitionListener(new TraceTransitionListener());
+        mDrawerListenerAdapter.addTransitionListener(new TraceTransitionManagerListener());
 
         mGradient = findViewById(R.id.gradient);
         TransitionUtil.executeOnGlobalLayout(mGradient, new ViewTreeObserver.OnGlobalLayoutListener() {

@@ -33,41 +33,14 @@ public class SlidingUpPanelLayoutAdapter extends MenuBaseAdapter implements Slid
     }
 
     @Override
-    public void onPanelCollapsed(View panel) {
-        getAdapterState().setState(AdapterState.CLOSE);
-        stopTransition();
-
-        if (mListener != null) {
-            mListener.onPanelCollapsed(panel);
+    public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+        if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+            getAdapterState().setState(AdapterState.CLOSE);
+        } else if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+            getAdapterState().setState(AdapterState.OPEN);
         }
-    }
-
-    @Override
-    public void onPanelExpanded(View panel) {
-        getAdapterState().setState(AdapterState.OPEN);
         stopTransition();
-
-        if (mListener != null) {
-            mListener.onPanelExpanded(panel);
-        }
-    }
-
-    @Override
-    public void onPanelAnchored(View panel) {
-        stopTransition();
-
-        if (mListener != null) {
-            mListener.onPanelAnchored(panel);
-        }
-    }
-
-    @Override
-    public void onPanelHidden(View panel) {
-        stopTransition();
-
-        if (mListener != null) {
-            mListener.onPanelHidden(panel);
-        }
+        mListener.onPanelStateChanged(panel, previousState, newState);
     }
 
     @Override

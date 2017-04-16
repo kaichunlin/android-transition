@@ -11,13 +11,13 @@ import android.view.View;
 
 import com.kaichunlin.transition.MenuItemTransition;
 import com.kaichunlin.transition.MenuItemTransitionBuilder;
-import com.kaichunlin.transition.TransitionListener;
+import com.kaichunlin.transition.TransitionManagerListener;
 import com.kaichunlin.transition.TransitionManager;
 import com.kaichunlin.transition.adapter.DrawerListenerAdapter;
 import com.kaichunlin.transition.adapter.MenuOptionConfiguration;
 import com.kaichunlin.transition.animation.AnimationManager;
 import com.kaichunlin.transition.animation.TransitionAnimation;
-import com.kaichunlin.transition.internal.debug.TraceTransitionListener;
+import com.kaichunlin.transition.internal.debug.TraceTransitionManagerListener;
 
 import kaichunlin.transition.app.R;
 
@@ -77,21 +77,21 @@ public class DrawerMenuItemActivity extends AppCompatActivity implements View.On
         mDrawerListenerAdapter.setDrawerListener(new DialogDrawerListener(this));
 
         //debug
-        mDrawerListenerAdapter.addTransitionListener(new TraceTransitionListener());
+        mDrawerListenerAdapter.addTransitionListener(new TraceTransitionManagerListener());
 
         mStartAnimation = new TransitionAnimation(mShrinkOpen.clone().reverse());
 
         //this is to prevent conflict when the drawer is being opened while the above mStartAnimation is still in progress
         //unfortunately there's no way to reconcile the two, so the transiting/animating View will "jump" to a new state
         //TODO evaluate if it's possible to reconcile the two states automatically, maybe if they share the same ITransition instance?
-        mDrawerListenerAdapter.addTransitionListener(new TransitionListener() {
+        mDrawerListenerAdapter.addTransitionListener(new TransitionManagerListener() {
             @Override
-            public void onTransitionStart(TransitionManager transitionManager) {
+            public void onTransitionStart(TransitionManager manager) {
                 mStartAnimation.cancelAnimation();
             }
 
             @Override
-            public void onTransitionEnd(TransitionManager transitionManager) {
+            public void onTransitionEnd(TransitionManager manager) {
             }
         });
 

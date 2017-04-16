@@ -34,7 +34,7 @@ public class SlidingUpPanelRotateActivity extends AppCompatActivity {
         ViewTransitionBuilder.transit(findViewById(R.id.content_bg)).rotationY(90).endRange(0.25f).id("BG").buildFor(mSlidingUpPanelLayoutAdapter);
         ViewTransitionBuilder.transit(findViewById(R.id.content_bg2)).rotationY(270, 360).range(0.25f, 0.5f).id("BG_2").buildFor(mSlidingUpPanelLayoutAdapter);
         ViewTransitionBuilder.transit(findViewById(R.id.toolbar)).alpha(0f).buildFor(mSlidingUpPanelLayoutAdapter);
-        supl.setPanelSlideListener(mSlidingUpPanelLayoutAdapter);
+        supl.addPanelSlideListener(mSlidingUpPanelLayoutAdapter);
 
         mSlidingUpPanelLayoutAdapter.setPanelSlideListener(new DialogPanelSlideListener(this));
     }

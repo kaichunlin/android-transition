@@ -27,19 +27,9 @@ public class DialogPanelSlideListener implements SlidingUpPanelLayout.PanelSlide
     }
 
     @Override
-    public void onPanelCollapsed(View view) {
-    }
-
-    @Override
-    public void onPanelExpanded(View view) {
-        mActivity.getPreferences(0).edit().putBoolean("dialog", false).commit();
-    }
-
-    @Override
-    public void onPanelAnchored(View view) {
-    }
-
-    @Override
-    public void onPanelHidden(View view) {
+    public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+        if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+            mActivity.getPreferences(0).edit().putBoolean("dialog", false).commit();
+        }
     }
 }

@@ -30,7 +30,7 @@ public class ObservableScrollViewCallbacksAdapter extends AbstractAdapter implem
     private OnChangeDirectionListener mOnChangeDirectionListener;
 
     @Override
-    public void addTransition(AbstractTransitionBuilder transitionBuilder) {
+    public void addTransition(AbstractTransitionBuilder builder) {
         //TODO guess/retrieve range
         throw new UnsupportedOperationException();
     }

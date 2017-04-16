@@ -12,7 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.kaichunlin.transition.adapter.OnPageChangeListenerAdapter;
-import com.kaichunlin.transition.internal.debug.TraceTransitionListener;
+import com.kaichunlin.transition.internal.debug.TraceTransitionManagerListener;
 
 import kaichunlin.transition.app.R;
 
@@ -46,7 +46,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         adapter = OnPageChangeListenerAdapter.bindWithRotationYTransition(mViewPager);
 
         //debug
-        adapter.addTransitionListener(new TraceTransitionListener());
+        adapter.addTransitionListener(new TraceTransitionManagerListener());
     }
 
     @Override
