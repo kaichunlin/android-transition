@@ -174,10 +174,11 @@ public class TransitionAnimation extends AbstractAnimation {
         if (mController != null) {
             mController.resetController();
             mController = null;
+            setAnimating(false);
+            //TODO optimize
+            getTransition().startTransition();
+            getTransition().updateProgress(mReverse ? 1 : 0);
+            getTransition().stopTransition();
         }
-        //TODO optimize
-        getTransition().startTransition();
-        getTransition().updateProgress(mReverse ? 1 : 0);
-        getTransition().stopTransition();
     }
 }
