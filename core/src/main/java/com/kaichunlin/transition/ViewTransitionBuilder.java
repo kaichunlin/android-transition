@@ -35,12 +35,13 @@ import java.util.List;
  */
 public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransitionBuilder, ViewTransition> implements ViewTransition.Setup {
     private static final String TAG = "ViewTransitionBuilder";
-    protected static final int HEIGHT = 0;
-    protected static final int TRANSLATION_X_AS_FRACTION_OF_WIDTH_WITH_VIEW = 1;
-    protected static final int TRANSLATION_X_AS_FRACTIONS_OF_WIDTH_WITH_VIEW = 2;
-    protected static final int TRANSLATION_Y_AS_FRACTION_OF_HEIGHT_WITH_VIEW = 3;
-    protected static final int TRANSLATION_Y_AS_FRACTIONS_OF_HEIGHT_WITH_VIEW = 4;
-    protected static final int DELAYED_TOTAL = 5;
+    protected static final int WIDTH = 0;
+    protected static final int HEIGHT = 1;
+    protected static final int TRANSLATION_X_AS_FRACTION_OF_WIDTH_WITH_VIEW = 2;
+    protected static final int TRANSLATION_X_AS_FRACTIONS_OF_WIDTH_WITH_VIEW = 3;
+    protected static final int TRANSLATION_Y_AS_FRACTION_OF_HEIGHT_WITH_VIEW = 4;
+    protected static final int TRANSLATION_Y_AS_FRACTIONS_OF_HEIGHT_WITH_VIEW = 5;
+    protected static final int DELAYED_TOTAL = 6;
     private ViewTransitionDelayedEvaluation mViewDelayedProcessor;
 
     /**
@@ -323,6 +324,21 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
         return y(ViewHelper.getY(mView), end);
     }
 
+    public ViewTransitionBuilder width(@IntRange(from = 0) final int targetWidth) {
+        width(mView.getWidth(), targetWidth);
+        return self();
+    }
+
+    public ViewTransitionBuilder width(@IntRange(from = 0) final int fromWidth, @IntRange(from = 0) final int targetWidth) {
+        addViewTransformer(new WidthTransformer(fromWidth, targetWidth));
+        return self();
+    }
+
+    public ViewTransitionBuilder delayWidth(@IntRange(from = 0) final int targetHeight) {
+        getViewDelayedProcessor().addProcess(WIDTH, targetHeight);
+        return self();
+    }
+
     public ViewTransitionBuilder height(@IntRange(from = 0) final int targetHeight) {
         height(mView.getHeight(), targetHeight);
         return self();
@@ -582,6 +598,11 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
             float value;
             float[] orgValues;
             float[] newValues;
+            value = process[WIDTH];
+            if (value != Float.MIN_VALUE) {
+                builder.width((int) value);
+            }
+
             value = process[HEIGHT];
             if (value != Float.MIN_VALUE) {
                 builder.height((int) value);
@@ -704,6 +725,26 @@ public class ViewTransitionBuilder extends AbstractTransitionBuilder<ViewTransit
 
         public int getChildrenCount() {
             return total;
+        }
+    }
+
+    private static class WidthTransformer extends ScaledTransformer {
+        private final int curWidth;
+        private final int targetWidth;
+
+        public WidthTransformer(int curWidth, int targetWidth) {
+            this.curWidth = curWidth;
+            this.targetWidth = targetWidth;
+        }
+
+        @Override
+        public void updateViewScaled(TransitionController controller, View target, float scaledProgress) {
+            if (controller.isReverse()) {
+                target.getLayoutParams().width = (int) ((curWidth - targetWidth) * scaledProgress + targetWidth);
+            } else {
+                target.getLayoutParams().width = (int) ((targetWidth - curWidth) * scaledProgress + curWidth);
+            }
+            target.requestLayout();
         }
     }
 
