@@ -56,17 +56,17 @@ On the other hand now it only takes __8 lines of code__ to achieve the effect be
 
 On Android Studio update Gradle dependency to:
 ```groovy
-    compile 'com.github.kaichunlin.transition:core:0.9.4'
+    implementation 'com.github.kaichunlin.transition:core:0.9.4'
 ```
 To add the corresponding slidinguppanel module:
 ```groovy
-    compile 'com.github.kaichunlin.transition:slidinguppanel:0.9.1'
+    implementation 'com.github.kaichunlin.transition:slidinguppanel:0.9.1'
 ```
 **0.8.3**
 
 [Android Support Annotations](http://tools.android.com/tech-docs/support-annotations) are applied across the codebase which should help catching incorrect usage early. On Android Studio update Gradle dependency to:
 ```groovy
-    compile 'com.github.kaichunlin.transition:core:0.8.3'
+    implementation 'com.github.kaichunlin.transition:core:0.8.3'
 ```
 Note that while many annotations such as @NonNull and @Nullable work on [SDK Build Tools](https://developer.android.com/tools/revisions/build-tools.html) 22.0.x, some annotations like @IntRange and @FlatRange only work when preview version (23.0.0 rc2) is used.
 
